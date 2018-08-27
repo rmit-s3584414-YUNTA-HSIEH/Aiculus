@@ -57,7 +57,7 @@
         <div class="row">
             <div class="col-5 offset-md-4">
                 <div class="btn-group" role="group" aria-label="time" style="padding: 20px;">
-                    <button type="button" class="btn btn-outline-dark">&nbsp;&nbsp;daily&nbsp;&nbsp; </button>
+                    <button type="button" class="btn btn-outline-dark" id="daily">&nbsp;&nbsp;daily&nbsp;&nbsp; </button>
                     <button type="button" class="btn btn-outline-dark">monthly</button>
                     <button type="button" class="btn btn-outline-dark">annually</button>
                 </div>
@@ -65,23 +65,31 @@
         </div>
     </div>
 </div>
+
+
+
 <script>
+    var firstData,secondData;
+     $("#daily").click(function(){
+        alert('daily!');
+        
+    });
     var ctx = document.getElementById('myChart').getContext('2d');
-    var firstData = {
+    firstData = {
         label: "Deposit",
         backgroundColor:'transparent',
         borderColor: 'rgb(255,102,106)',
         pointBackgroundColor:'rgb(255,102,106)',
         data: [10000,10020,10040,10066,10081,10095,10110,10133,10150,10177,10198,10218],
     };
-    var secondData={
+    secondData={
         label:'Australian Bonds',
         backgroundColor:'transparent',
         borderColor: 'rgb(128,255,163)',
         pointBackgroundColor:'rgb(128,255,163)',
         data: [10000,10030,10044,10078,10100,10125,10136,10159,10177,10197,10215,10238],
     }
-    new Chart(ctx, {
+    var lineChart =new Chart(ctx, {
         // The type of chart we want to create
         type: 'line',
 
@@ -94,6 +102,8 @@
         // Configuration options go here
         options: {}
     });
+
+   
 </script>
 
 <script>

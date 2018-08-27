@@ -3,6 +3,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -29,7 +30,8 @@ func initializeRoutes() {
 
 	router.GET("/json", func(c *gin.Context) {
 		stock := readExcel()
-		c.JSON(http.StatusOK, gin.H{"stock": stock.name, "price": stock.price})
+		fmt.Print(stock)
+		c.JSON(http.StatusOK, stock)
 
 	})
 }
