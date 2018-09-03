@@ -6,11 +6,15 @@
 <div class="content">
     <div class="container">
         <div class="row">
+         <div class="col-2">
+            <button class="btn btn-info" ><i class="fa fa-bars"></i></button>
+         </div>   
+        </div>
+        <div class="row">
             <div class="col-4">
                 <div class="card">
                     <div class="card-body">
                         <canvas id="DoughnutChart" width="800" height="500"></canvas>
-                        <button type="button" class="btn btn-light btn-block">View Detail</button>
                     </div>
                 </div>
             </div>
@@ -18,7 +22,6 @@
                 <div class="card">
                     <div class="card-body">
                         <canvas id="barChart" width="800" height="500"></canvas>
-                        <button type="button" class="btn btn-light btn-block">View Detail</button>
                     </div>
                 </div>
             </div>
@@ -26,7 +29,6 @@
                 <div class="card">
                     <div class="card-body">
                         <canvas id="radarChart" width="800" height="500"></canvas>
-                        <button type="button" class="btn btn-light btn-block">View Detail</button>
                     </div>
                 </div>
             </div>
@@ -35,16 +37,14 @@
             <div class="col-6">
                 <div class="card">
                     <div class="card-body">
-                        <canvas id="bar-chart-horizontal" width="800" height="800"></canvas>
-                        <button type="button" class="btn btn-light btn-block">View Detail</button>
+                        <canvas id="bar-chart-horizontal" width="800" height="500"></canvas>
                     </div>
                 </div>
             </div>
             <div class="col-6">
                 <div class="card">
                     <div class="card-body">
-                        <canvas id="bubble-chart" width="800" height="800"></canvas>
-                        <button type="button" class="btn btn-light btn-block">View Detail</button>
+                        <canvas id="bubble-chart" width="800" height="500"></canvas>
                     </div>
                 </div>
             </div>
@@ -66,14 +66,25 @@
     </div>
 </div>
 
+<script>
 
+    $("#daily").click(function(){
+        $.ajax({
+            url:'http://localhost:8080/json',
+            dataType:'json',
+            success: function(data){
+                alert("stock:"+data.name+"\nprice:"+data.Price);
+            }
+        });
+    });
+
+</script>
 
 <script>
+
+
     var firstData,secondData;
-     $("#daily").click(function(){
-        alert('daily!');
-        
-    });
+
     var ctx = document.getElementById('myChart').getContext('2d');
     firstData = {
         label: "Deposit",
@@ -118,6 +129,7 @@
             }]
         },
         options: {
+            legend: { display: false },
             title: {
                 display: true,
                 text: 'index tracking bar'
@@ -145,6 +157,7 @@
             ]
         },
         options: {
+            legend: { display: false },
             title: {
                 display: true,
                 text: 'Customer investment brief'
@@ -278,8 +291,7 @@
 </script>
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-    crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
     crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em"

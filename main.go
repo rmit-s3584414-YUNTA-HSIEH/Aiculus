@@ -23,7 +23,7 @@ func main() {
 
 	// Initialize the routes
 	initializeRoutes()
-
+	getJSONData()
 	// Start serving the application
 	router.Run()
 }

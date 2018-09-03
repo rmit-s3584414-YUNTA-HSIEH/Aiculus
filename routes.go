@@ -3,7 +3,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -28,10 +27,11 @@ func initializeRoutes() {
 		)
 	})
 
+}
+func getJSONData() {
 	router.GET("/json", func(c *gin.Context) {
-		stock := readExcel()
-		fmt.Print(stock)
-		c.JSON(http.StatusOK, stock)
 
+		stock := readExcel()
+		c.JSON(http.StatusOK, stock)
 	})
 }
