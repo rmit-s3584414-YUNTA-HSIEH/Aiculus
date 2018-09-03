@@ -38,8 +38,6 @@
 /* Page content. The value of the margin-left property should match the value of the sidebar's width property */
 div.content {
   margin-left: 200px;
-
-
 }
 
 div.card{
