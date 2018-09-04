@@ -53,6 +53,10 @@ div.card{
  margin: 5px -10px;
 }
 
+div.card-body{
+  padding: 0px;
+}
+
 body{
   background: #fafafa;
 }
