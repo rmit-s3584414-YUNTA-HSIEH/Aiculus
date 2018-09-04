@@ -3,51 +3,56 @@
 <!--Embed the header.html template at this location-->
 {{ template "header.html" .}}
 <!--page content-->
-<div class="content">
+<div class="content" id="content">
     <div class="container">
         <div class="row">
-            <div class="col-4">
-                <div class="card">
-                    <div class="card-body">
-                        <canvas id="DoughnutChart" width="800" height="500"></canvas>
-                    </div>
-                </div>
-            </div>
-            <div class="col-4">
-                <div class="card">
-                    <div class="card-body">
-                        <canvas id="barChart" width="800" height="500"></canvas>
-                    </div>
-                </div>
-            </div>
-            <div class="col-4">
-                <div class="card">
-                    <div class="card-body">
-                        <canvas id="radarChart" width="800" height="500"></canvas>
-                    </div>
-                </div>
+            <div class="col-3">
+                    &nbsp;<button class="btn" style="background-color:#7386D5;color:#fff;" id="collapseBut"><i class="fa fa-bars"></i>&nbsp;Menu</button>  
             </div>
         </div>
         <div class="row">
-            <div class="col-6">
+            <div class="col-3">
+                <a href="#">
+                <div class="card" >
+                    <div class="card-body">
+                        <canvas id="DoughnutChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+                </a>
+            </div>
+            <div class="col-3">
                 <div class="card">
                     <div class="card-body">
-                        <canvas id="bar-chart-horizontal" width="800" height="500"></canvas>
+                        <canvas id="barChart" width="400" height="200"></canvas>
                     </div>
                 </div>
             </div>
-            <div class="col-6">
+            <div class="col-3">
                 <div class="card">
                     <div class="card-body">
-                        <canvas id="bubble-chart" width="800" height="500"></canvas>
+                        <canvas id="radarChart" ></canvas>
                     </div>
                 </div>
             </div>
+            <div class="col-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <canvas id="bar-chart-horizontal"></canvas>
+                        </div>
+                    </div>
+                </div>
         </div>
         <div class="row">
-            <div class="col">
-                <canvas id="myChart" width="1500" height="500" style="padding: 30px;"></canvas>
+            <div class="col-4">
+                <div class="card">
+                    <div class="card-body">
+                        <canvas id="bubble-chart"></canvas>
+                    </div>
+                </div>
             </div>
+            <div class="col-8">
+                    <canvas id="myChart" width="1500" height="500" style="padding: 30px;"></canvas>
+            </div>           
         </div>
         <div class="row">
             <div class="col-5 offset-md-4">
@@ -62,14 +67,12 @@
 </div>
 
 <script>
-$("#collapseBut").click(function(){
-    $("sidebar").animate({
-        width:'toggle'
-    });
-
-});
-
+        $("#collapseBut").on("click",function(){
+            $("#sidebar").toggleClass("active");
+            $("#content").toggleClass("active");
+        });     
 </script>
+
 
 <script>
 
@@ -197,6 +200,7 @@ $("#collapseBut").click(function(){
             ]
         },
         options: {
+            legend: { display: false },
             title: {
                 display: true,
                 text: 'Distribution in % of investment'
@@ -273,6 +277,7 @@ $("#collapseBut").click(function(){
             ]
         },
         options: {
+            legend: { display: false },
             title: {
                 display: true,
                 text: 'happiness,GDP&population'

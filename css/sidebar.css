@@ -1,4 +1,4 @@
-.sidebar {
+#sidebar {
   margin: 0;
   padding: 0;
   width: 200px;
@@ -8,15 +8,14 @@
   overflow: auto;
 }
 
+#sidebar.active {
+  left: -200px;
+}
+
 .sidebar-header {
   padding: 20px;
   background: #6d7fcc;
   color: #fff;
-}
-
-#collapseBut{
-  padding: 10px;
-  background: #6d7fcc;
 }
 
 /* Sidebar links */
@@ -40,14 +39,18 @@
 }
 
 /* Page content. The value of the margin-left property should match the value of the sidebar's width property */
-div.content {
+#content {
   margin-left: 200px;
-  padding: 10px 10px;
+  padding: 10px 0px;
 
 }
 
+#content.active{
+  margin-left: 0px;
+}
+
 div.card{
-  margin: 5px;
+ margin: 5px -5px;
 }
 
 body{
