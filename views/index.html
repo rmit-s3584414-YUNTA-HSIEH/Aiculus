@@ -15,7 +15,7 @@
                 <a href="#">
                 <div class="card" >
                     <div class="card-body">
-                        <canvas id="DoughnutChart" width="400" height="200"></canvas>
+                        <canvas id="DoughnutChart"></canvas>
                     </div>
                 </div>
                 </a>
@@ -23,7 +23,7 @@
             <div class="col-3">
                 <div class="card">
                     <div class="card-body">
-                        <canvas id="barChart" width="400" height="200"></canvas>
+                        <canvas id="barChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -51,17 +51,19 @@
                 </div>
             </div>
             <div class="col-8">
-                    <canvas id="myChart" width="1500" height="500" style="padding: 30px;"></canvas>
+                <div class="card">
+                    <div class="card-body">
+                        <canvas id="myChart"></canvas> 
+                    </div>
+                    <div class="card-footer">
+                        <div class="btn-group" role="group" aria-label="time" style="padding: 20px;">
+                            <button type="button" class="btn btn-outline-dark" id="daily">&nbsp;&nbsp;daily&nbsp;&nbsp; </button>
+                            <button type="button" class="btn btn-outline-dark">monthly</button>
+                            <button type="button" class="btn btn-outline-dark">annually</button>
+                        </div>
+                    </div>
+                </div>                  
             </div>           
-        </div>
-        <div class="row">
-            <div class="col-5 offset-md-4">
-                <div class="btn-group" role="group" aria-label="time" style="padding: 20px;">
-                    <button type="button" class="btn btn-outline-dark" id="daily">&nbsp;&nbsp;daily&nbsp;&nbsp; </button>
-                    <button type="button" class="btn btn-outline-dark">monthly</button>
-                    <button type="button" class="btn btn-outline-dark">annually</button>
-                </div>
-            </div>
         </div>
     </div>
 </div>
