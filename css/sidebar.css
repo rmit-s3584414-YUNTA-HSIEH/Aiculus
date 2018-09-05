@@ -1,7 +1,7 @@
 #sidebar {
   margin: 0;
   padding: 0;
-  width: 200px;
+  width: 150px;
   background-color:#7386D5;
   position: fixed;
   height: 100%;
@@ -9,7 +9,7 @@
 }
 
 #sidebar.active {
-  left: -200px;
+  left: -150px;
 }
 
 .sidebar-header {
@@ -40,7 +40,7 @@
 
 /* Page content. The value of the margin-left property should match the value of the sidebar's width property */
 #content {
-  margin-left: 200px;
+  margin-left: 150px;
   padding: 10px 0px;
 
 }
