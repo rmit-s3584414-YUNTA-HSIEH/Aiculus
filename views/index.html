@@ -55,9 +55,9 @@
                         <canvas id="myChart"></canvas>
                         <div class="text-center">
                             <div class="btn-group" role="group" aria-label="time" style="padding:10px;">
-                                <button type="button" class="btn btn-outline-dark" id="daily">&nbsp;&nbsp;daily&nbsp;&nbsp; </button>
-                                <button type="button" class="btn btn-outline-dark">monthly</button>
-                                <button type="button" class="btn btn-outline-dark">annually</button> 
+                                <button type="button" class="btn btn-outline-dark" id="daily">&nbsp;&nbsp;{{ .text }}&nbsp;&nbsp; </button>
+                                <button type="button" class="btn btn-outline-dark" id="monthly">monthly</button>
+                                <button type="button" class="btn btn-outline-dark" id="annually">annually</button> 
                             </div>              
                         </div>
                     </div>
@@ -68,15 +68,16 @@
 </div>
 
 <script>
-        $("#collapseBut").on("click",function(){
-            $("#sidebar").toggleClass("active");
-            $("#content").toggleClass("active");
-        });     
+    //collapse bar 
+    $("#collapseBut").on("click",function(){
+        $("#sidebar").toggleClass("active");
+        $("#content").toggleClass("active");
+    });     
 </script>
 
 
 <script>
-
+    //get data from go api
     $("#daily").click(function(){
         $.ajax({
             url:'http://localhost:8080/json',
@@ -91,8 +92,11 @@
 
 <script>
 
-
-    var firstData,secondData;
+    $.ajax({
+            url:'http://localhost:8080/json',
+            dataType:'json',
+            success: function(data){
+var firstData,secondData;
 
     var ctx = document.getElementById('myChart').getContext('2d');
     firstData = {
@@ -100,7 +104,7 @@
         backgroundColor:'transparent',
         borderColor: 'rgb(255,102,106)',
         pointBackgroundColor:'rgb(255,102,106)',
-        data: [10000,10020,10040,10066,10081,10095,10110,10133,10150,10177,10198,10218],
+        data: [Number(data.Price),10020,10040,10066,10081,10095,10110,10133,10150,10177,10198,10218],
     };
     secondData={
         label:'Australian Bonds',
@@ -123,6 +127,11 @@
         options: {}
     });
 
+            }
+        });
+
+    
+
    
 </script>
 
@@ -134,7 +143,7 @@
             datasets: [{
                 labels: "index",
                 backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850"],
-                data: [50, 44, 125, 211, 21]
+                data: ["{{ .text }}", 44, 125, 211, 21]
             }]
         },
         options: {

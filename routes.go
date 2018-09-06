@@ -20,10 +20,7 @@ func initializeRoutes() {
 			// Use the index.html template
 			"index.html",
 			// Pass the data that the page uses (in this case, 'title')
-
-			gin.H{
-				"message": stock,
-			},
+			gin.H{"text": stock.Price},
 		)
 	})
 
