@@ -16,14 +16,14 @@ type Stock struct {
 
 // StockProprety struct to store information of data
 type StockProprety struct {
-	StockCode          string `json:"stockcode"`
-	StockName          string `json:"stockname"`
-	StockCurrentPrice  string `json:"stockcurrentprice"`
-	StockChange        string `json:"stockchange"`
-	StockPrecentChange string `json:"stockprecentchange"`
-	StockDayHighPrice  string `json:"stockdayhighprice"`
-	StockDayLowPrice   string `json:"stockdaylowprice"`
-	StockVolume        string `json:"stockvolume"`
+	Date        string `json:"date"`
+	Isin        string `json:"isin"`
+	Ric         string `json:"ric"`
+	Name        string `json:"name"`
+	IsoCty      string `json:"isocty"`
+	Gics        string `json:"gics"`
+	IssuedShare string `json:"issuedshare"`
+	MarketValue string `json:"marketvalue"`
 }
 
 // StockInformation is a map that contains StockNumber as key and Stockproprety map as value
@@ -97,14 +97,14 @@ func SetData1() []StockProprety {
 
 		if rows[i][0] != "" {
 			stock = append(stock, StockProprety{
-				StockCode:          rows[i][0],
-				StockName:          rows[i][1],
-				StockCurrentPrice:  rows[i][2],
-				StockChange:        rows[i][3],
-				StockPrecentChange: rows[i][4],
-				StockDayHighPrice:  rows[i][5],
-				StockDayLowPrice:   rows[i][6],
-				StockVolume:        rows[i][7],
+				Date:        rows[i][0],
+				Isin:        rows[i][1],
+				Ric:         rows[i][2],
+				Name:        rows[i][3],
+				IsoCty:      rows[i][4],
+				Gics:        rows[i][5],
+				IssuedShare: rows[i][6],
+				MarketValue: rows[i][7],
 			})
 		}
 	}
