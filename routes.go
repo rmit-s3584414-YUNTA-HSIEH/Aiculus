@@ -35,7 +35,7 @@ func getLineData() {
 func getOtherGraphs() {
 
 	router.GET("OtherGraphs", func(c *gin.Context) {
-		//stock := SetData1()
-
+		stock := SetData1()
+		c.JSON(http.StatusOK, stock)
 	})
 }

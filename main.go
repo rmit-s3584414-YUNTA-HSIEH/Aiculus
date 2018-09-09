@@ -24,6 +24,7 @@ func main() {
 	// Initialize the routes
 	initializeRoutes()
 	getLineData()
+	getOtherGraphs()
 	// Start serving the application
 	router.Run()
 }
