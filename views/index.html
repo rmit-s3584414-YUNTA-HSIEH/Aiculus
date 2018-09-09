@@ -137,14 +137,14 @@ var firstData,secondData;
 
 //use ajax to get other 5 charts' data
 $.ajax({
-    url: '',
-    dataType: '',
+    url: 'http://localhost:8080/OtherGraphs',
+    dataType: 'json',
     success: function(data){
         //bar chart
 new Chart(document.getElementById("barChart"), {
         type: 'bar',
         data: {
-            labels: [data.stock[1], "item2", "item3", "item4", "item5"],
+            labels: [data[1].stockprecentchange, data[2].stockprecentchange, data[3].stockprecentchange, data[5].stockprecentchange, data[6].stockprecentchange],
             datasets: [{
                 labels: "index",
                 backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850"],
