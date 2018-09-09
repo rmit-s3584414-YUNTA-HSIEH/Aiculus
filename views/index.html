@@ -55,9 +55,9 @@
                         <canvas id="myChart"></canvas>
                         <div class="text-center">
                             <div class="btn-group" role="group" aria-label="time" style="padding:10px;">
-                                <button type="button" class="btn btn-outline-dark" id="daily">&nbsp;&nbsp;{{ .text }}&nbsp;&nbsp; </button>
-                                <button type="button" class="btn btn-outline-dark" id="monthly">monthly</button>
-                                <button type="button" class="btn btn-outline-dark" id="annually">annually</button> 
+                                <button type="button" class="btn btn-outline-dark" id="daily">&nbsp;&nbsp;Daily&nbsp;&nbsp; </button>
+                                <button type="button" class="btn btn-outline-dark" id="monthly">Monthly</button>
+                                <button type="button" class="btn btn-outline-dark" id="annually">Annually</button> 
                             </div>              
                         </div>
                     </div>
@@ -75,15 +75,10 @@
     });     
 </script>
 <script>
-var label="aaa"
-
-</script>
-
-<script>
     //get data from go api
     $("#daily").click(function(){
         $.ajax({
-            url:'http://localhost:8080/json',
+            url:'http://localhost:8080/line',
             dataType:'json',
             success: function(data){
                 alert("stock:"+data.name+"\nprice:"+data.Price);
@@ -94,9 +89,9 @@ var label="aaa"
 </script>
 
 <script>
-
+//line chart
     $.ajax({
-            url:'http://localhost:8080/json',
+            url:'http://localhost:8080/line',
             dataType:'json',
             success: function(data){
 var firstData,secondData;
@@ -137,12 +132,19 @@ var firstData,secondData;
 
    
 </script>
-
 <script>
-    new Chart(document.getElementById("barChart"), {
+//other charts
+
+//use ajax to get other 5 charts' data
+$.ajax({
+    url: '',
+    dataType: '',
+    success: function(data){
+        //bar chart
+new Chart(document.getElementById("barChart"), {
         type: 'bar',
         data: {
-            labels: ["item1", "item2", "item3", "item4", "item5"],
+            labels: [data.StockProprety[1].StockPrecentChange, "item2", "item3", "item4", "item5"],
             datasets: [{
                 labels: "index",
                 backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850"],
@@ -158,11 +160,8 @@ var firstData,secondData;
         }
     });
 
-
-</script>
-
-<script>
-    new Chart(document.getElementById("DoughnutChart"), {
+//Doughnut chart
+new Chart(document.getElementById("DoughnutChart"), {
         type: 'doughnut',
         data: {
             labels: ["Stock1", "Stock2", "Stock3", "Stock4", "Stock5"],
@@ -182,9 +181,9 @@ var firstData,secondData;
             }
         }
     });
-</script>
-<script>
-    new Chart(document.getElementById("radarChart"), {
+
+//radar chart
+new Chart(document.getElementById("radarChart"), {
         type: 'radar',
         data: {
             labels: ["Africa", "Asia", "Europe", "Latin America", "North America"],
@@ -218,9 +217,9 @@ var firstData,secondData;
         }
     });
 
-</script>
-<script>
-    new Chart(document.getElementById("bar-chart-horizontal"), {
+
+//horizontal-bar chart
+new Chart(document.getElementById("bar-chart-horizontal"), {
         type: 'horizontalBar',
         data: {
             labels: ["Africa", "Asia", "Europe", "Latin America", "North America"],
@@ -240,8 +239,8 @@ var firstData,secondData;
             }
         }
     });
-</script>
-<script>
+
+//bubble chart
     new Chart(document.getElementById("bubble-chart"), {
         type: 'bubble',
         data: {
@@ -307,6 +306,13 @@ var firstData,secondData;
             }
         }
     });
+
+
+
+    }
+});
+
+
 
 </script>
 <!-- Optional JavaScript -->

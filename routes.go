@@ -25,10 +25,17 @@ func initializeRoutes() {
 	})
 
 }
-func getJSONData() {
-	router.GET("/json", func(c *gin.Context) {
+func getLineData() {
+	router.GET("/line", func(c *gin.Context) {
 
 		stock := readExcel()
 		c.JSON(http.StatusOK, stock)
+	})
+}
+func getOtherGraphs() {
+
+	router.GET("OtherGraphs", func(c *gin.Context) {
+		//stock := SetData1()
+
 	})
 }
