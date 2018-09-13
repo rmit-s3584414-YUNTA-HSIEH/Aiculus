@@ -3,51 +3,55 @@
 <!--Embed the header.html template at this location-->
 {{ template "header.html" .}}
 <!--page content-->
-<div class="content" id="content">
-    <div class="container">
-        <div class="row">
-            <div class="col-3">
-                    &nbsp;<button class="btn" style="background-color:#7386D5;color:#fff;" id="collapseBut"><i class="fa fa-bars"></i>&nbsp;Menu</button>  
-            </div>
-        </div>
+
+    <div class="container" id="content">
         <div class="row">
             <div class="col-4">
                 <a href="#">
                 <div class="card" >
                     <div class="card-body">
-                        <canvas id="DoughnutChart"></canvas>
+                        <canvas id="barChart1"></canvas>
                     </div>
                 </div>
                 </a>
             </div>
             <div class="col-4">
+                <a href="#">
                 <div class="card">
                     <div class="card-body">
-                        <canvas id="barChart"></canvas>
+                        <canvas id="barChart2"></canvas>
                     </div>
                 </div>
+                </a>
             </div>
             <div class="col-4">
-                <div class="card">
+                <a href="#">
+                 <div class="card">
                     <div class="card-body">
-                        <canvas id="radarChart" ></canvas>
+                        <canvas id="barChart3"></canvas>
                     </div>
-                </div>
+                </div>    
+                </a>
             </div>
 
         </div>
         <div class="row">
             <div class="col-4">
-                <div class="card">
+                <a href="#">
+                <div class="card" width="700px">
                     <div class="card-body">
                         <canvas id="bar-chart-horizontal"></canvas>
                     </div>
                 </div>
+                </a>
+                <a href="#">
                 <div class="card">
                     <div class="card-body">
                         <canvas id="bubble-chart"></canvas>
                     </div>
-                </div>
+                </div>   
+                </a>
+
             </div>
             <div class="col-8">
                 <div class="card">
@@ -65,7 +69,7 @@
             </div>           
         </div>
     </div>
-</div>
+
 
 <script>
     //collapse bar 
@@ -141,7 +145,7 @@ $.ajax({
     dataType: 'json',
     success: function(data){
         //bar chart
-new Chart(document.getElementById("barChart"), {
+new Chart(document.getElementById("barChart1"), {
         type: 'bar',
         data: {
             labels: [data[1].stockprecentchange, data[2].stockprecentchange, data[3].stockprecentchange, data[5].stockprecentchange, data[6].stockprecentchange],
@@ -161,8 +165,8 @@ new Chart(document.getElementById("barChart"), {
     });
 
 //Doughnut chart
-new Chart(document.getElementById("DoughnutChart"), {
-        type: 'doughnut',
+new Chart(document.getElementById("barChart2"), {
+        type: 'bar',
         data: {
             labels: ["Stock1", "Stock2", "Stock3", "Stock4", "Stock5"],
             datasets: [
@@ -183,8 +187,8 @@ new Chart(document.getElementById("DoughnutChart"), {
     });
 
 //radar chart
-new Chart(document.getElementById("radarChart"), {
-        type: 'radar',
+new Chart(document.getElementById("barChart3"), {
+        type: 'bar',
         data: {
             labels: ["Africa", "Asia", "Europe", "Latin America", "North America"],
             datasets: [

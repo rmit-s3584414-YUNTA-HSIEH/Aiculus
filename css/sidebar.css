@@ -9,7 +9,7 @@
 }
 
 #sidebar.active {
-  left: -150px;
+  left: -80px;
 }
 
 .sidebar-header {
@@ -40,9 +40,9 @@
 
 /* Page content. The value of the margin-left property should match the value of the sidebar's width property */
 #content {
-  margin-left: 150px;
-  padding: 10px 0px;
-
+  margin-left: 210px;
+  padding: 5px 0px;
+    width: 100%;
 }
 
 #content.active{
@@ -50,16 +50,26 @@
 }
 
 div.card{
- margin: 5px -10px;
+ margin: 5px -15px;
+  width:100%;
 }
 
 div.card-body{
   padding: 0px;
 }
 
-body{
+html, body{
   background: #fafafa;
+  padding: 0;
+  margin:0;
 }
+
+@media (min-width: 1200px){
+  .container {
+    max-width: 1280px;
+}
+}
+
 
 /* On screens that are less than 700px wide, make the sidebar into a topbar */
 @media screen and (max-width: 700px) {
