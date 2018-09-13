@@ -1,7 +1,7 @@
 #sidebar {
   margin: 0;
   padding: 0;
-  width: 150px;
+  width: 120px;
   background-color:#7386D5;
   position: fixed;
   height: 100%;
@@ -9,11 +9,11 @@
 }
 
 #sidebar.active {
-  left: -80px;
+  left: -60px;
 }
 
 .sidebar-header {
-  padding: 20px;
+  padding: 20px 0;
   background: #6d7fcc;
   color: #fff;
 }
@@ -44,11 +44,11 @@
   padding: 5px 0px;
     width: 100%;
 }
-
+/*
 #content.active{
-  margin-left: 0px;
+ 
 }
-
+*/
 div.card{
  margin: 5px -15px;
   width:100%;
