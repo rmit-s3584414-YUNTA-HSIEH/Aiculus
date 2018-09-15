@@ -4,6 +4,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"math"
 	"strconv"
 
@@ -45,10 +46,19 @@ type (
 		Value      float64
 		Presentage float64 `json:"presentage"`
 	}
+
+	// StockVMQ struct to store information of VMQ score
+	StockVMQ struct {
+		Name     string
+		VScore   float64
+		MScore   float64
+		QScore   float64
+		VMQScore float64
+	}
 )
 
 // ReadData from xlsx
-func ReadData(xlsxName string, sheetName string) [][]string {
+func ReadData(xlsxName string, sheetName string, header string) [][]string {
 
 	xlsx, err := excelize.OpenFile(xlsxName)
 	if err != nil {
@@ -59,7 +69,7 @@ func ReadData(xlsxName string, sheetName string) [][]string {
 	var a = false
 
 	for a != true {
-		if xlsx.GetCellValue(sheetName, "A1") != "CALC_DATE" {
+		if xlsx.GetCellValue(sheetName, "A1") != header {
 			xlsx.RemoveRow(sheetName, 0)
 		} else {
 			a = true
@@ -75,7 +85,7 @@ func ReadData(xlsxName string, sheetName string) [][]string {
 func SetStockData() []StockProprety {
 
 	// Read data from excel, pass xlsx filename and spreadsheet name
-	rows := ReadData("Summary Data.xlsx", "Universe")
+	rows := ReadData("Summary Data.xlsx", "Universe", "CALC_DATE")
 
 	var stock []StockProprety
 
@@ -109,7 +119,7 @@ func SetStockData() []StockProprety {
 func SetBMData() []BenchMarkProprety {
 
 	// Read data from excel, pass xlsx filename and spreadsheet name
-	rows := ReadData("Benchmark.xlsx", "Sheet1")
+	rows := ReadData("Benchmark.xlsx", "Sheet1", "CALC_DATE")
 
 	var bench []BenchMarkProprety
 
@@ -135,6 +145,40 @@ func SetBMData() []BenchMarkProprety {
 	}
 
 	return bench
+
+}
+
+// SetVMQScore function to calculate VMQ score
+func SetVMQScore() []StockVMQ {
+	// Read data from excel, pass xlsx filename and spreadsheet name
+	rows := ReadData("Summary Data.xlsx", "VMQ Scores", "ISIN")
+
+	var vmq []StockVMQ
+
+	// Add data into struct
+	for i := range rows {
+
+		// header location
+		if i == 0 {
+			continue
+		}
+
+		// Check first element is not empty to add
+		if rows[i][0] != "" {
+			v := StringToFloat(rows[i][21])
+			m := StringToFloat(rows[i][22])
+			q := StringToFloat(rows[i][23])
+			vmq = append(vmq, StockVMQ{
+				Name:     rows[i][2],
+				VScore:   v,
+				MScore:   m,
+				QScore:   q,
+				VMQScore: v + m + q,
+			})
+		}
+	}
+
+	return vmq
 
 }
 
@@ -167,13 +211,7 @@ func CalStock(s []StockProprety) []StockCalculation {
 	// Get every FloatMktCap from struct, convert them to float64, and sum up
 	for i := range s {
 
-		// Convert sting to float64
-		number, err := strconv.ParseFloat(s[i].FloatMktCap, 64)
-		if err != nil {
-			break
-		}
-		// Round to integer
-		number = math.Round(number)
+		number := StringToFloat(s[i].FloatMktCap)
 
 		// Check Gics to define 11 classification
 		// Energy 10
@@ -288,6 +326,17 @@ func CalStock(s []StockProprety) []StockCalculation {
 	}
 
 	return stockPrecent
+}
+
+// StringToFloat function to convert string to float for further use
+func StringToFloat(s string) float64 {
+	var n float64
+	n, err := strconv.ParseFloat(s, 64)
+	if err != nil {
+		log.Fatal(err)
+	}
+	n = math.Round(n*1000) / 1000
+	return n
 }
 
 // CalculatePresentage function use to get totalsum&values to calculate their precentage, then return
