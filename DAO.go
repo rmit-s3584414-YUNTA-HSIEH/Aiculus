@@ -4,57 +4,48 @@ package main
 
 import (
 	"fmt"
+	"math"
+	"strconv"
 
 	"github.com/360EntSecGroup-Skylar/excelize"
 )
 
 //Stock data
 type Stock struct {
-	Name  string `json:"name"`
+	Name  string
 	Price string
 }
 
-// StockProprety struct to store information of data
-type StockProprety struct {
-	Date        string `json:"date"`
-	Isin        string `json:"isin"`
-	Ric         string `json:"ric"`
-	Name        string `json:"name"`
-	IsoCty      string `json:"isocty"`
-	Gics        string `json:"gics"`
-	IssuedShare string `json:"issuedshare"`
-	MarketValue string `json:"marketvalue"`
-}
-
-// StockInformation is a map that contains StockNumber as key and Stockproprety map as value
-type StockInformation struct {
-	StockWhole map[string]StockProprety
-}
-
-var stockSlice = make([]Stock, 2)
-
-func readExcel() Stock {
-
-	xlsx, err := excelize.OpenFile("./dashboardData.xlsx")
-	if err != nil {
-		fmt.Println(err)
-		return Stock{"1", "2"}
+// Type list
+type (
+	// StockProprety struct to store information of data
+	StockProprety struct {
+		Date        string `json:"date"`
+		Isin        string
+		Ric         string
+		Name        string
+		IsoCty      string
+		Gics        string
+		FloatMktCap string
 	}
-	// Get value from cell by given worksheet name and axis.
-	stock1 := Stock{xlsx.GetCellValue("工作表1", "A1"), xlsx.GetCellValue("工作表1", "A2")}
-	/*
-		fmt.Println(stock1)
-		// Get all the rows in the Sheet1.
-		rows := xlsx.GetRows("工作表1")
-		for _, row := range rows {
-			for _, colCell := range row {
-				fmt.Print(colCell, "\t")
-			}
-			fmt.Println()
-		}
-	*/
-	return stock1
-}
+
+	// BenchMarkProprety struct to store information of Benchmark
+	BenchMarkProprety struct {
+		Date      string
+		Isin      string
+		Ric       string
+		IsoCty    string
+		IDXMktCap string
+		Gicses    string
+	}
+
+	// StockCalculation struct to store all stock calculation tables
+	StockCalculation struct {
+		Name       string `json:"name"`
+		Value      float64
+		Presentage float64 `json:"presentage"`
+	}
+)
 
 // ReadData from xlsx
 func ReadData(xlsxName string, sheetName string) [][]string {
@@ -75,19 +66,20 @@ func ReadData(xlsxName string, sheetName string) [][]string {
 			break
 		}
 	}
-	fmt.Println("H")
 	rows := xlsx.GetRows(sheetName)
 
 	return rows
 }
 
-// SetData1 is about
-func SetData1() []StockProprety {
+// SetStockData function use to read data from excel and return the stock struct
+func SetStockData() []StockProprety {
 
-	rows := ReadData("RMIT 1.0.xlsx", "asset_universe")
+	// Read data from excel, pass xlsx filename and spreadsheet name
+	rows := ReadData("Summary Data.xlsx", "Universe")
 
 	var stock []StockProprety
 
+	// Add data into struct
 	for i := range rows {
 
 		// header location
@@ -95,6 +87,7 @@ func SetData1() []StockProprety {
 			continue
 		}
 
+		// Check first element is not empty to add
 		if rows[i][0] != "" {
 			stock = append(stock, StockProprety{
 				Date:        rows[i][0],
@@ -103,35 +96,213 @@ func SetData1() []StockProprety {
 				Name:        rows[i][3],
 				IsoCty:      rows[i][4],
 				Gics:        rows[i][5],
-				IssuedShare: rows[i][6],
-				MarketValue: rows[i][7],
+				FloatMktCap: rows[i][9],
 			})
 		}
 	}
+
 	return stock
+
 }
 
-// SetData2 is about
-func SetData2() StockInformation {
+// SetBMData function use to read data from excel and return the benchmark struct
+func SetBMData() []BenchMarkProprety {
 
-	rows := ReadData("mockdata.xlsx", "Sheet1")
+	// Read data from excel, pass xlsx filename and spreadsheet name
+	rows := ReadData("Benchmark.xlsx", "Sheet1")
 
-	stockWhole := make(map[string]StockProprety)
-	stockInformation := StockInformation{stockWhole}
+	var bench []BenchMarkProprety
 
+	// Add data into struct
 	for i := range rows {
 
+		// header location
 		if i == 0 {
 			continue
 		}
+
+		// Check first element is not empty to add
 		if rows[i][0] != "" {
-			var key = rows[i][1]
-			stockWhole[key] = StockProprety{
-				rows[i][0], rows[i][1], rows[i][2],
-				rows[i][3], rows[i][4], rows[i][5],
-				rows[i][6], rows[i][7],
-			}
+			bench = append(bench, BenchMarkProprety{
+				Date:      rows[i][0],
+				Isin:      rows[i][1],
+				Ric:       rows[i][2],
+				IsoCty:    rows[i][3],
+				IDXMktCap: rows[i][4],
+				Gicses:    rows[i][22],
+			})
 		}
 	}
-	return stockInformation
+
+	return bench
+
+}
+
+// CalStock function to calculate sum&presentage of stock in order to display
+func CalStock(s []StockProprety) []StockCalculation {
+	// Set variable
+	var (
+		stockPrecent []StockCalculation
+		// Total sum of float market values
+		totalSum float64
+		// GICS vars
+		eSum  float64
+		mSum  float64
+		iSum  float64
+		cdSum float64
+		csSum float64
+		hcSum float64
+		fSum  float64
+		itSum float64
+		tsSum float64
+		uSum  float64
+		reSum float64
+		// Region vars
+		naSum     float64
+		eurxukSum float64
+		gbSum     float64
+		apxjpSum  float64
+		jpSum     float64
+	)
+	// Get every FloatMktCap from struct, convert them to float64, and sum up
+	for i := range s {
+
+		// Convert sting to float64
+		number, err := strconv.ParseFloat(s[i].FloatMktCap, 64)
+		if err != nil {
+			break
+		}
+		// Round to integer
+		number = math.Round(number)
+
+		// Check Gics to define 11 classification
+		// Energy 10
+		if s[i].Gics[:2] == "10" {
+			eSum += number
+		}
+		// Materials 15
+		if s[i].Gics[:2] == "15" {
+			mSum += number
+		}
+		// Industrials 20
+		if s[i].Gics[:2] == "20" {
+			iSum += number
+		}
+		// Consumer Discretionary 25
+		if s[i].Gics[:2] == "25" {
+			cdSum += number
+		}
+		// Consumer Staples 30
+		if s[i].Gics[:2] == "30" {
+			csSum += number
+		}
+		// Health Care 35
+		if s[i].Gics[:2] == "35" {
+			hcSum += number
+		}
+		// Financials 40
+		if s[i].Gics[:2] == "40" {
+			fSum += number
+		}
+		// Information Technology 45
+		if s[i].Gics[:2] == "45" {
+			itSum += number
+		}
+		// Telecommunication Services 50
+		if s[i].Gics[:2] == "50" {
+			tsSum += number
+		}
+		// Utilities 55
+		if s[i].Gics[:2] == "55" {
+			uSum += number
+		}
+		// Real Estate 60
+		if s[i].Gics[:2] == "60" {
+			reSum += number
+		}
+
+		// Check ISO city code to define region
+		if s[i].IsoCty == "CA" || s[i].IsoCty == "US" ||
+			s[i].IsoCty == "MX" {
+			naSum += number
+		}
+		if s[i].IsoCty == "GB" {
+			gbSum += number
+		}
+		if s[i].IsoCty == "JP" {
+			jpSum += number
+		}
+		if s[i].IsoCty == "AU" || s[i].IsoCty == "HK" ||
+			s[i].IsoCty == "NZ" || s[i].IsoCty == "SG" ||
+			s[i].IsoCty == "CN" || s[i].IsoCty == "KR" ||
+			s[i].IsoCty == "TW" {
+			apxjpSum += number
+		}
+		if s[i].IsoCty == "AT" || s[i].IsoCty == "BE" ||
+			s[i].IsoCty == "CH" || s[i].IsoCty == "DE" ||
+			s[i].IsoCty == "DK" || s[i].IsoCty == "ES" ||
+			s[i].IsoCty == "FI" || s[i].IsoCty == "FR" ||
+			s[i].IsoCty == "IE" || s[i].IsoCty == "IL" ||
+			s[i].IsoCty == "IT" || s[i].IsoCty == "NL" ||
+			s[i].IsoCty == "NO" || s[i].IsoCty == "PT" ||
+			s[i].IsoCty == "CZ" || s[i].IsoCty == "GR" ||
+			s[i].IsoCty == "HU" || s[i].IsoCty == "PL" ||
+			s[i].IsoCty == "SE" {
+			eurxukSum += number
+		}
+
+		// Always add to totalsum
+		totalSum += number
+	}
+
+	// Add these variables to slice for further use
+	stockGICSName := []string{"Energy", "Materials", "Industrials", "Consumer Discretionary",
+		"Consumer Staples", "Health Care", "Financials", "Information Technology",
+		"Telecommunication Services", "Utilities", "Real Estate"}
+	stockGICSValue := []float64{eSum, mSum, iSum, cdSum, csSum, hcSum, fSum,
+		itSum, tsSum, uSum, reSum}
+
+	stockRegionName := []string{"North America", "Europe ex UK", "United Kingdom",
+		"Asia Pacific ex Japan", "Japan"}
+	stockRegionValue := []float64{naSum, eurxukSum, gbSum, apxjpSum, jpSum}
+
+	// get precentage
+	gics := CalculatePresentage(totalSum, stockGICSValue)
+	region := CalculatePresentage(totalSum, stockRegionValue)
+
+	for i := 0; i < len(stockGICSName); i++ {
+		stockPrecent = append(stockPrecent, StockCalculation{
+			Name:       stockGICSName[i],
+			Value:      stockGICSValue[i],
+			Presentage: gics[i],
+		})
+	}
+
+	for i := 0; i < len(stockRegionName); i++ {
+		stockPrecent = append(stockPrecent, StockCalculation{
+			Name:       stockRegionName[i],
+			Value:      stockRegionValue[i],
+			Presentage: region[i],
+		})
+		fmt.Println(stockRegionName[i], region[i])
+	}
+
+	return stockPrecent
+}
+
+// CalculatePresentage function use to get totalsum&values to calculate their precentage, then return
+func CalculatePresentage(a float64, b []float64) []float64 {
+	var presentage []float64
+	var number float64
+	for i := 0; i < len(b); i++ {
+
+		// Float to 2 decimals
+		n := (b[i] / a) * 100
+		n = math.Round(n*100) / 100
+		presentage = append(presentage, n)
+
+		number += n
+	}
+
+	return presentage
 }

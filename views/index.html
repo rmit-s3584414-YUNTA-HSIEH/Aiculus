@@ -148,18 +148,18 @@ $.ajax({
 new Chart(document.getElementById("barChart1"), {
         type: 'bar',
         data: {
-            labels: [data[1].isocty, data[2].isocty, data[3].isocty, data[5].isocty, data[6].isocty],
+            labels: [data[0].name, data[1].name, data[2].name, data[3].name, data[4].name],
             datasets: [{
                 labels: "index",
                 backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850"],
-                data: ["{{ .text }}", "{{ .text }}", 125, 211, 21]
+                data: [data[0].presentage, data[1].presentage, data[2].presentage, data[3].presentage, data[4].presentage]
             }]
         },
         options: {
             legend: { display: false },
             title: {
                 display: true,
-                text: 'index tracking bar'
+                text: 'GICS Sectors'
             }
         }
     });
@@ -181,7 +181,7 @@ new Chart(document.getElementById("barChart2"), {
             legend: { display: false },
             title: {
                 display: true,
-                text: 'Customer investment brief'
+                text: 'Regional Weights'
             }
         }
     });
