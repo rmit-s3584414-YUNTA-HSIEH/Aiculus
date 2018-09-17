@@ -6,16 +6,33 @@
 
     <div class="container" id="content">
         <div class="row">
-            <div class="col-4">
-                <a href="#">
+            <div class="col-4" id="col">
+                <a href="/bar/1">
                 <div class="card" >
                     <div class="card-body">
-                        <canvas id="barChart1"></canvas>
+                        <div id="carouselExampleControls" class="carousel slide" data-ride="carousel" data-interval="false">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                <canvas id="barChart1-1"></canvas>
+                                </div>
+                                <div class="carousel-item">
+                                <canvas id="barChart1-2"></canvas>
+                                </div>
+                            </div>
+                            <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev" >
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="sr-only" >Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next" >
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </div>                   
                     </div>
                 </div>
                 </a>
             </div>
-            <div class="col-4">
+            <div class="col-4" id="col">
                 <a href="#">
                 <div class="card">
                     <div class="card-body">
@@ -24,7 +41,7 @@
                 </div>
                 </a>
             </div>
-            <div class="col-4">
+            <div class="col-4" id="col">
                 <a href="#">
                  <div class="card">
                     <div class="card-body">
@@ -36,7 +53,7 @@
 
         </div>
         <div class="row">
-            <div class="col-4">
+            <div class="col-4" id="col">
                 <a href="#">
                 <div class="card" width="700px">
                     <div class="card-body">
@@ -53,7 +70,7 @@
                 </a>
 
             </div>
-            <div class="col-8">
+            <div class="col-8" id="col">
                 <div class="card">
                     <div class="card-body">
                         <canvas id="myChart"></canvas>
@@ -145,14 +162,14 @@ $.ajax({
     dataType: 'json',
     success: function(data){
         //bar chart
-new Chart(document.getElementById("barChart1"), {
+    new Chart(document.getElementById("barChart1-1"), {
         type: 'bar',
         data: {
-            labels: [data[0].name, data[1].name, data[2].name, data[3].name, data[4].name],
+            labels: ["ca", "ca", "ca", "ca", "ca", "ca", "ca", "ca", "ca", "ca","ca"],
             datasets: [{
                 labels: "index",
-                backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850"],
-                data: [data[0].presentage, data[1].presentage, data[2].presentage, data[3].presentage, data[4].presentage]
+                backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850","#493e8e","#49b6bb","#beb6bb","#beffbb","#beffff","#6d844e"],
+                data: [data[0].presentage, data[1].presentage, data[2].presentage, data[3].presentage, data[4].presentage, data[5].presentage, data[6].presentage, data[7].presentage, data[8].presentage, data[9].presentage, data[10].presentage]
             }]
         },
         options: {
@@ -163,6 +180,24 @@ new Chart(document.getElementById("barChart1"), {
             }
         }
     });
+    new Chart(document.getElementById("barChart1-2"), {
+            type: 'bar',
+            data: {
+                labels: ["ca", "ca", "ca", "ca", "ca", "ca", "ca", "ca", "ca", "ca", "ca"],
+                datasets: [{
+                    labels: "index",
+                    backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850", "#493e8e", "#49b6bb", "#beb6bb", "#beffbb", "#beffff", "#6d844e"],
+                    data: [data[0].presentage, data[1].presentage, data[2].presentage, data[3].presentage, data[4].presentage, data[5].presentage, data[6].presentage, data[7].presentage, data[8].presentage, data[9].presentage, data[10].presentage]
+                }]
+            },
+            options: {
+                legend: { display: false },
+                title: {
+                    display: true,
+                    text: 'GICS Sectors Active Weight'
+                }
+            }
+        });
 
 //Doughnut chart
 new Chart(document.getElementById("barChart2"), {

@@ -26,18 +26,26 @@ func initializeRoutes() {
 		)
 	})
 
-}
-func getLineData() {
 	router.GET("/line", func(c *gin.Context) {
 
 		stock := a
 		c.JSON(http.StatusOK, stock)
 	})
-}
-func getOtherGraphs() {
 
 	router.GET("/OtherGraphs", func(c *gin.Context) {
 		stock := CalStock(a)
 		c.JSON(http.StatusOK, stock)
 	})
+
+	router.GET("/bar/:id", func(c *gin.Context) {
+
+		id := c.Param("id")
+		address := "bar" + id + ".html"
+		c.HTML(
+			http.StatusOK,
+			address,
+			gin.H{},
+		)
+	})
+
 }
