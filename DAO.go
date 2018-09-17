@@ -42,6 +42,7 @@ type (
 
 	// StockCalculation struct to store all stock calculation tables
 	StockCalculation struct {
+		Code       string `json:"code"`
 		Name       string `json:"name"`
 		Value      float64
 		Presentage float64 `json:"presentage"`
@@ -189,143 +190,123 @@ func CalStock(s []StockProprety) []StockCalculation {
 		stockPrecent []StockCalculation
 		// Total sum of float market values
 		totalSum float64
-		// GICS vars
-		eSum  float64
-		mSum  float64
-		iSum  float64
-		cdSum float64
-		csSum float64
-		hcSum float64
-		fSum  float64
-		itSum float64
-		tsSum float64
-		uSum  float64
-		reSum float64
-		// Region vars
-		naSum     float64
-		eurxukSum float64
-		gbSum     float64
-		apxjpSum  float64
-		jpSum     float64
 	)
+
+	// Set GICS struct
+	stockGICSCode := []string{"10", "15", "20", "25", "30", "35",
+		"40", "45", "50", "55", "60"}
+	stockGICSName := []string{"Energy", "Materials", "Industrials", "Consumer Discretionary",
+		"Consumer Staples", "Health Care", "Financials", "Information Technology",
+		"Telecommunication Services", "Utilities", "Real Estate"}
+
+	for i := 0; i < len(stockGICSName); i++ {
+		stockPrecent = append(stockPrecent, StockCalculation{
+			Code:       stockGICSCode[i],
+			Name:       stockGICSName[i],
+			Value:      0,
+			Presentage: 0,
+		})
+	}
+
+	// Set Region struct
+	stockRegionCode := []string{"NA", "EURXUK", "GB", "APXJP", "JP"}
+	stockRegionName := []string{"North America", "Europe ex UK", "United Kingdom",
+		"Asia Pacific ex Japan", "Japan"}
+
+	for i := 0; i < len(stockRegionName); i++ {
+		stockPrecent = append(stockPrecent, StockCalculation{
+			Code:       stockRegionCode[i],
+			Name:       stockRegionName[i],
+			Value:      0,
+			Presentage: 0,
+		})
+	}
+
 	// Get every FloatMktCap from struct, convert them to float64, and sum up
 	for i := range s {
 
 		number := StringToFloat(s[i].FloatMktCap)
+		code := s[i].Gics[:2]
+		region := s[i].IsoCty
 
-		// Check Gics to define 11 classification
-		// Energy 10
-		if s[i].Gics[:2] == "10" {
-			eSum += number
-		}
-		// Materials 15
-		if s[i].Gics[:2] == "15" {
-			mSum += number
-		}
-		// Industrials 20
-		if s[i].Gics[:2] == "20" {
-			iSum += number
-		}
-		// Consumer Discretionary 25
-		if s[i].Gics[:2] == "25" {
-			cdSum += number
-		}
-		// Consumer Staples 30
-		if s[i].Gics[:2] == "30" {
-			csSum += number
-		}
-		// Health Care 35
-		if s[i].Gics[:2] == "35" {
-			hcSum += number
-		}
-		// Financials 40
-		if s[i].Gics[:2] == "40" {
-			fSum += number
-		}
-		// Information Technology 45
-		if s[i].Gics[:2] == "45" {
-			itSum += number
-		}
-		// Telecommunication Services 50
-		if s[i].Gics[:2] == "50" {
-			tsSum += number
-		}
-		// Utilities 55
-		if s[i].Gics[:2] == "55" {
-			uSum += number
-		}
-		// Real Estate 60
-		if s[i].Gics[:2] == "60" {
-			reSum += number
+		// Calculate value base by GICS
+		for j := 0; j < len(stockGICSCode); j++ {
+			stockPrecent[j].CheckGICS(code, number)
 		}
 
-		// Check ISO city code to define region
-		if s[i].IsoCty == "CA" || s[i].IsoCty == "US" ||
-			s[i].IsoCty == "MX" {
-			naSum += number
-		}
-		if s[i].IsoCty == "GB" {
-			gbSum += number
-		}
-		if s[i].IsoCty == "JP" {
-			jpSum += number
-		}
-		if s[i].IsoCty == "AU" || s[i].IsoCty == "HK" ||
-			s[i].IsoCty == "NZ" || s[i].IsoCty == "SG" ||
-			s[i].IsoCty == "CN" || s[i].IsoCty == "KR" ||
-			s[i].IsoCty == "TW" {
-			apxjpSum += number
-		}
-		if s[i].IsoCty == "AT" || s[i].IsoCty == "BE" ||
-			s[i].IsoCty == "CH" || s[i].IsoCty == "DE" ||
-			s[i].IsoCty == "DK" || s[i].IsoCty == "ES" ||
-			s[i].IsoCty == "FI" || s[i].IsoCty == "FR" ||
-			s[i].IsoCty == "IE" || s[i].IsoCty == "IL" ||
-			s[i].IsoCty == "IT" || s[i].IsoCty == "NL" ||
-			s[i].IsoCty == "NO" || s[i].IsoCty == "PT" ||
-			s[i].IsoCty == "CZ" || s[i].IsoCty == "GR" ||
-			s[i].IsoCty == "HU" || s[i].IsoCty == "PL" ||
-			s[i].IsoCty == "SE" {
-			eurxukSum += number
+		// Calculate value base by Region
+		for k := len(stockGICSCode); k < (len(stockGICSCode) + len(stockRegionCode)); k++ {
+			stockPrecent[k].CheckIso(region, number)
 		}
 
 		// Always add to totalsum
 		totalSum += number
 	}
 
-	// Add these variables to slice for further use
-	stockGICSName := []string{"Energy", "Materials", "Industrials", "Consumer Discretionary",
-		"Consumer Staples", "Health Care", "Financials", "Information Technology",
-		"Telecommunication Services", "Utilities", "Real Estate"}
-	stockGICSValue := []float64{eSum, mSum, iSum, cdSum, csSum, hcSum, fSum,
-		itSum, tsSum, uSum, reSum}
-
-	stockRegionName := []string{"North America", "Europe ex UK", "United Kingdom",
-		"Asia Pacific ex Japan", "Japan"}
-	stockRegionValue := []float64{naSum, eurxukSum, gbSum, apxjpSum, jpSum}
-
-	// get precentage
-	gics := CalculatePresentage(totalSum, stockGICSValue)
-	region := CalculatePresentage(totalSum, stockRegionValue)
-
-	for i := 0; i < len(stockGICSName); i++ {
-		stockPrecent = append(stockPrecent, StockCalculation{
-			Name:       stockGICSName[i],
-			Value:      stockGICSValue[i],
-			Presentage: gics[i],
-		})
+	for i := 0; i < len(stockGICSCode); i++ {
+		stockPrecent[i].SetPresentage(totalSum)
 	}
-
-	for i := 0; i < len(stockRegionName); i++ {
-		stockPrecent = append(stockPrecent, StockCalculation{
-			Name:       stockRegionName[i],
-			Value:      stockRegionValue[i],
-			Presentage: region[i],
-		})
-		fmt.Println(stockRegionName[i], region[i])
+	for i := len(stockGICSCode); i < (len(stockGICSCode) + len(stockRegionCode)); i++ {
+		stockPrecent[i].SetPresentage(totalSum)
 	}
 
 	return stockPrecent
+}
+
+// CheckGICS function to check gics then add values to it
+func (c *StockCalculation) CheckGICS(s string, a float64) {
+	if s == c.Code {
+		c.Value = c.Value + a
+	}
+}
+
+// CheckIso function to check iso city code then add values to it
+func (c *StockCalculation) CheckIso(s string, a float64) {
+	if s == "CA" || s == "US" || s == "MX" || s == "NA" {
+		s := "NA"
+		if s == c.Code {
+			c.Value = c.Value + a
+		}
+	} else if s == "GB" {
+		s := "GB"
+		if s == c.Code {
+			c.Value = c.Value + a
+		}
+	} else if s == "JP" {
+		s := "JP"
+		if s == c.Code {
+			c.Value = c.Value + a
+		}
+	} else if s == "AU" || s == "HK" ||
+		s == "NZ" || s == "SG" ||
+		s == "CN" || s == "KR" ||
+		s == "TW" || s == "APXJP" {
+		s := "APXJP"
+		if s == c.Code {
+			c.Value = c.Value + a
+		}
+	} else if s == "AT" || s == "BE" ||
+		s == "CH" || s == "DE" ||
+		s == "DK" || s == "ES" ||
+		s == "FI" || s == "FR" ||
+		s == "IE" || s == "IL" ||
+		s == "IT" || s == "NL" ||
+		s == "NO" || s == "PT" ||
+		s == "CZ" || s == "GR" ||
+		s == "HU" || s == "PL" ||
+		s == "SE" || s == "EURXUK" {
+		s := "EURXUK"
+		if s == c.Code {
+			c.Value = c.Value + a
+		}
+	}
+
+}
+
+// SetPresentage function use to set presentage of each data struct
+func (c *StockCalculation) SetPresentage(a float64) {
+	c.Presentage = (c.Value / a) * 100
+	c.Presentage = math.Round(c.Presentage*100) / 100
 }
 
 // StringToFloat function to convert string to float for further use
@@ -337,21 +318,4 @@ func StringToFloat(s string) float64 {
 	}
 	n = math.Round(n*1000) / 1000
 	return n
-}
-
-// CalculatePresentage function use to get totalsum&values to calculate their precentage, then return
-func CalculatePresentage(a float64, b []float64) []float64 {
-	var presentage []float64
-	var number float64
-	for i := 0; i < len(b); i++ {
-
-		// Float to 2 decimals
-		n := (b[i] / a) * 100
-		n = math.Round(n*100) / 100
-		presentage = append(presentage, n)
-
-		number += n
-	}
-
-	return presentage
 }
