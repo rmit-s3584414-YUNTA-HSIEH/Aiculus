@@ -191,6 +191,8 @@ func CalStock(s []StockProprety) []StockCalculation {
 		// Total sum of float market values
 		totalSum float64
 	)
+	// Get Region map
+	regionMap := BuildRegionMap()
 
 	// Set GICS struct
 	stockGICSCode := []string{"10", "15", "20", "25", "30", "35",
@@ -228,79 +230,68 @@ func CalStock(s []StockProprety) []StockCalculation {
 		number := StringToFloat(s[i].FloatMktCap)
 		code := s[i].Gics[:2]
 		region := s[i].IsoCty
+		regionCode := CheckRegion(region, regionMap)
 
 		// Calculate value base by GICS
 		for j := 0; j < len(stockGICSCode); j++ {
-			stockPrecent[j].CheckGICS(code, number)
+			stockPrecent[j].SetValue(code, number)
 		}
 
 		// Calculate value base by Region
 		for k := len(stockGICSCode); k < (len(stockGICSCode) + len(stockRegionCode)); k++ {
-			stockPrecent[k].CheckIso(region, number)
+			stockPrecent[k].SetValue(regionCode, number)
 		}
 
 		// Always add to totalsum
 		totalSum += number
 	}
 
-	for i := 0; i < len(stockGICSCode); i++ {
-		stockPrecent[i].SetPresentage(totalSum)
-	}
-	for i := len(stockGICSCode); i < (len(stockGICSCode) + len(stockRegionCode)); i++ {
+	// Set presentage of each item
+	for i := 0; i < (len(stockGICSCode) + len(stockRegionCode)); i++ {
 		stockPrecent[i].SetPresentage(totalSum)
 	}
 
 	return stockPrecent
 }
 
-// CheckGICS function to check gics then add values to it
-func (c *StockCalculation) CheckGICS(s string, a float64) {
+// BuildRegionMap function to build the region map, which key is region and values is code
+func BuildRegionMap() map[string]([]string) {
+
+	// Make map
+	var m map[string]([]string)
+	m = make(map[string]([]string))
+	// Current iso code we are using
+	m["NA"] = []string{"CA", "US", "MX", "NA"}
+	m["GB"] = []string{"GB"}
+	m["JP"] = []string{"JP"}
+	m["APXJP"] = []string{"AU", "HK", "NZ", "SG", "CN", "KR", "TW", "APXJP"}
+	m["EURXUK"] = []string{"AT", "BE", "CH", "DE", "DK", "ES", "FI",
+		"FR", "IE", "IL", "IT", "NL", "NO", "PT", "CZ", "GR", "HU",
+		"PL", "SE", "EURXUK"}
+
+	return m
+}
+
+// CheckRegion function to check region code
+func CheckRegion(s string, m map[string]([]string)) string {
+
+	// Check if value exist in map
+	for key, value := range m {
+		for i := range value {
+			if value[i] == s {
+				return key
+			}
+		}
+	}
+
+	return ""
+}
+
+// SetValue function to add value by getting correct code
+func (c *StockCalculation) SetValue(s string, a float64) {
 	if s == c.Code {
 		c.Value = c.Value + a
 	}
-}
-
-// CheckIso function to check iso city code then add values to it
-func (c *StockCalculation) CheckIso(s string, a float64) {
-	if s == "CA" || s == "US" || s == "MX" || s == "NA" {
-		s := "NA"
-		if s == c.Code {
-			c.Value = c.Value + a
-		}
-	} else if s == "GB" {
-		s := "GB"
-		if s == c.Code {
-			c.Value = c.Value + a
-		}
-	} else if s == "JP" {
-		s := "JP"
-		if s == c.Code {
-			c.Value = c.Value + a
-		}
-	} else if s == "AU" || s == "HK" ||
-		s == "NZ" || s == "SG" ||
-		s == "CN" || s == "KR" ||
-		s == "TW" || s == "APXJP" {
-		s := "APXJP"
-		if s == c.Code {
-			c.Value = c.Value + a
-		}
-	} else if s == "AT" || s == "BE" ||
-		s == "CH" || s == "DE" ||
-		s == "DK" || s == "ES" ||
-		s == "FI" || s == "FR" ||
-		s == "IE" || s == "IL" ||
-		s == "IT" || s == "NL" ||
-		s == "NO" || s == "PT" ||
-		s == "CZ" || s == "GR" ||
-		s == "HU" || s == "PL" ||
-		s == "SE" || s == "EURXUK" {
-		s := "EURXUK"
-		if s == c.Code {
-			c.Value = c.Value + a
-		}
-	}
-
 }
 
 // SetPresentage function use to set presentage of each data struct
