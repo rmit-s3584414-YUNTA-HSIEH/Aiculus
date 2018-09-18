@@ -48,6 +48,14 @@ type (
 		Presentage float64 `json:"presentage"`
 	}
 
+	// BenchMarkCalculation struct to store all benchmark calculation tables
+	BenchMarkCalculation struct {
+		Code       string
+		Name       string
+		Value      float64
+		Presentage float64
+	}
+
 	// StockVMQ struct to store information of VMQ score
 	StockVMQ struct {
 		Name     string
@@ -254,6 +262,95 @@ func CalStock(s []StockProprety) []StockCalculation {
 	return stockPrecent
 }
 
+// CalBench function to calculate sum&presentage of benchmark in order to display
+func CalBench(b []BenchMarkProprety) []BenchMarkCalculation {
+	// Set variable
+	var (
+		bench []BenchMarkCalculation
+		// Total sum of float market values
+		totalSum float64
+	)
+	// Get Region map
+	regionMap := BuildRegionMap()
+
+	// Set GICS struct
+	benchGICSCode, benchGICSName := BuildGICSList()
+
+	for i := 0; i < len(benchGICSName); i++ {
+		bench = append(bench, BenchMarkCalculation{
+			Code:       benchGICSCode[i],
+			Name:       benchGICSName[i],
+			Value:      0,
+			Presentage: 0,
+		})
+	}
+
+	// Set Region struct
+	benchRegionCode, benchRegionName := BuildRegionList()
+
+	for i := 0; i < len(benchRegionName); i++ {
+		bench = append(bench, BenchMarkCalculation{
+			Code:       benchRegionCode[i],
+			Name:       benchRegionName[i],
+			Value:      0,
+			Presentage: 0,
+		})
+	}
+
+	// Get every FloatMktCap from struct, convert them to float64, and sum up
+	for i := range b {
+
+		number := StringToFloat(b[i].IDXMktCap)
+		code := b[i].Gicses[:2]
+		region := b[i].IsoCty
+		regionCode := CheckRegion(region, regionMap)
+
+		// Calculate value base by GICS
+		for j := 0; j < len(benchGICSCode); j++ {
+			bench[j].SetBValue(code, number)
+		}
+
+		// Calculate value base by Region
+		for k := len(benchGICSCode); k < (len(benchGICSCode) + len(benchRegionCode)); k++ {
+			bench[k].SetBValue(regionCode, number)
+		}
+
+		// Always add to totalsum
+		totalSum += number
+	}
+
+	// Set presentage of each item
+	for i := 0; i < (len(benchGICSCode) + len(benchRegionCode)); i++ {
+		bench[i].SetBPresentage(totalSum)
+	}
+
+	return bench
+}
+
+// BuildGICSList function to provide the list of GICS name&code
+func BuildGICSList() ([]string, []string) {
+
+	a := []string{"10", "15", "20", "25", "30", "35",
+		"40", "45", "50", "55", "60"}
+	b := []string{"Energy", "Materials", "Industrials", "Consumer Discretionary",
+		"Consumer Staples", "Health Care", "Financials", "Information Technology",
+		"Telecommunication Services", "Utilities", "Real Estate"}
+
+	return a, b
+
+}
+
+// BuildRegionList function to provide the list of region name&code
+func BuildRegionList() ([]string, []string) {
+
+	a := []string{"NA", "EURXUK", "GB", "APXJP", "JP"}
+	b := []string{"North America", "Europe ex UK", "United Kingdom",
+		"Asia Pacific ex Japan", "Japan"}
+
+	return a, b
+
+}
+
 // BuildRegionMap function to build the region map, which key is region and values is code
 func BuildRegionMap() map[string]([]string) {
 
@@ -296,6 +393,19 @@ func (c *StockCalculation) SetValue(s string, a float64) {
 
 // SetPresentage function use to set presentage of each data struct
 func (c *StockCalculation) SetPresentage(a float64) {
+	c.Presentage = (c.Value / a) * 100
+	c.Presentage = math.Round(c.Presentage*100) / 100
+}
+
+// SetBValue function to add value by getting correct code
+func (c *BenchMarkCalculation) SetBValue(s string, a float64) {
+	if s == c.Code {
+		c.Value = c.Value + a
+	}
+}
+
+// SetBPresentage function use to set presentage of each data struct
+func (c *BenchMarkCalculation) SetBPresentage(a float64) {
 	c.Presentage = (c.Value / a) * 100
 	c.Presentage = math.Round(c.Presentage*100) / 100
 }
