@@ -1,3 +1,14 @@
+<Add project name>
+
+<Add project introduction>
+
+
+
+
+<Add our name&id here>
+
+<Add description of files, functions and etc.>
+
 DAO:
 
 func ReadData() is for reading the data from xlsx. 
