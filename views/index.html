@@ -4,9 +4,10 @@
 {{ template "header.html" .}}
 <!--page content-->
 
-    <div class="container" id="content">
-        <div class="row">
-            <div class="col-4" id="col">
+    <div  id="page-content-wrapper">
+        <div class="container-fluid">
+            <div class="row">
+            <div class="col-4 col-xs-6" id="col">
                 <a href="/bar/1">
                 <div class="card" >
                     <div class="card-body">
@@ -86,8 +87,10 @@
             </div>           
         </div>
     </div>
-
-
+    </div>
+        
+</div>
+<!--
 <script>
     //collapse bar 
     $("#collapseBut").on("click",function(){
@@ -95,6 +98,7 @@
         $("#content").toggleClass("active");
     });     
 </script>
+-->
 <script>
     //get data from go api
     $("#daily").click(function(){
@@ -165,7 +169,7 @@ $.ajax({
     new Chart(document.getElementById("barChart1-1"), {
         type: 'bar',
         data: {
-            labels: ["ca", "ca", "ca", "ca", "ca", "ca", "ca", "ca", "ca", "ca","ca"],
+            labels: [data[0].name, "ca", "ca", "ca", "ca", "ca", "ca", "ca", "ca", "ca","ca"],
             datasets: [{
                 labels: "index",
                 backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850","#493e8e","#49b6bb","#beb6bb","#beffbb","#beffff","#6d844e"],

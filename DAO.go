@@ -22,12 +22,12 @@ type (
 	// StockProprety struct to store information of data
 	StockProprety struct {
 		Date        string `json:"date"`
-		Isin        string
-		Ric         string
-		Name        string
-		IsoCty      string
-		Gics        string
-		FloatMktCap string
+		Isin        string `json:"isin"`
+		Ric         string `json:"ric"`
+		Name        string `json:"name"`
+		IsoCty      string `json:"isocty"`
+		Gics        string `json:"gics"`
+		FloatMktCap string `json:"float"`
 	}
 
 	// BenchMarkProprety struct to store information of Benchmark
