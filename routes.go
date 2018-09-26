@@ -34,7 +34,7 @@ func initializeRoutes() {
 	})
 
 	router.GET("/OtherGraphs", func(c *gin.Context) {
-		stock := CalStock(a, b)
+		stock := CalGICS(a, b)
 		c.JSON(http.StatusOK, stock)
 	})
 

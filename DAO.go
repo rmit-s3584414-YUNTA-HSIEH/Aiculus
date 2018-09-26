@@ -210,8 +210,8 @@ func SetVMQScore() []StockVMQ {
 
 }
 
-// CalStock function to calculate sum&presentage of stock in order to display
-func CalStock(s []StockProprety, b []BenchMarkProprety) []GICSCalculation {
+// CalGICS function to calculate sum&presentage of stock in order to display
+func CalGICS(s []StockProprety, b []BenchMarkProprety) []GICSCalculation {
 	// Set variable
 	var (
 		gics []GICSCalculation
