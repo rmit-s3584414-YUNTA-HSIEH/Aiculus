@@ -16,6 +16,7 @@
         <div class="row">
             <div class="col">
                 <div>
+                    <p hidden>{{ .id }}</p>
                     <h1>GICS Details</h1>
                     <table id="table">
                     </table>
@@ -30,43 +31,26 @@
    google.charts.load('current', { 'packages': ['corechart'] });
 
     // Draw the bar chart when Charts is loaded.
-    google.charts.setOnLoadCallback(drawMultSeries);
+    google.charts.setOnLoadCallback(drawcolumnChart);
     // Draw the column chart when Charts is loaded.
-    google.charts.setOnLoadCallback(drawBasic);
+    google.charts.setOnLoadCallback(drawBarChart);
 
-    function drawMultSeries() {
-        var data = new google.visualization.DataTable();
-        data.addColumn('timeofday', 'Time of Day');
-        data.addColumn('number', 'Motivation Level');
-        data.addColumn('number', 'Energy Level');
-
-        data.addRows([
-            [{ v: [8, 0, 0], f: '8 am' }, 1, .25],
-            [{ v: [9, 0, 0], f: '9 am' }, 2, .5],
-            [{ v: [10, 0, 0], f: '10 am' }, 3, 1],
-            [{ v: [11, 0, 0], f: '11 am' }, 4, 2.25],
-            [{ v: [12, 0, 0], f: '12 pm' }, 5, 2.25],
-            [{ v: [13, 0, 0], f: '1 pm' }, 6, 3],
-            [{ v: [14, 0, 0], f: '2 pm' }, 7, 4],
-            [{ v: [15, 0, 0], f: '3 pm' }, 8, 5.25],
-            [{ v: [16, 0, 0], f: '4 pm' }, 9, 7.5],
-            [{ v: [17, 0, 0], f: '5 pm' }, 10, 10],
-        ]);
-
-        var options = {
-            title: 'Motivation and Energy Level Throughout the Day',
-            hAxis: {
-                title: 'Time of Day',
-                format: 'h:mm a',
-                viewWindow: {
-                    min: [7, 30, 0],
-                    max: [17, 30, 0]
+    function drawcolumnChart() {
+        $.ajax({
+            url: 'http://localhost:8080/OtherGraphs',
+            dataType: 'json',
+            success: function (jsonData) {
+                var data = new google.visualization.DataTable();
+                
+                data.addColumn('string','name');
+               // data.addColumn({ type: 'string', role: 'annotation' });
+                data.addColumn('number','presentage');
+                for(var i=0;i<11;i++){
+                    data.addRows([[jsonData[i].name, jsonData[i].presentage]]);
                 }
-            },
-            vAxis: {
-                title: 'Rating (scale of 1-10)'
-            }
-        };
+                var options = {
+                    title: 'GICS Sectors',
+                }
 
         var chart = new google.visualization.ColumnChart(
             document.getElementById('columnChart'));
@@ -74,7 +58,10 @@
         chart.draw(data, options);
     }
 
-    function drawBasic() {
+    });
+    }
+
+    function drawBarChart() {
 
             var data = google.visualization.arrayToDataTable([
                 ['City', '2010 Population',],
@@ -108,6 +95,7 @@
 
 <script>
     $('#table').bootstrapTable({
+        
         pagination:true,
         pageNumber:1,
         pageSize:5,
@@ -131,42 +119,7 @@
         alert(row.name+" "+row.code+" "+row.presentage);
         window.location.assign("http://localhost:8080/details/"+row.code);
         
-         alert(data.code);
-                $('#table2').bootstrapTable('load',data
-               
-                /*
-                [{
-                    url: 'http://localhost:8080/stock',
-                        columns: [{
-                        field: 'date',
-                        title: 'date'
-                    },
-                    {
-                        field: 'isin',
-                        title: 'isin'
-                    },
-                    {
-                        field: 'ric',
-                        title: 'ric'
-                    },
-                    {
-                        field: 'name',
-                        title: 'name'
-                    },
-                    {
-                        field: 'isocty',
-                        title: 'isocty'
-                    }, 
-                    {
-                        field: 'gics',
-                        title: 'gics'
-                    },]
-                    
-                }]
-                */
-                );
-
-
+         alert(data.code);               
     });
 </script>
 

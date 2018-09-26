@@ -5,6 +5,51 @@
 <!--page content-->
 <div id="page-content-wrapper">
     <div class="container-fluid">
-       <h1>details</h1>
+       <table id="table">
+
+       </div>
     </div>
 </div>
+
+<script>
+    var id = '{{ .id }}';
+    $('#table').bootstrapTable({
+
+        pagination: true,
+        pageNumber: 1,
+        pageSize: 12,
+        search: true,
+        sortable: true,
+        pageList: [20, 50, 100, 150],
+        url: 'http://localhost:8080/stock/' + id,
+        columns: [{
+            field: 'date',
+            title: 'Date'
+        },
+        {
+            field: 'isin',
+            title: 'ISIN'
+        },
+        {
+            field: 'ric',
+            title: 'RIC'
+        },
+        {
+            field: 'name',
+            title: 'Name'
+        },
+        {
+            field: 'isocty',
+            title: 'isocty'
+        },
+        {
+            field: 'gics',
+            title: 'GICS'
+        },
+        {
+            field: 'float',
+            title: 'float'
+        },
+        ]
+    });
+</script>

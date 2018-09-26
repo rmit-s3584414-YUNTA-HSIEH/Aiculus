@@ -7,6 +7,7 @@ import (
 	"log"
 	"math"
 	"strconv"
+	"strings"
 
 	"github.com/360EntSecGroup-Skylar/excelize"
 )
@@ -122,6 +123,24 @@ func SetStockData() []StockProprety {
 
 	return stock
 
+}
+
+//FindCics :get stock by gics
+func FindCics(id string) []StockProprety {
+	stock := SetStockData()
+	var theGicsStock []StockProprety
+
+	for i := 0; i < len(stock); i++ {
+		var stringID = stock[i].Gics
+		if strings.HasPrefix(stringID, id) {
+			theGicsStock = append(theGicsStock, stock[i])
+		}
+	}
+	if len(theGicsStock) == 0 {
+		return stock
+	}
+	fmt.Println(theGicsStock)
+	return theGicsStock
 }
 
 // SetBMData function use to read data from excel and return the benchmark struct

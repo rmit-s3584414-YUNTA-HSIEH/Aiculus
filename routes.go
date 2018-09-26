@@ -37,28 +37,29 @@ func initializeRoutes() {
 		c.JSON(http.StatusOK, stock)
 	})
 
-	router.GET("/stock", func(c *gin.Context) {
-		stock := SetStockData()
+	router.GET("/stock/:id", func(c *gin.Context) {
+		id := c.Param("id")
+		stock := FindCics(id)
 		c.JSON(http.StatusOK, stock)
 	})
 
 	router.GET("/bar/:id", func(c *gin.Context) {
-		/*	id := c.Param("id")*/
+		id := c.Param("id")
 		address := "bar.html"
 		c.HTML(
 			http.StatusOK,
 			address,
-			gin.H{},
+			gin.H{"id": id},
 		)
 	})
 
 	router.GET("/details/:id", func(c *gin.Context) {
-		/*id := c.Param("id")*/
+		id := c.Param("id")
 		address := "details.html"
 		c.HTML(
 			http.StatusOK,
 			address,
-			gin.H{},
+			gin.H{"id": id},
 		)
 	})
 
