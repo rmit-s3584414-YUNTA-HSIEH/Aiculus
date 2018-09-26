@@ -9,6 +9,7 @@ import (
 )
 
 var a = SetStockData()
+var b = SetBMData()
 
 func initializeRoutes() {
 
@@ -33,7 +34,7 @@ func initializeRoutes() {
 	})
 
 	router.GET("/OtherGraphs", func(c *gin.Context) {
-		stock := CalStock(a)
+		stock := CalStock(a, b)
 		c.JSON(http.StatusOK, stock)
 	})
 
