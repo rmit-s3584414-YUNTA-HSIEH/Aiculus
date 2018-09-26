@@ -46,7 +46,7 @@
                // data.addColumn({ type: 'string', role: 'annotation' });
                 data.addColumn('number','presentage');
                 for(var i=0;i<11;i++){
-                    data.addRows([[jsonData[i].name, jsonData[i].presentage]]);
+                    data.addRows([[jsonData[i].name, jsonData[i].spresentage]]);
                 }
                 var options = {
                     title: 'GICS Sectors',
@@ -110,13 +110,21 @@
             title:'Name'
         },
         {
-            field:'presentage',
-            title:'presentage'            
+            field:'spresentage',
+            title:'Portfolio'            
+        },
+        {
+            field: 'bpresentage',
+            title: 'Benchmark'
+        },
+        {
+            field: 'diff',
+            title: 'Difference'
         },]   
     });
 
     $('#table').on('click-row.bs.table', function(e, row, $element) {
-        alert(row.name+" "+row.code+" "+row.presentage);
+        alert(row.name+" "+row.code+" "+row.spresentage+" "+row.bpresentage+" "+ row.diff);
         window.location.assign("http://localhost:8080/details/"+row.code);
         
          alert(data.code);               
