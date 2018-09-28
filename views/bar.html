@@ -44,7 +44,8 @@
                 
                 data.addColumn('string','name');
                // data.addColumn({ type: 'string', role: 'annotation' });
-                data.addColumn('number','presentage');
+                data.addColumn('number','Profolio');
+                //data.addColumn('number', 'Benchmark');
                 for(var i=0;i<11;i++){
                     data.addRows([[jsonData[i].name, jsonData[i].spresentage]]);
                 }
@@ -109,16 +110,6 @@
             field:'name',
             title:'Name'
         },
-        /*
-        {
-            field: 'bvaule',
-            title: 'bvaule'
-        },
-        {
-            field: 'svaule',
-            title: 'svaule'
-        },
-        */
         {
             field:'spresentage',
             title:'Portfolio'            
@@ -134,7 +125,7 @@
     });
 
     $('#table').on('click-row.bs.table', function(e, row, $element) {
-        alert(row.name+" "+row.code+" "+row.spresentage+" "+row.bpresentage+" "+ row.diff);
+        //alert(row.name+" "+row.code+" "+row.spresentage+" "+row.bpresentage+" "+ row.diff);
         window.location.assign("http://localhost:8080/details/"+row.code);
         
          alert(data.code);               
