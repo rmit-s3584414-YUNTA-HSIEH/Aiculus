@@ -196,18 +196,24 @@ var firstData,secondData;
 
 //use ajax to get other 5 charts' data
 $.ajax({
-    url: 'http://localhost:8080/OtherGraphs',
+    url: 'http://localhost:8080/barChart1',
     dataType: 'json',
     success: function(data){
         //bar chart
     new Chart(document.getElementById("barChart1-1"), {
         type: 'bar',
         data: {
-            labels: [data[0].name, "ca", "ca", "ca", "ca", "ca", "ca", "ca", "ca", "ca","ca"],
+            labels: ["EN", "MA", "IN", "CD", "CS", "HC", "FIN", "IT", "Tele", "Uti","RE"],
             datasets: [{
-                labels: "index",
-                backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850","#493e8e","#49b6bb","#beb6bb","#beffbb","#beffff","#6d844e"],
+                label: "profolio",
+                backgroundColor:"#3e95cd",
                 data: [data[0].spresentage, data[1].spresentage, data[2].spresentage, data[3].spresentage, data[4].spresentage, data[5].spresentage, data[6].spresentage, data[7].spresentage, data[8].spresentage, data[9].spresentage, data[10].spresentage]
+            },
+            {
+                label: "Benchmark",
+                backgroundColor:"#8e5ea2",
+                data: [data[0].bpresentage, data[1].bpresentage, data[2].bpresentage, data[3].bpresentage, data[4].bpresentage, data[5].bpresentage, data[6].bpresentage, data[7].bpresentage, data[8].bpresentage, data[9].bpresentage, data[10].bpresentage]
+
             }]
         },
         options: {
@@ -225,7 +231,7 @@ $.ajax({
                 datasets: [{
                     labels: "index",
                     backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850", "#493e8e", "#49b6bb", "#beb6bb", "#beffbb", "#beffff", "#6d844e"],
-                    data: [data[0].bpresentage, data[1].bpresentage, data[2].bpresentage, data[3].bpresentage, data[4].bpresentage, data[5].bpresentage, data[6].bpresentage, data[7].bpresentage, data[8].bpresentage, data[9].bpresentage, data[10].bpresentage]
+                    data: [data[0].diff, data[1].diff, data[2].diff, data[3].diff, data[4].diff, data[5].diff, data[6].diff, data[7].diff, data[8].diff, data[9].diff, data[10].diff]
                 }]
             },
             options: {
@@ -236,7 +242,14 @@ $.ajax({
                 }
             }
         });
+    }
+});
 
+
+    $.ajax({
+        url: 'http://localhost:8080/barChart2',
+        dataType: 'json',
+        success: function (data) {
 //Doughnut chart
         new Chart(document.getElementById("barChart2-1"), {
             type: 'bar',
@@ -293,7 +306,15 @@ new Chart(document.getElementById("barChart2-2"), {
             }
         }
     });
-    
+        }
+    });
+
+
+    $.ajax({
+        url: 'http://localhost:8080/barChart3',
+        dataType: 'json',
+        success: function (data) {
+
 //radar chart
 new Chart(document.getElementById("barChart3-1"), {
         type: 'bar',

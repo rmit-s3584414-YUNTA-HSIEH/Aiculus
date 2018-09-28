@@ -37,7 +37,7 @@
 
     function drawcolumnChart() {
         $.ajax({
-            url: 'http://localhost:8080/OtherGraphs',
+            url: 'http://localhost:8080/barChart1',
             dataType: 'json',
             success: function (jsonData) {
                 var data = new google.visualization.DataTable();
@@ -100,7 +100,7 @@
         pageNumber:1,
         pageSize:5,
         pageList: [20, 50, 100, 150],
-        url: 'http://localhost:8080/OtherGraphs',
+        url: 'http://localhost:8080/barChart1',
         columns:[{
             field: 'code',
             title:'GICS code'
@@ -109,6 +109,16 @@
             field:'name',
             title:'Name'
         },
+        /*
+        {
+            field: 'bvaule',
+            title: 'bvaule'
+        },
+        {
+            field: 'svaule',
+            title: 'svaule'
+        },
+        */
         {
             field:'spresentage',
             title:'Portfolio'            

@@ -33,7 +33,15 @@ func initializeRoutes() {
 		c.JSON(http.StatusOK, stock)
 	})
 
-	router.GET("/OtherGraphs", func(c *gin.Context) {
+	router.GET("/barChart1", func(c *gin.Context) {
+		stock := CalGICS(a, b)
+		c.JSON(http.StatusOK, stock)
+	})
+	router.GET("/barChart2", func(c *gin.Context) {
+		stock := CalGICS(a, b)
+		c.JSON(http.StatusOK, stock)
+	})
+	router.GET("/barChart3", func(c *gin.Context) {
 		stock := CalGICS(a, b)
 		c.JSON(http.StatusOK, stock)
 	})
