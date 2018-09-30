@@ -12,7 +12,7 @@
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B"
             crossorigin="anonymous">
-        <link href="/css/sidebar.css" rel="stylesheet">
+        <link href="/css/sidebar1.css" rel="stylesheet">
         <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -34,10 +34,12 @@
     <div id="wrapper">     
         <!--sidebar-->
         <div  id="sidebar-wrapper">
-            <div class="sidebar-header">
-                <h3 class="font-weight-bold" style="text-align:center;">Aiculus</h3>
-            </div>
-            <a class="active" href="/">
+            <div id="iniSideBar">
+                <div class="sidebar-header">
+                    <h3 class="font-weight-bold" style="text-align:center;">Aiculus</h3>
+                </div>
+
+                <a class="active" href="/">
                 <i class="fa fa-home"></i> &nbsp;Home</a>
             <a href="#news">
                 <i class="fa fa-user-o"></i>&nbsp;Account</a>
@@ -48,9 +50,22 @@
             <a href="#about">
                 <i class="fa fa-map-signs"></i>&nbsp;About</a>
                 
-                <a href="#" id ="menu-toggle">
-                    <i class="fa fa-exchange"></i></a>
-                
+            </div>
+            
+             <div id="actedSideBar" style="display:none;">
+                    <a class="active" href="/"><i class="fa fa-home"></i></a>
+
+                    <a href="#news"><i class="fa fa-user-o"></i></a>
+
+                    <a href="https://www.google.com/"><i class="fa fa-newspaper-o"></i></a>
+
+                    <a href="#contact"><i class="fa fa-commenting-o"></i></a>
+
+                    <a href="#about"><i class="fa fa-map-signs"></i></a>
+             </div> 
+
+            <a href="#" id ="menu-toggle"><i class="fa fa-exchange"></i></a>
+        </div> 
         </div>
 
         <script>

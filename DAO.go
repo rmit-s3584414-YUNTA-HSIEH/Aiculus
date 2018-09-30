@@ -37,12 +37,12 @@ type (
 
 	// GICSCalculation struct to store all stock calculation tables
 	GICSCalculation struct {
-		Code        string `json:"code"`
-		Name        string `json:"name"`
+		Code        string  `json:"code"`
+		Name        string  `json:"name"`
 		SValue      float64 `json:"svaule"`
 		BValue      float64 `json:"bvaule"`
-		SPresentage float64 `json:"spresentage"`
-		BPresentage float64 `json:"bpresentage"`
+		SPresentage float64 `json:"spersentage"`
+		BPresentage float64 `json:"bpersentage"`
 		Diff        float64 `json:"diff"`
 	}
 
@@ -269,6 +269,8 @@ func CalGICS(s []StockProprety, b []BenchMarkProprety) []GICSCalculation {
 		gics[i].SetPresentage(totalSSum)
 		gics[i].SetBPresentage(totalBSum)
 	}
+
+	fmt.Println(gics)
 
 	return gics
 }

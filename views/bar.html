@@ -45,9 +45,9 @@
                 data.addColumn('string','name');
                // data.addColumn({ type: 'string', role: 'annotation' });
                 data.addColumn('number','Profolio');
-                //data.addColumn('number', 'Benchmark');
+                data.addColumn('number', 'Benchmark');
                 for(var i=0;i<11;i++){
-                    data.addRows([[jsonData[i].name, jsonData[i].spresentage]]);
+                    data.addRows([[jsonData[i].name, jsonData[i].spersentage,jsonData[i].bpersentage]]);
                 }
                 var options = {
                     title: 'GICS Sectors',
@@ -111,11 +111,11 @@
             title:'Name'
         },
         {
-            field:'spresentage',
+            field:'spersentage',
             title:'Portfolio'            
         },
         {
-            field: 'bpresentage',
+            field: 'bpersentage',
             title: 'Benchmark'
         },
         {

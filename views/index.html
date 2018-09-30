@@ -207,12 +207,12 @@ $.ajax({
             datasets: [{
                 label: "profolio",
                 backgroundColor:"#3e95cd",
-                data: [data[0].spresentage, data[1].spresentage, data[2].spresentage, data[3].spresentage, data[4].spresentage, data[5].spresentage, data[6].spresentage, data[7].spresentage, data[8].spresentage, data[9].spresentage, data[10].spresentage]
+                data: [data[0].spersentage, data[1].spersentage, data[2].spersentage, data[3].spersentage, data[4].spersentage, data[5].spersentage, data[6].spersentage, data[7].spersentage, data[8].spersentage, data[9].spersentage, data[10].spersentage]
             },
             {
                 label: "Benchmark",
                 backgroundColor:"#8e5ea2",
-                data: [data[0].bpresentage, data[1].bpresentage, data[2].bpresentage, data[3].bpresentage, data[4].bpresentage, data[5].bpresentage, data[6].bpresentage, data[7].bpresentage, data[8].bpresentage, data[9].bpresentage, data[10].bpresentage]
+                data: [data[0].bpersentage, data[1].bpersentage, data[2].bpersentage, data[3].bpersentage, data[4].bpersentage, data[5].bpersentage, data[6].bpersentage, data[7].bpersentage, data[8].bpersentage, data[9].bpersentage, data[10].bpersentage]
 
             }]
         },
@@ -227,7 +227,7 @@ $.ajax({
     new Chart(document.getElementById("barChart1-2"), {
             type: 'bar',
             data: {
-                labels: ["ca", "ca", "ca", "ca", "ca", "ca", "ca", "ca", "ca", "ca", "ca"],
+                labels: ["EN", "MA", "IN", "CD", "CS", "HC", "FIN", "IT", "Tele", "Uti", "RE"],
                 datasets: [{
                     label: "%",
                     backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850", "#493e8e", "#49b6bb", "#beb6bb", "#beffbb", "#beffff", "#6d844e"],
