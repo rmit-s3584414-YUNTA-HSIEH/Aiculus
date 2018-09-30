@@ -45,17 +45,13 @@ padding-left: 130px;
 
 /* Change with of sidebar from 130px to 80px */
 #wrapper.menuDisplayed #sidebar-wrapper {
-    width: 80px;
+    width: 60px;
 }
 
-#wrapper.menuDisplayed #sidebar-wrapper #iniSideBar{
-    width: 80px;
-    display: hidden;
-}
 
 /* Since we added left padding, we need to shrink the width by 80px */
 #wrapper.menuDisplayed #page-content-wrapper {
-    padding-left: 80px;
+    padding-left: 70px;
 }
 
 .carousel-control-prev-icon {

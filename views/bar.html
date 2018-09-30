@@ -63,18 +63,18 @@
     }
 
     function drawBarChart() {
-
-            var data = google.visualization.arrayToDataTable([
-                ['City', '2010 Population',],
-                ['New York City, NY', 8175000],
-                ['Los Angeles, CA', 3792000],
-                ['Chicago, IL', 2695000],
-                ['Houston, TX', 2099000],
-                ['Philadelphia, PA', 1526000]
-            ]);
-
+        $.ajax({
+            url: 'http://localhost:8080/barChart1',
+            dataType: 'json',
+            success: function (jsonData) {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'name');
+        data.addColumn('number', 'persentage');
+        for (var i = 0; i < 11; i++) {
+            data.addRows([[jsonData[i].name, jsonData[i].diff]]);
+        }
             var options = {
-                title: 'Population of Largest U.S. Cities',
+                title: 'GICS Sector Active Weight',
                 chartArea: { width: '50%' },
                 hAxis: {
                     title: 'Total Population',
@@ -88,6 +88,8 @@
             var chart = new google.visualization.BarChart(document.getElementById('barChart'));
 
             chart.draw(data, options);
+            }
+        });
         }
 
 </script>
@@ -112,15 +114,15 @@
         },
         {
             field:'spersentage',
-            title:'Portfolio'            
+            title:'Portfolio(%)'            
         },
         {
             field: 'bpersentage',
-            title: 'Benchmark'
+            title: 'Benchmark(%)'
         },
         {
             field: 'diff',
-            title: 'Difference'
+            title: 'Difference(%)'
         },]   
     });
 
