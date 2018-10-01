@@ -15,12 +15,13 @@
         </div>
         <div class="row">
             <div class="col">
-                <div>
                     <p hidden>{{ .id }}</p>
                     <h1>GICS Details</h1>
-                    <table id="table">
-                    </table>
-                </div>  
+                    <div id="scrollable">
+                        <table id="table">
+                        </table>  
+                    </div>
+                    
             </div>           
         </div>
     </div>
@@ -99,10 +100,7 @@
 <script>
     $('#table').bootstrapTable({
         
-        pagination:true,
-        pageNumber:1,
-        pageSize:5,
-        pageList: [20, 50, 100, 150],
+ 
         url: 'http://localhost:8080/barChart1',
         columns:[{
             field: 'code',
