@@ -48,7 +48,6 @@ type (
 
 	// RegionCalculation struct to store all benchmark calculation tables
 	RegionCalculation struct {
-<<<<<<< HEAD
 		Code        string  `json:"code"`
 		Name        string  `json:"name"`
 		SValue      float64 `json:"svalue"`
@@ -56,15 +55,6 @@ type (
 		SPercentage float64 `json:"spercentage"`
 		BPercentage float64 `json:"bpercentage"`
 		Diff        float64 `json:"diff"`
-=======
-		Code        string
-		Name        string
-		SValue      float64
-		BValue      float64
-		SPercentage float64
-		BPercentage float64
-		Diff        float64
->>>>>>> 5f5ee0910829b29967c39c1efe15c1b69df1a2c1
 	}
 
 	// StockVMQ struct to store information of VMQ score
