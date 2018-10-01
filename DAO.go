@@ -1,19 +1,28 @@
-//DAO.go
-
 package main
 
 import (
 	"fmt"
+	"github.com/360EntSecGroup-Skylar/excelize"
 	"log"
 	"math"
 	"strconv"
 	"strings"
-
-	"github.com/360EntSecGroup-Skylar/excelize"
 )
 
-// Type list
+// Type lists
 type (
+
+	//StockCountry struct to store information of data
+	CountryCalculation struct {
+		Code        string  `json:"code"`
+		Name        string  `json:"name"`
+		SValue      float64 `json:"svalue"`
+		BValue      float64 `json:"bvalue"`
+		SPersentage float64 `json:"spersentage"`
+		BPersentage float64 `json:"bpersentage"`
+		Diff        float64 `json:"diff"`
+	}
+
 	// StockProprety struct to store information of data
 	StockProprety struct {
 		Date        string `json:"date"`
@@ -41,8 +50,8 @@ type (
 		Name        string  `json:"name"`
 		SValue      float64 `json:"svalue"`
 		BValue      float64 `json:"bvalue"`
-		SPercentage float64 `json:"spercentage"`
-		BPercentage float64 `json:"bpercentage"`
+		SPersentage float64 `json:"spersentage"`
+		BPersentage float64 `json:"bpersentage"`
 		Diff        float64 `json:"diff"`
 	}
 
@@ -52,8 +61,8 @@ type (
 		Name        string
 		SValue      float64
 		BValue      float64
-		SPercentage float64
-		BPercentage float64
+		SPersentage float64
+		BPersentage float64
 		Diff        float64
 	}
 
@@ -210,7 +219,7 @@ func SetVMQScore() []StockVMQ {
 
 }
 
-// CalGICS function to calculate sum&presentage of stock in order to display
+// CalGICS function to calculate sum&Persentage of stock in order to display
 func CalGICS(s []StockProprety, b []BenchMarkProprety) []GICSCalculation {
 	// Set variable
 	var (
@@ -229,8 +238,8 @@ func CalGICS(s []StockProprety, b []BenchMarkProprety) []GICSCalculation {
 			Name:        stockGICSName[i],
 			SValue:      0,
 			BValue:      0,
-			SPercentage: 0,
-			BPercentage: 0,
+			SPersentage: 0,
+			BPersentage: 0,
 			Diff:        0,
 		})
 	}
@@ -264,18 +273,17 @@ func CalGICS(s []StockProprety, b []BenchMarkProprety) []GICSCalculation {
 		totalBSum += number
 	}
 
-	// Set presentage of each item
+	// Set Persentage of each item
 	for i := 0; i < (len(stockGICSCode)); i++ {
-		gics[i].SetPresentage(totalSSum)
-		gics[i].SetBPresentage(totalBSum)
+		gics[i].SetPersentage(totalSSum)
+		gics[i].SetBPersentage(totalBSum)
 	}
 
 	fmt.Println(gics)
-
 	return gics
 }
 
-// CalRegion function to calculate sum&presentage of benchmark in order to display
+// CalRegion function to calculate sum&Persentage of benchmark in order to display
 func CalRegion(s []StockProprety, b []BenchMarkProprety) []RegionCalculation {
 	// Set variable
 	var (
@@ -296,8 +304,8 @@ func CalRegion(s []StockProprety, b []BenchMarkProprety) []RegionCalculation {
 			Name:        benchRegionName[i],
 			SValue:      0,
 			BValue:      0,
-			SPercentage: 0,
-			BPercentage: 0,
+			SPersentage: 0,
+			BPersentage: 0,
 			Diff:        0,
 		})
 	}
@@ -334,12 +342,13 @@ func CalRegion(s []StockProprety, b []BenchMarkProprety) []RegionCalculation {
 		totalBSum += number
 	}
 
-	// Set presentage of each item
+	// Set Persentage of each item
 	for i := 0; i < len(benchRegionCode); i++ {
-		regions[i].SetPresentage(totalSSum)
-		regions[i].SetBPresentage(totalBSum)
+		regions[i].SetPersentage(totalSSum)
+		regions[i].SetBPersentage(totalBSum)
 	}
 
+	fmt.Println(regions)
 	return regions
 }
 
@@ -416,17 +425,17 @@ func (c *GICSCalculation) SetBValue(s string, a float64) {
 	}
 }
 
-// SetPresentage function use to set presentage of each data struct
-func (c *GICSCalculation) SetPresentage(a float64) {
-	c.SPercentage = (c.SValue / a) * 100
-	c.SPercentage = math.Round(c.SPercentage*100) / 100
+// SetPersentage function use to set Persentage of each data struct
+func (c *GICSCalculation) SetPersentage(a float64) {
+	c.SPersentage = (c.SValue / a) * 100
+	c.SPersentage = math.Round(c.SPersentage*100) / 100
 }
 
-// SetBPresentage function to
-func (c *GICSCalculation) SetBPresentage(a float64) {
-	c.BPercentage = (c.BValue / a) * 100
-	c.BPercentage = math.Round(c.BPercentage*100) / 100
-	c.Diff = math.Round((c.SPercentage-c.BPercentage)*1000) / 1000
+// SetBPersentage function to
+func (c *GICSCalculation) SetBPersentage(a float64) {
+	c.BPersentage = (c.BValue / a) * 100
+	c.BPersentage = math.Round(c.BPersentage*100) / 100
+	c.Diff = math.Round((c.SPersentage-c.BPersentage)*1000) / 1000
 }
 
 // GICSCalculation pointer functions end
@@ -447,17 +456,17 @@ func (c *RegionCalculation) SetBValue(s string, a float64) {
 	}
 }
 
-// SetPresentage function use to set presentage of each data struct
-func (c *RegionCalculation) SetPresentage(a float64) {
-	c.SPercentage = (c.SValue / a) * 100
-	c.SPercentage = math.Round(c.SPercentage*100) / 100
+// SetPersentage function use to set Persentage of each data struct
+func (c *RegionCalculation) SetPersentage(a float64) {
+	c.SPersentage = (c.SValue / a) * 100
+	c.SPersentage = math.Round(c.SPersentage*100) / 100
 }
 
-// SetBPresentage function use to set presentage of each data struct
-func (c *RegionCalculation) SetBPresentage(a float64) {
-	c.BPercentage = (c.BValue / a) * 100
-	c.BPercentage = math.Round(c.BPercentage*100) / 100
-	c.Diff = math.Round((c.SPercentage-c.BPercentage)*1000) / 1000
+// SetBPersentage function use to set Persentage of each data struct
+func (c *RegionCalculation) SetBPersentage(a float64) {
+	c.BPersentage = (c.BValue / a) * 100
+	c.BPersentage = math.Round(c.BPersentage*100) / 100
+	c.Diff = math.Round((c.SPersentage-c.BPersentage)*1000) / 1000
 }
 
 // RegionCalculation pointer functions end
@@ -471,4 +480,184 @@ func StringToFloat(s string) float64 {
 	}
 	n = math.Round(n*1000) / 1000
 	return n
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// BuildCountryMap function to build the Country map, which key is Country and values is code
+func BuildCountryList() ([]string, []string) {
+
+	a := []string{"US", "SG", "SE", "PT", "NZ",
+		"NO", "NL", "MX", "KR", "JP",
+		"IT", "IL", "IE", "HK", "GB",
+		"FR", "FI", "ES", "DK", "DE",
+		"CN", "CH", "CA", "BE", "AU", "AT"}
+	b := []string{"United States", "Singapore", "Sweden", "Portugal", "New Zealand",
+		"Norway", "Netherlands", "Mexico", "South Korea", "Japan",
+		"Italy", "Israel", "Ireland", "Hong Kong", "Great Britain",
+		"France", "Finland", "Spain", "Denmark", "Germany",
+		"China", "Switzerland", "Canada", "Belgium", "Australia", "Austria"}
+
+	return a, b
+
+}
+
+//Cal County data
+func CalCountry(s []StockProprety, b []BenchMarkProprety) []CountryCalculation {
+	// Set variable
+	var (
+		countrys []CountryCalculation
+		// Total sum of float market values
+		totalSSum float64
+		totalBSum float64
+	)
+
+	// Get Country map
+	countryMap := BuildCountryMap()
+
+	// Set Region struct
+	stockCountryCode, stockCountryName := BuildCountryList()
+
+	for i := 0; i < len(stockCountryName); i++ {
+		countrys = append(countrys, CountryCalculation{
+			Code:        stockCountryCode[i],
+			Name:        stockCountryName[i],
+			SValue:      0,
+			BValue:      0,
+			SPersentage: 0,
+			BPersentage: 0,
+			Diff:        0,
+		})
+	}
+
+	// Get every FloatMktCap from struct, convert them to float64, and sum up
+	for i := range s {
+
+		number := StringToFloat(s[i].FloatMktCap)
+		country := s[i].IsoCty
+		countryCode := CheckCountry(country, countryMap)
+
+		// Calculate value base by GICS
+		for j := 0; j < len(stockCountryCode); j++ {
+			countrys[j].SetSValue(countryCode, number)
+		}
+
+		// Always add to totalsum
+		totalSSum += number
+	}
+
+	// Get every FloatMktCap from struct, convert them to float64, and sum up
+	for i := range b {
+
+		number := StringToFloat(b[i].IDXMktCap)
+		country := b[i].IsoCty
+		countryCode := CheckCountry(country, countryMap)
+
+		// Calculate value base by Region
+		for k := 0; k < len(stockCountryCode); k++ {
+			countrys[k].SetBValue(countryCode, number)
+		}
+
+		// Always add to totalsum
+		totalBSum += number
+	}
+
+	// Set Persentage of each item
+	for i := 0; i < (len(stockCountryCode)); i++ {
+		countrys[i].SetPersentage(totalSSum)
+		countrys[i].SetBPersentage(totalBSum)
+	}
+
+	/*// Rank all the data
+	for z:=0 ; z<=len(countrys) ; z++{
+		num1 := countrys[z].SPersentage + countrys[z].BPersentage
+		for y:=z+1 ; y<=len(countrys) ; y++{
+			num2 := countrys[y].SPersentage + countrys[y].BPersentage
+			if num1 < num2 {
+				countrys[z],countrys[y]=countrys[y],countrys[z]
+			}
+		}
+	}*/
+
+	fmt.Println(countrys)
+	return countrys
+}
+
+//Check the Country
+func CheckCountry(s string, cm map[string]([]string)) string {
+
+	// Check if value exist in map
+	for key, value := range cm {
+		for i := range value {
+			if value[i] == s {
+				return key
+			}
+		}
+	}
+
+	return ""
+}
+
+//build all the country
+func BuildCountryMap() map[string]([]string) {
+
+	// Make map
+	var cm map[string]([]string)
+	cm = make(map[string]([]string))
+
+	// Current country code we are using
+	cm["US"] = []string{"US"}
+	cm["SG"] = []string{"SG"}
+	cm["SE"] = []string{"SE"}
+	cm["PT"] = []string{"PT"}
+	cm["NZ"] = []string{"NZ"}
+	cm["NO"] = []string{"NO"}
+	cm["NL"] = []string{"NL"}
+	cm["MX"] = []string{"MX"}
+	cm["KR"] = []string{"KR"}
+	cm["JP"] = []string{"JP"}
+	cm["IT"] = []string{"IT"}
+	cm["IL"] = []string{"IL"}
+	cm["IE"] = []string{"IE"}
+	cm["HK"] = []string{"HK"}
+	cm["GB"] = []string{"GB"}
+	cm["FR"] = []string{"FR"}
+	cm["FI"] = []string{"FI"}
+	cm["ES"] = []string{"ES"}
+	cm["DK"] = []string{"DK"}
+	cm["DE"] = []string{"DE"}
+	cm["CN"] = []string{"CN"}
+	cm["CH"] = []string{"CH"}
+	cm["CA"] = []string{"CA"}
+	cm["BE"] = []string{"BE"}
+	cm["AU"] = []string{"AU"}
+	cm["AT"] = []string{"AT"}
+
+	return cm
+}
+
+// SetValue function to add value by getting correct code
+func (c *CountryCalculation) SetSValue(s string, a float64) {
+	if s == c.Code {
+		c.SValue = c.SValue + a
+	}
+}
+
+// SetBValue function to add value by getting correct code
+func (c *CountryCalculation) SetBValue(s string, a float64) {
+	if s == c.Code {
+		c.BValue = c.BValue + a
+	}
+}
+
+// SetPersentage function use to set Persentage of each data struct
+func (c *CountryCalculation) SetPersentage(a float64) {
+	c.SPersentage = (c.SValue / a) * 100
+	c.SPersentage = math.Round(c.SPersentage*100) / 100
+}
+
+// SetBPersentage function use to set Persentage of each data struct
+func (c *CountryCalculation) SetBPersentage(a float64) {
+	c.BPersentage = (c.BValue / a) * 100
+	c.BPersentage = math.Round(c.BPersentage*100) / 100
+	c.Diff = math.Round((c.SPersentage-c.BPersentage)*1000) / 1000
 }
