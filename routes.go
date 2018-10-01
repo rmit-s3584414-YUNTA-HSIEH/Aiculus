@@ -62,6 +62,26 @@ func initializeRoutes() {
 		)
 	})
 
+	router.GET("/bar2/:id", func(c *gin.Context) {
+		id := c.Param("id")
+		address := "bar2.html"
+		c.HTML(
+			http.StatusOK,
+			address,
+			gin.H{"id": id},
+		)
+	})
+
+	router.GET("/bar3/:id", func(c *gin.Context) {
+		id := c.Param("id")
+		address := "bar3.html"
+		c.HTML(
+			http.StatusOK,
+			address,
+			gin.H{"id": id},
+		)
+	})
+
 	router.GET("/details/:id", func(c *gin.Context) {
 		id := c.Param("id")
 		address := "details.html"

@@ -39,22 +39,22 @@ type (
 	GICSCalculation struct {
 		Code        string  `json:"code"`
 		Name        string  `json:"name"`
-		SValue      float64 `json:"svaule"`
-		BValue      float64 `json:"bvaule"`
-		SPresentage float64 `json:"spersentage"`
-		BPresentage float64 `json:"bpersentage"`
+		SValue      float64 `json:"svalue"`
+		BValue      float64 `json:"bvalue"`
+		SPercentage float64 `json:"spercentage"`
+		BPercentage float64 `json:"bpercentage"`
 		Diff        float64 `json:"diff"`
 	}
 
 	// RegionCalculation struct to store all benchmark calculation tables
 	RegionCalculation struct {
-		Code        string
-		Name        string
-		SValue      float64
-		BValue      float64
-		SPresentage float64
-		BPresentage float64
-		Diff        float64
+		Code        string  `json:"code"`
+		Name        string  `json:"name"`
+		SValue      float64 `json:"svalue"`
+		BValue      float64 `json:"bvalue"`
+		SPercentage float64 `json:"spercentage"`
+		BPercentage float64 `json:"bpercentage"`
+		Diff        float64 `json:"diff"`
 	}
 
 	// StockVMQ struct to store information of VMQ score
@@ -229,8 +229,8 @@ func CalGICS(s []StockProprety, b []BenchMarkProprety) []GICSCalculation {
 			Name:        stockGICSName[i],
 			SValue:      0,
 			BValue:      0,
-			SPresentage: 0,
-			BPresentage: 0,
+			SPercentage: 0,
+			BPercentage: 0,
 			Diff:        0,
 		})
 	}
@@ -296,8 +296,8 @@ func CalRegion(s []StockProprety, b []BenchMarkProprety) []RegionCalculation {
 			Name:        benchRegionName[i],
 			SValue:      0,
 			BValue:      0,
-			SPresentage: 0,
-			BPresentage: 0,
+			SPercentage: 0,
+			BPercentage: 0,
 			Diff:        0,
 		})
 	}
@@ -418,15 +418,15 @@ func (c *GICSCalculation) SetBValue(s string, a float64) {
 
 // SetPresentage function use to set presentage of each data struct
 func (c *GICSCalculation) SetPresentage(a float64) {
-	c.SPresentage = (c.SValue / a) * 100
-	c.SPresentage = math.Round(c.SPresentage*100) / 100
+	c.SPercentage = (c.SValue / a) * 100
+	c.SPercentage = math.Round(c.SPercentage*100) / 100
 }
 
 // SetBPresentage function to
 func (c *GICSCalculation) SetBPresentage(a float64) {
-	c.BPresentage = (c.BValue / a) * 100
-	c.BPresentage = math.Round(c.BPresentage*100) / 100
-	c.Diff = math.Round((c.SPresentage-c.BPresentage)*1000) / 1000
+	c.BPercentage = (c.BValue / a) * 100
+	c.BPercentage = math.Round(c.BPercentage*100) / 100
+	c.Diff = math.Round((c.SPercentage-c.BPercentage)*1000) / 1000
 }
 
 // GICSCalculation pointer functions end
@@ -449,15 +449,15 @@ func (c *RegionCalculation) SetBValue(s string, a float64) {
 
 // SetPresentage function use to set presentage of each data struct
 func (c *RegionCalculation) SetPresentage(a float64) {
-	c.SPresentage = (c.SValue / a) * 100
-	c.SPresentage = math.Round(c.SPresentage*100) / 100
+	c.SPercentage = (c.SValue / a) * 100
+	c.SPercentage = math.Round(c.SPercentage*100) / 100
 }
 
 // SetBPresentage function use to set presentage of each data struct
 func (c *RegionCalculation) SetBPresentage(a float64) {
-	c.BPresentage = (c.BValue / a) * 100
-	c.BPresentage = math.Round(c.BPresentage*100) / 100
-	c.Diff = math.Round((c.SPresentage-c.BPresentage)*1000) / 1000
+	c.BPercentage = (c.BValue / a) * 100
+	c.BPercentage = math.Round(c.BPercentage*100) / 100
+	c.Diff = math.Round((c.SPercentage-c.BPercentage)*1000) / 1000
 }
 
 // RegionCalculation pointer functions end

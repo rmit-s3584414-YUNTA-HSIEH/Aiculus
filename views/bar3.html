@@ -15,13 +15,12 @@
         </div>
         <div class="row">
             <div class="col">
+                <div>
                     <p hidden>{{ .id }}</p>
                     <h1>GICS Details</h1>
-                    <div id="scrollable">
-                        <table id="table">
-                        </table>  
-                    </div>
-                    
+                    <table id="table">
+                    </table>
+                </div>  
             </div>           
         </div>
     </div>
@@ -38,7 +37,7 @@
 
     function drawcolumnChart() {
         $.ajax({
-            url: 'http://localhost:8080/barChart1',
+            url: 'http://localhost:8080/barChart3',
             dataType: 'json',
             success: function (jsonData) {
                 var data = new google.visualization.DataTable();
@@ -47,11 +46,11 @@
                // data.addColumn({ type: 'string', role: 'annotation' });
                 data.addColumn('number','Profolio');
                 data.addColumn('number', 'Benchmark');
-                for(var i=0;i<11;i++){
-                    data.addRows([[jsonData[i].name, jsonData[i].spercentage,jsonData[i].bpercentage]]);
+                for(var i=0;i<24;i++){
+                    data.addRows([[jsonData[i].name, jsonData[i].spersentage,jsonData[i].bpersentage]]);
                 }
                 var options = {
-                    title: 'GICS Sectors',
+                    title: 'Country Weights',
                 }
 
         var chart = new google.visualization.ColumnChart(
@@ -65,17 +64,17 @@
 
     function drawBarChart() {
         $.ajax({
-            url: 'http://localhost:8080/barChart1',
+            url: 'http://localhost:8080/barChart3',
             dataType: 'json',
             success: function (jsonData) {
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'name');
         data.addColumn('number', 'percentage');
-        for (var i = 0; i < 11; i++) {
+        for (var i = 0; i < 24; i++) {
             data.addRows([[jsonData[i].name, jsonData[i].diff]]);
         }
             var options = {
-                title: 'GICS Sector Active Weight',
+                title: 'Country Active Weights',
                 chartArea: { width: '50%' },
                 hAxis: {
                     title: 'Total Population',
@@ -100,11 +99,14 @@
 <script>
     $('#table').bootstrapTable({
         
- 
-        url: 'http://localhost:8080/barChart1',
+        pagination:true,
+        pageNumber:1,
+        pageSize:5,
+        pageList: [20, 50, 100, 150],
+        url: 'http://localhost:8080/barChart3',
         columns:[{
             field: 'code',
-            title:'GICS code'
+            title:'Country code'
         },
         {
             field:'name',
@@ -125,7 +127,7 @@
     });
 
     $('#table').on('click-row.bs.table', function(e, row, $element) {
-        //alert(row.name+" "+row.code+" "+row.spresentage+" "+row.bpresentage+" "+ row.diff);
+        //alert(row.name+" "+row.code+" "+row.spercentage+" "+row.bpercentage+" "+ row.diff);
         window.location.assign("http://localhost:8080/details/"+row.code);
         
          alert(data.code);               
