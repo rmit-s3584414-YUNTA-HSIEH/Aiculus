@@ -39,10 +39,10 @@ type (
 	GICSCalculation struct {
 		Code        string  `json:"code"`
 		Name        string  `json:"name"`
-		SValue      float64 `json:"svaule"`
-		BValue      float64 `json:"bvaule"`
-		SPresentage float64 `json:"spersentage"`
-		BPresentage float64 `json:"bpersentage"`
+		SValue      float64 `json:"svalue"`
+		BValue      float64 `json:"bvalue"`
+		SPresentage float64 `json:"spercentage"`
+		BPresentage float64 `json:"bpercentage"`
 		Diff        float64 `json:"diff"`
 	}
 

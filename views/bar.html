@@ -47,7 +47,7 @@
                 data.addColumn('number','Profolio');
                 data.addColumn('number', 'Benchmark');
                 for(var i=0;i<11;i++){
-                    data.addRows([[jsonData[i].name, jsonData[i].spersentage,jsonData[i].bpersentage]]);
+                    data.addRows([[jsonData[i].name, jsonData[i].spercentage,jsonData[i].bpercentage]]);
                 }
                 var options = {
                     title: 'GICS Sectors',
@@ -69,7 +69,7 @@
             success: function (jsonData) {
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'name');
-        data.addColumn('number', 'persentage');
+        data.addColumn('number', 'percentage');
         for (var i = 0; i < 11; i++) {
             data.addRows([[jsonData[i].name, jsonData[i].diff]]);
         }
@@ -113,11 +113,11 @@
             title:'Name'
         },
         {
-            field:'spersentage',
+            field:'spercentage',
             title:'Portfolio(%)'            
         },
         {
-            field: 'bpersentage',
+            field: 'bpercentage',
             title: 'Benchmark(%)'
         },
         {
