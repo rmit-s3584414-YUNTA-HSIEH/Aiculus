@@ -16,11 +16,10 @@
         <div class="row">
             <div class="col">
                     <p hidden>{{ .id }}</p>
-                    <h1>GICS Details</h1>
-                    <div id="scrollable">
+                    <h1>GICS Details</h1>                   
                         <table id="table">
                         </table>  
-                    </div>
+                    
                     
             </div>           
         </div>
@@ -52,6 +51,7 @@
                 }
                 var options = {
                     title: 'GICS Sectors',
+                    legend: { position: 'top' }
                 }
 
         var chart = new google.visualization.ColumnChart(
@@ -99,8 +99,7 @@
 
 <script>
     $('#table').bootstrapTable({
-        
- 
+        height: 300 ,
         url: 'http://localhost:8080/barChart1',
         columns:[{
             field: 'code',

@@ -12,6 +12,7 @@ var a = SetStockData()
 var b = SetBMData()
 
 func initializeRoutes() {
+	//pages
 
 	// Handle the index route
 	router.GET("/", func(c *gin.Context) {
@@ -27,10 +28,38 @@ func initializeRoutes() {
 		)
 	})
 
+	router.GET("/bar/:id", func(c *gin.Context) {
+		id := c.Param("id")
+		address := "bar" + id + ".html"
+
+		c.HTML(
+			http.StatusOK,
+			address,
+			gin.H{"id": id},
+		)
+	})
+
+	router.GET("/details/:id", func(c *gin.Context) {
+		id := c.Param("id")
+		address := "details.html"
+		c.HTML(
+			http.StatusOK,
+			address,
+			gin.H{"id": id},
+		)
+	})
+
+	//json api
 	router.GET("/line", func(c *gin.Context) {
 
 		stock := a
 		c.JSON(http.StatusOK, stock)
+	})
+
+	router.GET("/VMQ", func(c *gin.Context) {
+
+		VMQ := SetVMQScore()
+		c.JSON(http.StatusOK, VMQ)
 	})
 
 	router.GET("/barChart1", func(c *gin.Context) {
@@ -50,46 +79,6 @@ func initializeRoutes() {
 		id := c.Param("id")
 		stock := FindCics(id)
 		c.JSON(http.StatusOK, stock)
-	})
-
-	router.GET("/bar/:id", func(c *gin.Context) {
-		id := c.Param("id")
-		address := "bar.html"
-		c.HTML(
-			http.StatusOK,
-			address,
-			gin.H{"id": id},
-		)
-	})
-
-	router.GET("/bar2/:id", func(c *gin.Context) {
-		id := c.Param("id")
-		address := "bar2.html"
-		c.HTML(
-			http.StatusOK,
-			address,
-			gin.H{"id": id},
-		)
-	})
-
-	router.GET("/bar3/:id", func(c *gin.Context) {
-		id := c.Param("id")
-		address := "bar3.html"
-		c.HTML(
-			http.StatusOK,
-			address,
-			gin.H{"id": id},
-		)
-	})
-
-	router.GET("/details/:id", func(c *gin.Context) {
-		id := c.Param("id")
-		address := "details.html"
-		c.HTML(
-			http.StatusOK,
-			address,
-			gin.H{"id": id},
-		)
 	})
 
 }

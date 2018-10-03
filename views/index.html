@@ -34,7 +34,7 @@
                 </a>
             </div>
             <div class="col-4" id="col">
-                <a href="/bar2/1">
+                <a href="/bar/2">
                 <div class="card">
                     <div class="card-body">
                         <div id="carouselExampleControls2" class="carousel slide" data-ride="carousel" data-interval="false">
@@ -60,7 +60,7 @@
                 </a>
             </div>
             <div class="col-4" id="col">
-                <a href="/bar3/1">
+                <a href="/bar/3">
                  <div class="card">
                     <div class="card-body">
                         <div id="carouselExampleControls3" class="carousel slide" data-ride="carousel" data-interval="false">
@@ -89,13 +89,14 @@
         </div>
         <div class="row">
             <div class="col-4" id="col">
-                <a href="#">
-                <div class="card">
-                    <div class="card-body">
-                        <canvas id="bar-chart-horizontal"></canvas>
+                    <div class="card">
+                        <div class="card-body">
+                            <table id="table">
+                            </table>
+                        </div>
                     </div>
-                </div>
-                </a>
+            </div>
+            <div class="col-4" id="col">
                 <a href="#">
                 <div class="card">
                     <div class="card-body">
@@ -103,23 +104,30 @@
                     </div>
                 </div>   
                 </a>
-
             </div>
-            <div class="col-8" id="col">
+            <div class="col-4" id="col">
+                <a href="#">
                 <div class="card">
-                    <div class="card-body" >
-                        <canvas id="myChart"></canvas>
-                        <div class="text-center">
-                            <div class="btn-group" role="group" aria-label="time" style="padding:10px;">
-                                <button type="button" class="btn btn-outline-dark" id="daily">&nbsp;&nbsp;Daily&nbsp;&nbsp; </button>
-                                <button type="button" class="btn btn-outline-dark" id="monthly">Monthly</button>
-                                <button type="button" class="btn btn-outline-dark" id="annually">Annually</button> 
-                            </div>              
-                        </div>
+                    <div class="card-body">
+                        <canvas id="bar-chart-horizontal"></canvas>
                     </div>
-                </div>                  
+                </div>
+                </a>
             </div>           
+   
         </div>
+        <div class="row" >       
+            <div class="col">
+                <div id="myChart"></div>
+                    <div class="text-center">
+                        <div class="btn-group" role="group" aria-label="time" style="padding:10px;">
+                            <button type="button" class="btn btn-outline-dark" id="daily">&nbsp;&nbsp;Daily&nbsp;&nbsp; </button>
+                            <button type="button" class="btn btn-outline-dark" id="monthly">Monthly</button>
+                            <button type="button" class="btn btn-outline-dark" id="annually">Annually</button> 
+                        </div>
+                    </div>                              
+                </div>
+            </div>                   
     </div>
     </div>
         
@@ -133,6 +141,37 @@
     });     
 </script>
 -->
+<!--VMQ table-->
+<script>
+
+           $('#table').bootstrapTable({
+                height: 200,
+                url: 'http://localhost:8080/VMQ',
+                columns: [{
+                    field: 'name',
+                    title: 'Name'
+                },
+                {
+                    field: 'v',
+                    title: 'V'
+                },
+                {
+                    field: 'm',
+                    title: 'M'
+                },
+                {
+                    field: 'q',
+                    title: 'Q'
+                },
+                {
+                    field: 'vmq',
+                    title: 'VMQ'
+                },]
+            });
+
+
+</script>
+
 <script>
     //get data from go api
     $("#daily").click(function(){
@@ -149,47 +188,28 @@
 
 <script>
 //line chart
-    $.ajax({
-            url:'http://localhost:8080/line',
-            dataType:'json',
-            success: function(data){
-var firstData,secondData;
+    google.charts.load('current', { 'packages': ['corechart'] });
+    google.charts.setOnLoadCallback(drawChart);
 
-    var ctx = document.getElementById('myChart').getContext('2d');
-    firstData = {
-        label: "Deposit",
-        backgroundColor:'transparent',
-        borderColor: 'rgb(255,102,106)',
-        pointBackgroundColor:'rgb(255,102,106)',
-        data: [Number(data.Price),10020,10040,10066,10081,10095,10110,10133,10150,10177,10198,10218],
-    };
-    secondData={
-        label:'Australian Bonds',
-        backgroundColor:'transparent',
-        borderColor: 'rgb(128,255,163)',
-        pointBackgroundColor:'rgb(128,255,163)',
-        data: [10000,10030,10044,10078,10100,10125,10136,10159,10177,10197,10215,10238],
+    function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+            ['Year', 'Sales', 'Expenses'],
+            ['2004', 1000, 400],
+            ['2005', 1170, 460],
+            ['2006', 660, 1120],
+            ['2007', 1030, 540]
+        ]);
+
+        var options = {
+            title: 'Company Performance',
+            curveType: 'function',
+           
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('myChart'));
+
+        chart.draw(data, options);
     }
-    var lineChart =new Chart(ctx, {
-        // The type of chart we want to create
-        type: 'line',
-
-        // The data for our dataset
-        data: {
-            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug","Sep","Oct","Nov","Dec"],
-            datasets: [firstData,secondData]
-        },
-
-        // Configuration options go here
-        options: {}
-    });
-
-            }
-        });
-
-    
-
-   
 </script>
 <script>
 //other charts
