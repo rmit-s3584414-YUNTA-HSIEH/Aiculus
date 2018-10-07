@@ -71,7 +71,7 @@ func initializeRoutes() {
 		c.JSON(http.StatusOK, stock)
 	})
 	router.GET("/barChart3", func(c *gin.Context) {
-		stock := CalGICS(a, b)
+		stock := CalCountry(a, b)
 		c.JSON(http.StatusOK, stock)
 	})
 
