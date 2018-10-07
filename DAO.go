@@ -106,7 +106,7 @@ func ReadData(xlsxName string, sheetName string, header string) [][]string {
 func SetStockData() []StockProprety {
 
 	// Read data from excel, pass xlsx filename and spreadsheet name
-	rows := ReadData("Summary Data.xlsx", "Universe", "CALC_DATE")
+	rows := ReadData("data/Summary Data.xlsx", "Universe", "CALC_DATE")
 
 	var stock []StockProprety
 
@@ -158,7 +158,7 @@ func FindCics(id string) []StockProprety {
 func SetBMData() []BenchMarkProprety {
 
 	// Read data from excel, pass xlsx filename and spreadsheet name
-	rows := ReadData("Benchmark.xlsx", "Sheet1", "CALC_DATE")
+	rows := ReadData("data/Benchmark.xlsx", "Sheet1", "CALC_DATE")
 
 	var bench []BenchMarkProprety
 
@@ -190,7 +190,7 @@ func SetBMData() []BenchMarkProprety {
 // SetVMQScore function to calculate VMQ score
 func SetVMQScore() []StockVMQ {
 	// Read data from excel, pass xlsx filename and spreadsheet name
-	rows := ReadData("Summary Data.xlsx", "VMQ Scores", "ISIN")
+	rows := ReadData("data/Summary Data.xlsx", "VMQ Scores", "ISIN")
 
 	var vmq []StockVMQ
 
