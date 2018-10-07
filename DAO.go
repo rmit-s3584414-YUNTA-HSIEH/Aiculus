@@ -174,12 +174,13 @@ func FindID(id string, stock []StockProprety) []StockProprety {
 	}
 
 	if idtype == "region" {
-		regionmap := BuildRegionMap()
 
-		fmt.Println(regionmap[id])
+		// Get regionmap
+		regionmap := BuildRegionMap()
 
 		idlist := regionmap[id]
 
+		// Check every isocty according to the map
 		for j := range regionmap[id] {
 
 			for i := 0; i < len(stock); i++ {
