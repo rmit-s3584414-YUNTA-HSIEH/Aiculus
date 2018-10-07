@@ -137,22 +137,98 @@ func SetStockData() []StockProprety {
 
 }
 
-//FindCics :get stock by gics
-func FindCics(id string) []StockProprety {
-	stock := SetStockData()
-	var theGicsStock []StockProprety
+//FindID :get id from table and return the data
+func FindID(id string, stock []StockProprety) []StockProprety {
 
-	for i := 0; i < len(stock); i++ {
-		var stringID = stock[i].Gics
-		if strings.HasPrefix(stringID, id) {
-			theGicsStock = append(theGicsStock, stock[i])
+	var theStock []StockProprety
+
+	// Check the type of id
+	idtype := CheckID(id)
+
+	if idtype == "gics" {
+		for i := 0; i < len(stock); i++ {
+			var stringID = stock[i].Gics
+			if strings.HasPrefix(stringID, id) {
+				theStock = append(theStock, stock[i])
+			}
+		}
+		if len(theStock) == 0 {
+			return stock
+		}
+
+		return theStock
+	}
+
+	if idtype == "country" {
+		for i := 0; i < len(stock); i++ {
+			var stringID = stock[i].IsoCty
+			if strings.HasPrefix(stringID, id) {
+				theStock = append(theStock, stock[i])
+			}
+		}
+		if len(theStock) == 0 {
+			return stock
+		}
+
+		return theStock
+	}
+
+	if idtype == "region" {
+		regionmap := BuildRegionMap()
+
+		fmt.Println(regionmap[id])
+
+		idlist := regionmap[id]
+
+		for j := range regionmap[id] {
+
+			for i := 0; i < len(stock); i++ {
+				var stringID = stock[i].IsoCty
+
+				if strings.HasPrefix(stringID, idlist[j]) {
+					theStock = append(theStock, stock[i])
+				}
+			}
+		}
+		if len(theStock) == 0 {
+			return stock
+		}
+		return theStock
+	}
+
+	return nil
+}
+
+// CheckID function to check the type of return id
+func CheckID(id string) string {
+
+	gics := []string{"10", "15", "20", "25", "30", "35",
+		"40", "45", "50", "55", "60"}
+
+	region := []string{"NA", "EURXUK", "GB", "APXJP", "JP"}
+
+	country := []string{"US", "SG", "SE", "PT", "NZ",
+		"NO", "NL", "MX", "KR", "JP",
+		"IT", "IL", "IE", "HK", "GB",
+		"FR", "FI", "ES", "DK", "DE",
+		"CN", "CH", "CA", "BE", "AU", "AT"}
+
+	for i := range gics {
+		if id == gics[i] {
+			return "gics"
 		}
 	}
-	if len(theGicsStock) == 0 {
-		return stock
+	for i := range region {
+		if id == region[i] {
+			return "region"
+		}
 	}
-	//fmt.Println(theGicsStock)
-	return theGicsStock
+	for i := range country {
+		if id == country[i] {
+			return "country"
+		}
+	}
+	return ""
 }
 
 // SetBMData function use to read data from excel and return the benchmark struct
@@ -215,14 +291,16 @@ func SetVMQScore() []StockVMQ {
 
 	// Setup struct
 	for i := 2; i < len(rows); i++ {
-		vmq = append(vmq, StockVMQ{
-			Name:     rows[i][0],
-			Date:     date,
-			VScore:   nil,
-			MScore:   nil,
-			QScore:   nil,
-			VMQScore: nil,
-		})
+		if rows[i][0] != "" {
+			vmq = append(vmq, StockVMQ{
+				Name:     rows[i][0],
+				Date:     date,
+				VScore:   nil,
+				MScore:   nil,
+				QScore:   nil,
+				VMQScore: nil,
+			})
+		}
 	}
 
 	// Add data into struct

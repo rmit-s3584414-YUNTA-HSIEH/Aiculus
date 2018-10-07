@@ -77,7 +77,7 @@ func initializeRoutes() {
 
 	router.GET("/stock/:id", func(c *gin.Context) {
 		id := c.Param("id")
-		stock := FindCics(id)
+		stock := FindID(id, a)
 		c.JSON(http.StatusOK, stock)
 	})
 
