@@ -36,10 +36,10 @@ type (
 
 	// GICSCalculation struct to store all stock calculation tables
 	GICSCalculation struct {
-		Code        string  `json:"code"`
-		Name        string  `json:"name"`
-		SValue      float64 `json:"svalue"`
-		BValue      float64 `json:"bvalue"`
+		Code        string `json:"code"`
+		Name        string `json:"name"`
+		SValue      float64
+		BValue      float64
 		SPercentage float64 `json:"spercentage"`
 		BPercentage float64 `json:"bpercentage"`
 		Diff        float64 `json:"diff"`
@@ -47,10 +47,10 @@ type (
 
 	// RegionCalculation struct to store all benchmark calculation tables
 	RegionCalculation struct {
-		Code        string  `json:"code"`
-		Name        string  `json:"name"`
-		SValue      float64 `json:"svalue"`
-		BValue      float64 `json:"bvalue"`
+		Code        string `json:"code"`
+		Name        string `json:"name"`
+		SValue      float64
+		BValue      float64
 		SPercentage float64 `json:"spercentage"`
 		BPercentage float64 `json:"bpercentage"`
 		Diff        float64 `json:"diff"`
@@ -58,11 +58,11 @@ type (
 
 	//CountryCalculation struct to store all calculation based by country
 	CountryCalculation struct {
-		Code        string  `json:"code"`
-		Name        string  `json:"name"`
-		RegionCode  string  `json:"region"`
-		SValue      float64 `json:"svalue"`
-		BValue      float64 `json:"bvalue"`
+		Code        string `json:"code"`
+		Name        string `json:"name"`
+		RegionCode  string `json:"region"`
+		SValue      float64
+		BValue      float64
 		SPercentage float64 `json:"spercentage"`
 		BPercentage float64 `json:"bpercentage"`
 		Diff        float64 `json:"diff"`
@@ -70,11 +70,12 @@ type (
 
 	// StockVMQ struct to store information of VMQ score
 	StockVMQ struct {
-		Name     string  `json:"name"`
-		VScore   float64 `json:"v"`
-		MScore   float64 `json:"m"`
-		QScore   float64 `json:"q"`
-		VMQScore float64 `json:"vmq"`
+		Name     string `json:"name"`
+		Date     []string
+		VScore   []float64 `json:"v"`
+		MScore   []float64 `json:"m"`
+		QScore   []float64 `json:"q"`
+		VMQScore []float64 `json:"vmq"`
 	}
 )
 
@@ -190,35 +191,78 @@ func SetBMData() []BenchMarkProprety {
 // SetVMQScore function to calculate VMQ score
 func SetVMQScore() []StockVMQ {
 	// Read data from excel, pass xlsx filename and spreadsheet name
-	rows := ReadData("data/Summary Data.xlsx", "VMQ Scores", "ISIN")
+	rows := ReadData("data/Book1.xlsx", "VMQ Scores", "DATE")
 
-	var vmq []StockVMQ
+	var (
+		vmq     []StockVMQ
+		date    []string
+		pointer []int
+	)
+
+	// Define date
+	for i := 1; i < len(rows[0]); i++ {
+		if rows[0][i] != "" {
+			date = append(date, rows[0][i])
+		}
+	}
+
+	// Define company name
+	for i := range rows[1] {
+		if rows[1][i] == "SECURITY_NAME" {
+			pointer = append(pointer, i)
+		}
+	}
+
+	// Setup struct
+	for i := 2; i < len(rows); i++ {
+		vmq = append(vmq, StockVMQ{
+			Name:     rows[i][0],
+			Date:     date,
+			VScore:   nil,
+			MScore:   nil,
+			QScore:   nil,
+			VMQScore: nil,
+		})
+	}
 
 	// Add data into struct
 	for i := range rows {
 
-		// header location
-		if i == 0 {
-			continue
-		}
+		// Skip first two rows
+		if i > 1 {
 
-		// Check first element is not empty to add
-		if rows[i][0] != "" {
-			v := StringToFloat(rows[i][21])
-			m := StringToFloat(rows[i][22])
-			q := StringToFloat(rows[i][23])
-			vmq = append(vmq, StockVMQ{
-				Name:     rows[i][2],
-				VScore:   v,
-				MScore:   m,
-				QScore:   q,
-				VMQScore: v + m + q,
-			})
+			// Check the name pointer
+			for j := range pointer {
+
+				// Ensure insert non-nil data
+				if rows[i][pointer[j]] != "" {
+					name := rows[i][pointer[j]]
+					v := StringToFloat(rows[i][pointer[j]+1])
+					m := StringToFloat(rows[i][pointer[j]+2])
+					q := StringToFloat(rows[i][pointer[j]+3])
+					vmqs := StringToFloat(rows[i][pointer[j]+4])
+
+					// Check the struct to add data
+					for i := 0; i < len(vmq); i++ {
+						vmq[i].SetVMQ(name, v, m, q, vmqs)
+					}
+				}
+			}
 		}
 	}
 
 	return vmq
 
+}
+
+// SetVMQ function to set vmq score, base on the name
+func (c *StockVMQ) SetVMQ(s string, v float64, m float64, q float64, vmqs float64) {
+	if s == c.Name {
+		c.VScore = append(c.VScore, v)
+		c.MScore = append(c.MScore, m)
+		c.QScore = append(c.QScore, q)
+		c.VMQScore = append(c.VMQScore, vmqs)
+	}
 }
 
 // CalGICS function to calculate sum&Persentage of stock in order to display

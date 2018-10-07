@@ -147,24 +147,26 @@
            $('#table').bootstrapTable({
                 height: 200,
                 url: 'http://localhost:8080/VMQ',
-                columns: [{
+                dataType: 'json',
+                columns: 
+                [{
                     field: 'name',
                     title: 'Name'
                 },
                 {
-                    field: 'v',
+                    field: 'v.0',
                     title: 'V'
                 },
                 {
-                    field: 'm',
+                    field: 'm.0',
                     title: 'M'
                 },
                 {
-                    field: 'q',
+                    field: 'q.0',
                     title: 'Q'
                 },
                 {
-                    field: 'vmq',
+                    field: 'vmq.0',
                     title: 'VMQ'
                 },]
             });
