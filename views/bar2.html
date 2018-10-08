@@ -19,7 +19,7 @@
                 <div>
                     <p hidden>{{ .id }}</p>
                     <h1>Regional Weights Details</h1>
-                    <table id="table1">
+                    <table id="table">
                     </table>
                 </div>  
             </div>           
@@ -102,7 +102,7 @@
 
 
 <script>
-    $('#table1').bootstrapTable({
+    $('#table').bootstrapTable({
         
         // pagination:true,
         // pageNumber:1,
@@ -111,7 +111,6 @@
         url: 'http://localhost:8080/barChart2',
         columns:[{
             field: 'code',
-            sortable:true,
             title:'Region Code'
         },
         {
@@ -141,7 +140,7 @@
         //alert(row.name+" "+row.code+" "+row.spercentage+" "+row.bpercentage+" "+ row.diff);
         window.location.assign("http://localhost:8080/details/"+row.code);
         
-         alert(data.code);               
+         alert(row.code);               
     });
 </script>
 
