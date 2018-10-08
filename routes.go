@@ -3,7 +3,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -98,8 +97,6 @@ func initializeRoutes() {
 	router.GET("/stock/:id", func(c *gin.Context) {
 		id := c.Param("id")
 		stock := FindID(id, a)
-		sec := SetSecruityData()
-		fmt.Println(sec)
 		c.JSON(http.StatusOK, stock)
 	})
 

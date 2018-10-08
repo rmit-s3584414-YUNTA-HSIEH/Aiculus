@@ -301,7 +301,6 @@ func SetSecruityData() []SecruityData {
 			header = append(header, i)
 		}
 	}
-	fmt.Println(header)
 	// Add data into struct
 	for i := range rows {
 
@@ -416,6 +415,18 @@ func SetVMQScore() []StockVMQ {
 		}
 	}
 
+	for i := 0; i < len(vmq)-1; i++ {
+		for j := 0; j < len(vmq)-1-i; j++ {
+			if vmq[j].VMQScore[0] < vmq[j+1].VMQScore[0] {
+				temp := vmq[j]
+				vmq[j] = vmq[j+1]
+				vmq[j+1] = temp
+			}
+
+		}
+
+	}
+
 	return vmq
 
 }
@@ -490,7 +501,6 @@ func CalGICS(s []StockProprety, b []BenchMarkProprety) []GICSCalculation {
 		gics[i].SetBPercentage(totalBSum)
 	}
 
-	//fmt.Println(gics)
 	return gics
 }
 
@@ -559,7 +569,6 @@ func CalRegion(s []StockProprety, b []BenchMarkProprety) []RegionCalculation {
 		regions[i].SetBPercentage(totalBSum)
 	}
 
-	//fmt.Println(regions)
 	return regions
 }
 
@@ -629,7 +638,6 @@ func CalCountry(s []StockProprety, b []BenchMarkProprety) []CountryCalculation {
 		countrys[i].SetRegionCode()
 	}
 
-	// fmt.Println(countrys)
 	return countrys
 }
 
