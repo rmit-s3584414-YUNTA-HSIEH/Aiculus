@@ -34,6 +34,24 @@ type (
 		Gicses    string
 	}
 
+	// SecruityData struct to store information of secruity data
+	SecruityData struct {
+		Name   string `json:"name"`
+		IsoCty string
+		Sector string  `json:"sector"`
+		Weight float64 `json:"weight"`
+	}
+
+	// StockVMQ struct to store information of VMQ score
+	StockVMQ struct {
+		Name     string `json:"name"`
+		Date     []string
+		VScore   []float64 `json:"v"`
+		MScore   []float64 `json:"m"`
+		QScore   []float64 `json:"q"`
+		VMQScore []float64 `json:"vmq"`
+	}
+
 	// GICSCalculation struct to store all stock calculation tables
 	GICSCalculation struct {
 		Code        string `json:"code"`
@@ -66,16 +84,6 @@ type (
 		SPercentage float64 `json:"spercentage"`
 		BPercentage float64 `json:"bpercentage"`
 		Diff        float64 `json:"diff"`
-	}
-
-	// StockVMQ struct to store information of VMQ score
-	StockVMQ struct {
-		Name     string `json:"name"`
-		Date     []string
-		VScore   []float64 `json:"v"`
-		MScore   []float64 `json:"m"`
-		QScore   []float64 `json:"q"`
-		VMQScore []float64 `json:"vmq"`
 	}
 )
 
@@ -263,6 +271,81 @@ func SetBMData() []BenchMarkProprety {
 
 	return bench
 
+}
+
+// SetSecruityData function use to read data from excel and return the secruity struct
+func SetSecruityData() []SecruityData {
+
+	// Read data from excel, pass xlsx filename and spreadsheet name
+	rows := ReadData("data/Summary Data.xlsx", "Portfolio", "prev_date_d0")
+
+	var (
+		secruity []SecruityData
+		header   []int
+	)
+
+	for i := range rows[0] {
+		if rows[0][i] == "iso_cty" {
+			header = append(header, i)
+		}
+		if rows[0][i] == "gics_ind" {
+			header = append(header, i)
+		}
+		if rows[0][i] == "name" {
+			header = append(header, i)
+		}
+		if rows[0][i] == "stock_only_wgt" {
+			header = append(header, i)
+		}
+		if rows[0][i] == "GICS_ES" {
+			header = append(header, i)
+		}
+	}
+	fmt.Println(header)
+	// Add data into struct
+	for i := range rows {
+
+		// header location
+		if i == 0 {
+			continue
+		}
+
+		// Get full gics code
+		s := []string{rows[i][header[4]], rows[i][header[1]]}
+		gics := strings.Join(s, "")
+		sector := GetGICSName(gics)
+
+		// Convert % number into float64
+		weightS := rows[i][header[3]]
+		weightS = strings.TrimRight(weightS, "%")
+		weight := StringToFloat(weightS)
+
+		// Check isocty code
+		if len(rows[i][header[0]]) == 2 {
+			secruity = append(secruity, SecruityData{
+				Name:   rows[i][header[2]],
+				IsoCty: rows[i][header[0]],
+				Sector: sector,
+				Weight: weight,
+			})
+		}
+	}
+
+	return secruity
+
+}
+
+// GetGICSName function is to define the gics name by code
+func GetGICSName(s string) string {
+
+	// Set GICS struct
+	stockGICSCode, stockGICSName := BuildGICSList()
+	for i := range stockGICSCode {
+		if s[:2] == stockGICSCode[i] {
+			return stockGICSName[i]
+		}
+	}
+	return ""
 }
 
 // SetVMQScore function to calculate VMQ score
