@@ -48,6 +48,16 @@ func initializeRoutes() {
 			gin.H{"id": id},
 		)
 	})
+	
+		router.GET("/account", func(c *gin.Context) {
+		address := "account.html"
+		c.HTML(
+			http.StatusOK,
+			address,
+			gin.H{},
+		)
+	})
+
 
 	//json api
 	router.GET("/line", func(c *gin.Context) {
