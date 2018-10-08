@@ -8,8 +8,9 @@
         <div class="container-fluid">
             <div class="row">
             <div class="col-4 col-xs-6" id="col">
-                <a href="/bar/1">
+                
                 <div class="card" >
+                    <a href="/bar/1">
                     <div class="card-body">
                         <div id="carouselExampleControls" class="carousel slide" data-ride="carousel" data-interval="false">
                             <div class="carousel-inner">
@@ -30,12 +31,11 @@
                             </a>
                         </div>                   
                     </div>
+                   </a> 
                 </div>
-                </a>
-            </div>
-            <div class="col-4" id="col">
-                <a href="/bar/2">
-                <div class="card">
+
+                 <div class="card">
+                    <a href="/bar/2">
                     <div class="card-body">
                         <div id="carouselExampleControls2" class="carousel slide" data-ride="carousel" data-interval="false">
                             <div class="carousel-inner">
@@ -56,62 +56,27 @@
                             </a>
                         </div>
                     </div>
+                   </a> 
                 </div>
-                </a>
             </div>
             <div class="col-4" id="col">
-                <a href="/bar/3">
-                 <div class="card">
-                    <div class="card-body">
-                          <table id="table_country">
-                          <!-- <div class="table-responsive">
-                            <table data-toggle="table" data-responsive="true" data-pagination="true" data-search="true" data-url="http://localhost:8080/VMQ">
-                                    <thead>
-                                        <tr>
-                                            <th data-field="name">Item ID</th>
-                                            <th data-field="v">Item Name</th>
-                                            <th data-field="m">Item Price</th>
-                                        </tr>
-                                    </thead>
-                                </table>
-                          </div>     -->
-
-                      </table>
-                        </div>
-                    </div>
-                </a>
-                </div>    
-                
-            </div>
-
-        <div class="row">
-            <div class="col-4" id="col">
-                    <div class="card">
-                        <div class="card-body">
-                            <table id="table">
-                            </table>
-                        </div>
-                    </div>
-            </div>
-            <div class="col-4" id="col">
-                <a href="#">
                 <div class="card">
                     <div class="card-body">
-                        <canvas id="bubble-chart"></canvas>
+                        <table id="table">
+                        </table>
                     </div>
-                </div>   
-                </a>
-            </div>
+                </div>
+            </div>   
             <div class="col-4" id="col">
-                <a href="#">
+                <a href="/security">
                 <div class="card">
                     <div class="card-body">
-                        <canvas id="bar-chart-horizontal"></canvas>
+                        <table id="table_country">
+                        </table>
                     </div>
                 </div>
                 </a>
-            </div>           
-   
+            </div>                   
         </div>
         <div class="row" >       
             <div class="col">
@@ -128,20 +93,12 @@
     </div>
         
 </div>
-<!--
-<script>
-    //collapse bar 
-    $("#collapseBut").on("click",function(){
-        $("#sidebar").toggleClass("active");
-        $("#content").toggleClass("active");
-    });     
-</script>
--->
-<!--VMQ table-->
-<script>
 
+
+<script>
+            //VMQ table
            $('#table').bootstrapTable({
-                height: 200,
+                height: 220,
                 url: 'http://localhost:8080/VMQ',
                 columns: [{
                     field: 'name',
@@ -421,7 +378,7 @@ $.ajax({
         dataType: 'json',
         success: function (data) {
 
-//radar chart
+//bar chart
 new Chart(document.getElementById("barChart3-1"), {
         type: 'bar',
         data: {
@@ -478,98 +435,6 @@ new Chart(document.getElementById("barChart3-1"), {
                 }
             }
         });
-
-//horizontal-bar chart
-new Chart(document.getElementById("bar-chart-horizontal"), {
-        type: 'horizontalBar',
-        data: {
-            labels: ["Africa", "Asia", "Europe", "Latin America", "North America"],
-            datasets: [
-                {
-                    label: "Population (millions)",
-                    backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850"],
-                    data: [2478, 5267, 734, 784, 433]
-                }
-            ]
-        },
-        options: {
-            legend: { display: false },
-            title: {
-                display: true,
-                text: 'Predicted world population (millions) in 2050'
-            }
-        }
-    });
-
-//bubble chart
-    new Chart(document.getElementById("bubble-chart"), {
-        type: 'bubble',
-        data: {
-            labels: "Africa",
-            datasets: [
-                {
-                    label: ["China"],
-                    backgroundColor: "rgba(255,221,50,0.2)",
-                    borderColor: "rgba(255,221,50,1)",
-                    data: [{
-                        x: 21269017,
-                        y: 5.245,
-                        r: 15
-                    }]
-                }, {
-                    label: ["Denmark"],
-                    backgroundColor: "rgba(60,186,159,0.2)",
-                    borderColor: "rgba(60,186,159,1)",
-                    data: [{
-                        x: 258702,
-                        y: 7.526,
-                        r: 10
-                    }]
-                }, {
-                    label: ["Germany"],
-                    backgroundColor: "rgba(0,0,0,0.2)",
-                    borderColor: "#000",
-                    data: [{
-                        x: 3979083,
-                        y: 6.994,
-                        r: 15
-                    }]
-                }, {
-                    label: ["Japan"],
-                    backgroundColor: "rgba(193,46,12,0.2)",
-                    borderColor: "rgba(193,46,12,1)",
-                    data: [{
-                        x: 4931877,
-                        y: 5.921,
-                        r: 15
-                    }]
-                }
-            ]
-        },
-        options: {
-            legend: { display: false },
-            title: {
-                display: true,
-                text: 'happiness,GDP&population'
-            }, scales: {
-                yAxes: [{
-                    scaleLabel: {
-                        display: true,
-                        labelString: "Happiness"
-                    }
-                }],
-                xAxes: [{
-                    scaleLabel: {
-                        display: true,
-                        labelString: "GDP (PPP)"
-                    }
-                }]
-            }
-        }
-    });
-
-
-
     }
 });
 </script>
