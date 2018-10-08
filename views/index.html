@@ -8,8 +8,9 @@
         <div class="container-fluid">
             <div class="row">
             <div class="col-4 col-xs-6" id="col">
-                <a href="/bar/1">
+                
                 <div class="card" >
+                    <a href="/bar/1">
                     <div class="card-body">
                         <div id="carouselExampleControls" class="carousel slide" data-ride="carousel" data-interval="false">
                             <div class="carousel-inner">
@@ -30,12 +31,11 @@
                             </a>
                         </div>                   
                     </div>
+                   </a> 
                 </div>
-                </a>
-            </div>
-            <div class="col-4" id="col">
-                <a href="/bar/2">
-                <div class="card">
+
+                 <div class="card">
+                    <a href="/bar/2">
                     <div class="card-body">
                         <div id="carouselExampleControls2" class="carousel slide" data-ride="carousel" data-interval="false">
                             <div class="carousel-inner">
@@ -56,21 +56,9 @@
                             </a>
                         </div>
                     </div>
+                   </a> 
                 </div>
-                </a>
             </div>
-            <div class="col-4" id="col">
-                <a href="/bar/3">
-                <div class="card">
-                    <div class="card-body">
-                        <table id="table_country">
-                      </table>
-                    </div>
-                </div>
-                </a>
-            </div>                   
-        </div>
-        <div class="row">
             <div class="col-4" id="col">
                 <div class="card">
                     <div class="card-body">
@@ -78,7 +66,17 @@
                         </table>
                     </div>
                 </div>
-            </div> 
+            </div>   
+            <div class="col-4" id="col">
+                <a href="/security">
+                <div class="card">
+                    <div class="card-body">
+                        <table id="table_country">
+                        </table>
+                    </div>
+                </div>
+                </a>
+            </div>                   
         </div>
         <div class="row" >       
             <div class="col">
@@ -100,7 +98,7 @@
 <script>
             //VMQ table
            $('#table').bootstrapTable({
-                height: 200,
+                height: 220,
                 url: 'http://localhost:8080/VMQ',
                 columns: [{
                     field: 'name',
