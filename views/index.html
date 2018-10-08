@@ -138,8 +138,8 @@
 <script>
 
     $('#table_country').bootstrapTable({
-         height: 220,
-         url: 'http://localhost:8080/barChart3',
+         height: 450,
+         url: 'http://localhost:8080/sec',
          columns: [{
              field: 'name',
              title: 'Name',
@@ -147,11 +147,23 @@
              align:'center'
          },
          {
-             field: 'spercentage',
-             title: 'Percentage',
+             field: 'isocty',
+             title: 'Country',
              sortable:true,
              align:'center'
          },
+        {
+            field: 'sector',
+            title: 'Sector',
+            sortable: true,
+            align: 'center'
+        },
+        {
+            field: 'weight',
+            title: 'Weight',
+            sortable: true,
+            align: 'center'
+        },
         ]
      });
 

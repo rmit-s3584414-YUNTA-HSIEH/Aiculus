@@ -36,8 +36,8 @@ type (
 
 	// SecruityData struct to store information of secruity data
 	SecruityData struct {
-		Name   string `json:"name"`
-		IsoCty string
+		Name   string  `json:"name"`
+		IsoCty string  `json:"isocty"`
 		Sector string  `json:"sector"`
 		Weight float64 `json:"weight"`
 	}
@@ -339,7 +339,10 @@ func SetSecruityData() []SecruityData {
 func GetGICSName(s string) string {
 
 	// Set GICS struct
-	stockGICSCode, stockGICSName := BuildGICSList()
+	stockGICSCode := []string{"10", "15", "20", "25", "30", "35",
+		"40", "45", "50", "55", "60"}
+	stockGICSName := []string{"ENE", "MAT", "IND", "CSD", "CSS",
+		"HLC", "FIN", "IFT", "TEL", "UTI", "REL"}
 	for i := range stockGICSCode {
 		if s[:2] == stockGICSCode[i] {
 			return stockGICSName[i]
