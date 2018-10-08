@@ -1,0 +1,47 @@
+<!--bar one detail-->
+
+<!--Embed the header.html template at this location-->
+{{ template "header.html" .}}
+<!--page content-->
+<div id="page-content-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-6">
+                <li>
+                    <span>File Upload</span>
+                    <span class="input">
+                        <input type="file" id="upfile" name="upfile" placeholder="" />
+                    </span>
+                    <button onclick="importExp();">import</button>
+                    <span>format：.xls</span>
+                </li>
+
+                <script>
+                    function importExp() {
+                        var formData = new FormData();
+                        var name = $("#upfile").val();
+                        formData.append("file", $("#upfile")[0].files[0]);
+                        formData.append("name", name);
+                        $.ajax({
+                            url: '/',
+                            type: 'POST',
+                            async: false,
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            beforeSend: function () {
+                                console.log("uploading...");
+                            },
+                            success: function (responseStr) {
+                                if (responseStr == "01") {
+                                    alert("Import succeed");
+                                } else {
+                                    alert("Import failed");
+                                }
+                            }
+                        });
+                    }
+                </script>
+
+                <!--Embed the footer.html template at this location-->
+                {{ template "footer.html" .}}

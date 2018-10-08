@@ -6,21 +6,21 @@
 <div id="page-content-wrapper">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-6">
+            <div class="col-12">
                 <div id="columnChart" style="height:300px"></div>
             </div>
-            <div class="col-6">
-                <div id="barChart" style="height:300px"></div>
+            <div class="col-12">
+                <div id="barChart" style="height:800px"></div>
             </div>
         </div>
         <div class="row">
             <div class="col">
-                <div>
                     <p hidden>{{ .id }}</p>
-                    <h1>GICS Details</h1>
-                    <table id="table">
-                    </table>
-                </div>  
+                    <h1>Country Weights Details</h1>                   
+                        <table id="table">
+                        </table>  
+                    
+                    
             </div>           
         </div>
     </div>
@@ -43,14 +43,17 @@
                 var data = new google.visualization.DataTable();
                 
                 data.addColumn('string','name');
-               // data.addColumn({ type: 'string', role: 'annotation' });
                 data.addColumn('number','Profolio');
+                data.addColumn({ type: 'string', role: 'annotation' });
                 data.addColumn('number', 'Benchmark');
-                for(var i=0;i<24;i++){
-                    data.addRows([[jsonData[i].name, jsonData[i].spersentage,jsonData[i].bpersentage]]);
+                data.addColumn({ type: 'string', role: 'annotation' });
+                
+                for(var i=0;i<jsonData.length;i++){
+                    data.addRows([[jsonData[i].name, jsonData[i].spercentage,""+jsonData[i].spercentage+"",jsonData[i].bpercentage,""+jsonData[i].bpercentage+""]]);
                 }
                 var options = {
                     title: 'Country Weights',
+                    legend: { position: 'top' }
                 }
 
         var chart = new google.visualization.ColumnChart(
@@ -70,19 +73,39 @@
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'name');
         data.addColumn('number', 'percentage');
-        for (var i = 0; i < 24; i++) {
-            data.addRows([[jsonData[i].name, jsonData[i].diff]]);
+        data.addColumn({ type: 'string', role: 'annotation' });
+        // var dataName = new Array();
+        // var dataDiff = new Array();
+        // for (var i=0; i< jsonData.length; i++){
+        //     dataName[i]=jsonData[i].name;
+        // }
+        // for (var i=0;i<jsonData.length;i++){
+        //     dataDiff[i]=jsonData[i].diff;
+        // }
+        for (var i = 0; i < jsonData.length; i++) {
+            data.addRows([[jsonData[i].name, jsonData[i].diff,''+jsonData[i].diff+'']]);
         }
+        // for (var i=0; i<dataDiff.length; i++){
+        //     data.addRows([[dataName[i],dataDiff[i]]]);
+        // }
             var options = {
-                title: 'Country Active Weights',
+                title: 'Country Active Weight',
                 chartArea: { width: '50%' },
                 hAxis: {
-                    title: 'Total Population',
+                    title: 'Weight',
                     minValue: 0
                 },
                 vAxis: {
-                    title: 'City'
-                }
+                    title: 'Country'
+                },
+                annotations: {
+          alwaysOutside: true,
+          textStyle: {
+            fontSize: 14,
+            color: '#000',
+            auraColor: 'none'
+          }
+        },
             };
 
             var chart = new google.visualization.BarChart(document.getElementById('barChart'));
@@ -98,40 +121,37 @@
 
 <script>
     $('#table').bootstrapTable({
-        
-        pagination:true,
-        pageNumber:1,
-        pageSize:5,
-        pageList: [20, 50, 100, 150],
+        height: 300 ,
         url: 'http://localhost:8080/barChart3',
         columns:[{
             field: 'code',
+            sortable:true,
             title:'Country code'
         },
         {
             field:'name',
-            title:'Name'
-        },
-        {
-            field: 'region',
-            title: 'Region'
+            sortable:true,
+            title:'Country Name'
         },
         {
             field:'spercentage',
+            sortable:true,
             title:'Portfolio(%)'            
         },
         {
             field: 'bpercentage',
+            sortable:true,
             title: 'Benchmark(%)'
         },
         {
             field: 'diff',
+            sortable:true,
             title: 'Difference(%)'
         },]   
     });
 
     $('#table').on('click-row.bs.table', function(e, row, $element) {
-        //alert(row.name+" "+row.code+" "+row.spercentage+" "+row.bpercentage+" "+ row.diff);
+        //alert(row.name+" "+row.code+" "+row.spresentage+" "+row.bpresentage+" "+ row.diff);
         window.location.assign("http://localhost:8080/details/"+row.code);
         
          alert(data.code);               

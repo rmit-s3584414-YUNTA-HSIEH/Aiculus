@@ -63,30 +63,27 @@
                 <a href="/bar/3">
                  <div class="card">
                     <div class="card-body">
-                        <div id="carouselExampleControls3" class="carousel slide" data-ride="carousel" data-interval="false">
-                            <div class="carousel-inner">
-                                <div class="carousel-item active">
-                                    <canvas id="barChart3-1"></canvas>
-                                </div>
-                                <div class="carousel-item">
-                                    <canvas id="barChart3-2"></canvas>
-                                </div>
-                            </div>
-                            <a class="carousel-control-prev" href="#carouselExampleControls3" role="button" data-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="sr-only">Previous</span>
-                            </a>
-                            <a class="carousel-control-next" href="#carouselExampleControls3" role="button" data-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="sr-only">Next</span>
-                            </a>
+                          <table id="table_country">
+                          <!-- <div class="table-responsive">
+                            <table data-toggle="table" data-responsive="true" data-pagination="true" data-search="true" data-url="http://localhost:8080/VMQ">
+                                    <thead>
+                                        <tr>
+                                            <th data-field="name">Item ID</th>
+                                            <th data-field="v">Item Name</th>
+                                            <th data-field="m">Item Price</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                          </div>     -->
+
+                      </table>
                         </div>
                     </div>
-                </div>    
                 </a>
+                </div>    
+                
             </div>
 
-        </div>
         <div class="row">
             <div class="col-4" id="col">
                     <div class="card">
@@ -129,7 +126,6 @@
                 </div>
             </div>                   
     </div>
-    </div>
         
 </div>
 <!--
@@ -147,29 +143,50 @@
            $('#table').bootstrapTable({
                 height: 200,
                 url: 'http://localhost:8080/VMQ',
-                dataType: 'json',
-                columns: 
-                [{
+                columns: [{
                     field: 'name',
                     title: 'Name'
                 },
                 {
-                    field: 'v.0',
+                    field: 'v',
                     title: 'V'
                 },
                 {
-                    field: 'm.0',
+                    field: 'm',
                     title: 'M'
                 },
                 {
-                    field: 'q.0',
+                    field: 'q',
                     title: 'Q'
                 },
                 {
-                    field: 'vmq.0',
+                    field: 'vmq',
                     title: 'VMQ'
                 },]
             });
+
+
+</script>
+
+<script>
+
+    $('#table_country').bootstrapTable({
+         height: 180,
+         url: 'http://localhost:8080/barChart3',
+         columns: [{
+             field: 'name',
+             title: 'Name',
+             sortable:true,
+             align:'center'
+         },
+         {
+             field: 'spercentage',
+             title: 'Percentage',
+             sortable:true,
+             align:'center'
+         },
+        ]
+     });
 
 
 </script>
@@ -225,7 +242,7 @@ $.ajax({
     new Chart(document.getElementById("barChart1-1"), {
         type: 'bar',
         data: {
-            labels: ["EN", "MA", "IN", "CD", "CS", "HC", "FIN", "IT", "Tele", "Uti","RE"],
+            labels: ["ENE", "MAT", "IND", "CSD", "CSS", "HLC", "FIN", "IFT", "TEL", "UTI","REL"],
             datasets: [{
                 label: "profolio",
                 backgroundColor:"#3e95cd",
@@ -242,14 +259,16 @@ $.ajax({
             legend: { display: false },
             title: {
                 display: true,
-                text: 'GICS Sectors'
-            }
+                text: 'GICS Sectors'},
         }
+            
+        
     });
     new Chart(document.getElementById("barChart1-2"), {
             type: 'bar',
             data: {
-                labels: ["EN", "MA", "IN", "CD", "CS", "HC", "FIN", "IT", "Tele", "Uti", "RE"],
+                //labels: ["EN", "MA", "IN", "CD", "CS", "HC", "FIN", "IT", "Tele", "Uti", "RE"],
+                labels: ["ENE", "MAT", "IND", "CSD", "CSS", "HLC", "FIN", "IFT", "TEL", "UTI","REL"],
                 datasets: [{
                     label: "%",
                     backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850", "#493e8e", "#49b6bb", "#beb6bb", "#beffbb", "#beffff", "#6d844e"],
@@ -261,7 +280,25 @@ $.ajax({
                 title: {
                     display: true,
                     text: 'GICS Sectors Active Weight'
-                }
+                },
+                animation: {
+                onComplete:function(){
+                    var chartInstance = this.chart,
+                    ctx = chartInstance.ctx;
+                    ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                    ctx.fillStyle = "black";
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'bottomtip';
+                    this.data.datasets.forEach(function (dataset, i) {
+                        var meta = chartInstance.controller.getDatasetMeta(i);
+                        meta.data.forEach(function (bar, index) {
+                            var data = dataset.data[index];
+                            ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                        });
+                    });
+            }
+
+                },
             }
         });
     }
@@ -303,7 +340,25 @@ $.ajax({
                 title: {
                     display: true,
                     text: 'Regional Weights'
+                },
+                animation: {
+                onComplete:function(){
+                    var chartInstance = this.chart,
+                    ctx = chartInstance.ctx;
+                    ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                    ctx.fillStyle = "black";
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'bottom';
+                    this.data.datasets.forEach(function (dataset, i) {
+                        var meta = chartInstance.controller.getDatasetMeta(i);
+                        meta.data.forEach(function (bar, index) {
+                            var data = dataset.data[index];
+                            ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                        });
+                    });
                 }
+
+                },
             }
         });
 
@@ -326,14 +381,32 @@ new Chart(document.getElementById("barChart2-2"), {
             title: {
                 display: true,
                 text: 'Regional Active Weight'
+            },
+            animation: {
+                onComplete:function(){
+                    var chartInstance = this.chart,
+                    ctx = chartInstance.ctx;
+                    ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                    ctx.fillStyle = "black";
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'bottomtip';
+                    this.data.datasets.forEach(function (dataset, i) {
+                        var meta = chartInstance.controller.getDatasetMeta(i);
+                        meta.data.forEach(function (bar, index) {
+                            var data = dataset.data[index];
+                            ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                        });
+                    });
             }
+
+                },
         }
     });
         }
     });
 
 
-    $.ajax({
+$.ajax({
         url: 'http://localhost:8080/barChart3',
         dataType: 'json',
         success: function (data) {

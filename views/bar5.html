@@ -1,0 +1,115 @@
+<!--bar one detail-->
+
+<!--Embed the header.html template at this location-->
+{{ template "header.html" .}}
+<!--page content-->
+<div id="page-content-wrapper">
+    <div class="container-fluid">
+        <section id="contact-us" class="front-page-section">
+            <div class="section-header">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h3 style="text-align:justify">Contact us</h3>
+                        </div>
+                        <!--/.col-sm-12-->
+                        <div class="col-sm-8 col-sm-offset-2">
+                            <div class="section-description">Would you like to hear more about our products or simply
+                                who we are and what we do? If
+                                yes, then please fill in your details below or email us at <a href="mailto:admin@aiculus.co">admin@aiculus.co</a></div>
+                        </div>
+                        <!--/.col-sm-10.col-sm-offset-1-->
+                    </div>
+                    <!--/.row-->
+                </div>
+                <!--/.container-->
+            </div>
+            <!--/.section-header-->
+            <div class="section-content">
+                <div class="container">
+                    <div class="row address-row">
+                        <div class="col-sm-12">
+                            <div class="row" style="margin-bottom: 45px;">
+                                <div class="col-sm-4">
+                                    <div class="contact-us-box">
+                                        <div class="box-right">
+                                        </div>
+                                        <!--/.box-right-->
+                                    </div>
+                                    <!--/.contact-us-box-->
+                                </div>
+                                <!--/.col-sm-4-->
+                                <div class="col-sm-5">
+                                    <div class="contact-us-box">
+                                        <div class="box-right">
+                                        </div>
+                                        <!--/.box-right-->
+                                    </div>
+                                    <!--/.contact-us-box-->
+                                </div>
+                                <!--/.col-sm-5-->
+
+                                <!--/.col-sm-3-->
+                            </div>
+                            <!--/.row-->
+                        </div>
+                        <!--/.col-sm-12-->
+                    </div>
+                    <!--/.row-->
+                    <div class="row inline-columns">
+                        <div class="col-sm-8">
+                            <div role="form" class="wpcf7" id="wpcf7-f10-o2" lang="en-US" dir="ltr">
+                                <div class="screen-reader-response"></div>
+                                <form action="/#wpcf7-f10-o2" method="post" class="wpcf7-form" novalidate="novalidate">
+                                    <div style="display: none;">
+                                        <input type="hidden" name="_wpcf7" value="10">
+                                        <input type="hidden" name="_wpcf7_version" value="4.9.2">
+                                        <input type="hidden" name="_wpcf7_locale" value="en_US">
+                                        <input type="hidden" name="_wpcf7_unit_tag" value="wpcf7-f10-o2">
+                                        <input type="hidden" name="_wpcf7_container_post" value="0">
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <label> Your Name (required)<br>
+                                                <span class="wpcf7-form-control-wrap your-name"><input type="text" name="your-name"
+                                                        value="" size="40" class="wpcf7-form-control wpcf7-text wpcf7-validates-as-required"
+                                                        aria-required="true" aria-invalid="false"></span> </label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label> Your Email (required)<br>
+                                                <span class="wpcf7-form-control-wrap your-email"><input type="email"
+                                                        name="your-email" value="" size="40" class="wpcf7-form-control wpcf7-text wpcf7-email wpcf7-validates-as-required wpcf7-validates-as-email"
+                                                        aria-required="true" aria-invalid="false"></span> </label>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-20">
+                                            <label> Your Message<br>
+                                                <span class="wpcf7-form-control-wrap your-message"><textarea name="your-message"
+                                                        cols="88" rows="10" class="wpcf7-form-control wpcf7-textarea"
+                                                        aria-invalid="false"></textarea></span> </label>
+                                        </div>
+                                    </div>
+                                    <div class="row contact-footer">
+                                        <div class="col-sm-12">
+                                            <input type="submit" value="Send" class="wpcf7-form-control wpcf7-submit"><span
+                                                class="ajax-loader"></span>
+                                        </div>
+                                    </div>
+                                    <div class="wpcf7-response-output wpcf7-display-none"></div>
+                                </form>
+                            </div>
+                        </div>
+                        <!--/.col-sm-12-->
+                    </div>
+                    <!--/.row-->
+                </div>
+                <!--/.container-->
+            </div>
+            <!--/.section-content-->
+        </section>
+
+
+
+        <!--Embed the footer.html template at this location-->
+        {{ template "footer.html" .}}

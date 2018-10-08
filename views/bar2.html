@@ -13,12 +13,13 @@
                 <div id="barChart" style="height:300px"></div>
             </div>
         </div>
+        
         <div class="row">
             <div class="col">
                 <div>
                     <p hidden>{{ .id }}</p>
                     <h1>Regional Weights Details</h1>
-                    <table id="table">
+                    <table id="table1">
                     </table>
                 </div>  
             </div>           
@@ -42,12 +43,14 @@
             success: function (jsonData) {
                 var data = new google.visualization.DataTable();
                 
-                data.addColumn('string','name');
+                data.addColumn('string','name',);
                // data.addColumn({ type: 'string', role: 'annotation' });
                 data.addColumn('number','CURR_PORT');
+                data.addColumn({ type: 'string', role: 'annotation' });
                 data.addColumn('number', 'MSWLD');
+                data.addColumn({ type: 'string', role: 'annotation' });
                 for(var i=0;i<5;i++){
-                    data.addRows([[jsonData[i].name, jsonData[i].spercentage,jsonData[i].bpercentage]]);
+                    data.addRows([[jsonData[i].name, jsonData[i].spercentage,''+jsonData[i].spercentage+'',jsonData[i].bpercentage,''+jsonData[i].bpercentage+'']]);
                 }
                 var options = {
                     title: 'Regional Weights',
@@ -70,8 +73,9 @@
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'name');
         data.addColumn('number', 'percentage');
+        data.addColumn({ type: 'string', role: 'annotation' });
         for (var i = 0; i < 5; i++) {
-            data.addRows([[jsonData[i].name, jsonData[i].diff]]);
+            data.addRows([[jsonData[i].name, jsonData[i].diff,''+jsonData[i].diff+'']]);
         }
             var options = {
                 title: 'Regional Active Weight',
@@ -96,35 +100,42 @@
 
 
 
+
 <script>
-    $('#table').bootstrapTable({
+    $('#table1').bootstrapTable({
         
-        pagination:true,
-        pageNumber:1,
-        pageSize:5,
-        pageList: [20, 50, 100, 150],
+        // pagination:true,
+        // pageNumber:1,
+        // pageSize:5,
+        // pageList: [20, 50, 100, 150],
         url: 'http://localhost:8080/barChart2',
         columns:[{
             field: 'code',
+            sortable:true,
             title:'Region Code'
         },
         {
             field:'name',
+            sortable:true,
             title:'Name'
         },
         {
             field:'spercentage',
+            sortable:true,
             title:'CURR_PORT(%)'            
         },
         {
             field: 'bpercentage',
+            sortable:true,
             title: 'MSWLD(%)'
         },
         {
             field: 'diff',
+            sortable:true,
             title: 'vs_MSWLD(%)'
         },]   
     });
+
 
     $('#table').on('click-row.bs.table', function(e, row, $element) {
         //alert(row.name+" "+row.code+" "+row.spercentage+" "+row.bpercentage+" "+ row.diff);
