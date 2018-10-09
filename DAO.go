@@ -215,7 +215,7 @@ func validationSummary(rows [][]string) (bool, []int) {
 	//	"CZ", "GR", "HU", "PL", "SE", "EURXUK", "GB", "JP"}
 	//gics := []string{}
 	errorRows := []int{}
-	var errorCols bool
+	errorCols := true
 	//var errorLogs = ""
 	//var correctRows int
 	for i := range rows {
@@ -235,6 +235,7 @@ func validationSummary(rows [][]string) (bool, []int) {
 			if A || B || C == false {
 				//table columns are missing
 				errorRows = append(errorRows, 0)
+				errorCols = false
 				break
 			}
 		}
@@ -253,7 +254,7 @@ func validationSummary(rows [][]string) (bool, []int) {
 //Benchmark validation
 func validationBenchmark(rows [][]string) (bool, []int) {
 	errorRows := []int{}
-	var errorCols bool
+	errorCols := true
 	for i := range rows {
 		if i == 0 {
 			var A, B, C, D bool
@@ -274,6 +275,7 @@ func validationBenchmark(rows [][]string) (bool, []int) {
 			if A || B || C || D == false {
 				//table columns are missing
 				errorRows = append(errorRows, 0)
+				errorCols = false
 				break
 			}
 		}
