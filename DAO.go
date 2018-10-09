@@ -118,7 +118,7 @@ func createFile(path string) {
 	fmt.Println("==> done creating file", path)
 }
 
-func writeFile(path string) {
+func writeLogFile(path string, rows []int) {
 	// open file using READ & WRITE permission
 	var file, err = os.OpenFile(path, os.O_RDWR, 0644)
 	if isError(err) {
@@ -127,15 +127,14 @@ func writeFile(path string) {
 	defer file.Close()
 
 	// write some text line-by-line to file
-	_, err = file.WriteString("halo\n")
-	if isError(err) {
-		return
+	if len(rows) > 0 {
+		if rows[0] == 0 {
+			_, err = file.WriteString("Colomuns missing\n")
+		}
+		for i := range rows {
+			_, err = file.WriteString("row" + strconv.Itoa(i) + "is missing\n")
+		}
 	}
-	_, err = file.WriteString("mari belajar golang\n")
-	if isError(err) {
-		return
-	}
-
 	// save changes
 	err = file.Sync()
 	if isError(err) {
@@ -217,6 +216,8 @@ func validationSummary(rows [][]string) (bool, []int) {
 	//gics := []string{}
 	errorRows := []int{}
 	var errorCols bool
+	//var errorLogs = ""
+	//var correctRows int
 	for i := range rows {
 		if i == 0 {
 			var A, B, C bool
@@ -233,15 +234,19 @@ func validationSummary(rows [][]string) (bool, []int) {
 			}
 			if A || B || C == false {
 				//table columns are missing
+				errorRows = append(errorRows, 0)
 				break
 			}
 		}
 		for j := range rows[i] {
 			if rows[i][j] == "" {
 				errorRows = append(errorRows, i)
+				continue
 			}
 		}
 	}
+	createFile(sLog)
+	writeLogFile(sLog, errorRows)
 	return errorCols, errorRows
 }
 
@@ -268,6 +273,7 @@ func validationBenchmark(rows [][]string) (bool, []int) {
 			}
 			if A || B || C || D == false {
 				//table columns are missing
+				errorRows = append(errorRows, 0)
 				break
 			}
 		}
@@ -277,6 +283,8 @@ func validationBenchmark(rows [][]string) (bool, []int) {
 			}
 		}
 	}
+	createFile(bmLog)
+	writeLogFile(bmLog, errorRows)
 	return errorCols, errorRows
 }
 
