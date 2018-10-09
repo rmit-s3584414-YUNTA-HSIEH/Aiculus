@@ -4,8 +4,10 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"math"
+	"os"
 	"strconv"
 	"strings"
 
@@ -67,6 +69,101 @@ type (
 	}
 )
 
+var sLog = "log/s_reports.log"
+var bmLog = "log/bm_reports.log"
+
+//
+func isError(err error) bool {
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+
+	return (err != nil)
+}
+
+//create file is not exists
+func createFile(path string) {
+	// detect if file exists
+	var _, err = os.Stat(path)
+
+	// create file if not exists
+	if os.IsNotExist(err) {
+		var file, err = os.Create(path)
+		if isError(err) {
+			return
+		}
+		defer file.Close()
+	}
+
+	fmt.Println("==> done creating file", path)
+}
+
+func writeFile(path string) {
+	// open file using READ & WRITE permission
+	var file, err = os.OpenFile(path, os.O_RDWR, 0644)
+	if isError(err) {
+		return
+	}
+	defer file.Close()
+
+	// write some text line-by-line to file
+	_, err = file.WriteString("halo\n")
+	if isError(err) {
+		return
+	}
+	_, err = file.WriteString("mari belajar golang\n")
+	if isError(err) {
+		return
+	}
+
+	// save changes
+	err = file.Sync()
+	if isError(err) {
+		return
+	}
+
+	fmt.Println("==> done writing to file")
+}
+
+func readFile(path string) {
+	// re-open file
+	var file, err = os.OpenFile(path, os.O_RDWR, 0644)
+	if isError(err) {
+		return
+	}
+	defer file.Close()
+
+	// read file, line by line
+	var text = make([]byte, 1024)
+	for {
+		_, err = file.Read(text)
+
+		// break if finally arrived at end of file
+		if err == io.EOF {
+			break
+		}
+
+		// break if error occured
+		if err != nil && err != io.EOF {
+			isError(err)
+			break
+		}
+	}
+
+	fmt.Println("==> done reading from file")
+	fmt.Println(string(text))
+}
+
+func deleteFile(path string) {
+	// delete file
+	var err = os.Remove(path)
+	if isError(err) {
+		return
+	}
+
+	fmt.Println("==> done deleting file")
+}
+
 // ReadData from xlsx
 func ReadData(xlsxName string, sheetName string, header string) [][]string {
 
@@ -89,6 +186,78 @@ func ReadData(xlsxName string, sheetName string, header string) [][]string {
 	rows := xlsx.GetRows(sheetName)
 
 	return rows
+}
+
+//validate excel file before loading
+func validationSummary(rows [][]string) (bool, []int) {
+	//city := []string{"CA", "US", "MX", "NA", "AU", "HK", "NZ",
+	//	"SG", "CN", "KR", "TW", "APXJP", "AT", "BE", "CH", "DE",
+	//	"DK", "ES", "FI", "FR", "IE", "IL", "IT", "NL", "NO", "PT",
+	//	"CZ", "GR", "HU", "PL", "SE", "EURXUK", "GB", "JP"}
+	//gics := []string{}
+	errorRows := []int{}
+	var errorCols bool
+	for i := range rows {
+		if i == 0 {
+			var A, B, C bool
+			for j := range rows {
+				if rows[0][j] != "GICS_SI" {
+					A = false
+				}
+				if rows[0][j] != "ISO_CTY_CODE" {
+					B = false
+				}
+				if rows[0][j] != "FFLOAT_MKTCAP_USD" {
+					C = false
+				}
+			}
+			if A || B || C == false {
+				//table columns are missing
+				break
+			}
+		}
+		for j := range rows[i] {
+			if rows[i][j] == "" {
+				errorRows = append(errorRows, i)
+			}
+		}
+	}
+	return errorCols, errorRows
+}
+
+//Benchmark validation
+func validationBenchmark(rows [][]string) (bool, []int) {
+	errorRows := []int{}
+	var errorCols bool
+	for i := range rows {
+		if i == 0 {
+			var A, B, C, D bool
+			for j := range rows {
+				if rows[0][j] != "GICS_IG" {
+					A = false
+				}
+				if rows[0][j] != "GICS_ES" {
+					B = false
+				}
+				if rows[0][j] != "ISO_CTY_CODE2" {
+					C = false
+				}
+				if rows[0][j] != "REGION" {
+					D = false
+				}
+			}
+			if A || B || C || D == false {
+				//table columns are missing
+				break
+			}
+		}
+		for j := range rows[i] {
+			if rows[i][j] == "" {
+				errorRows = append(errorRows, i)
+			}
+		}
+	}
+	return errorCols, errorRows
 }
 
 // SetStockData function use to read data from excel and return the stock struct
