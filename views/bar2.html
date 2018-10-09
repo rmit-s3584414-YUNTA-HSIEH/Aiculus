@@ -13,11 +13,12 @@
                 <div id="barChart" style="height:300px"></div>
             </div>
         </div>
+        
         <div class="row">
             <div class="col">
                 <div>
                     <p hidden>{{ .id }}</p>
-                    <h1>GICS Details</h1>
+                    <h1>Regional Weights Details</h1>
                     <table id="table">
                     </table>
                 </div>  
@@ -37,20 +38,22 @@
 
     function drawcolumnChart() {
         $.ajax({
-            url: 'http://localhost:8080/barChart1',
+            url: 'http://localhost:8080/barChart2',
             dataType: 'json',
             success: function (jsonData) {
                 var data = new google.visualization.DataTable();
                 
-                data.addColumn('string','name');
+                data.addColumn('string','name',);
                // data.addColumn({ type: 'string', role: 'annotation' });
-                data.addColumn('number','Profolio');
-                data.addColumn('number', 'Benchmark');
-                for(var i=0;i<11;i++){
-                    data.addRows([[jsonData[i].name, jsonData[i].spersentage,jsonData[i].bpersentage]]);
+                data.addColumn('number','CURR_PORT');
+                data.addColumn({ type: 'string', role: 'annotation' });
+                data.addColumn('number', 'MSWLD');
+                data.addColumn({ type: 'string', role: 'annotation' });
+                for(var i=0;i<5;i++){
+                    data.addRows([[jsonData[i].name, jsonData[i].spercentage,''+jsonData[i].spercentage+'',jsonData[i].bpercentage,''+jsonData[i].bpercentage+'']]);
                 }
                 var options = {
-                    title: 'GICS Sectors',
+                    title: 'Regional Weights',
                 }
 
         var chart = new google.visualization.ColumnChart(
@@ -63,18 +66,19 @@
     }
 
     function drawBarChart() {
-
-            var data = google.visualization.arrayToDataTable([
-                ['City', '2010 Population',],
-                ['New York City, NY', 8175000],
-                ['Los Angeles, CA', 3792000],
-                ['Chicago, IL', 2695000],
-                ['Houston, TX', 2099000],
-                ['Philadelphia, PA', 1526000]
-            ]);
-
+        $.ajax({
+            url: 'http://localhost:8080/barChart2',
+            dataType: 'json',
+            success: function (jsonData) {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'name');
+        data.addColumn('number', 'percentage');
+        data.addColumn({ type: 'string', role: 'annotation' });
+        for (var i = 0; i < 5; i++) {
+            data.addRows([[jsonData[i].name, jsonData[i].diff,''+jsonData[i].diff+'']]);
+        }
             var options = {
-                title: 'Population of Largest U.S. Cities',
+                title: 'Regional Active Weight',
                 chartArea: { width: '50%' },
                 hAxis: {
                     title: 'Total Population',
@@ -88,47 +92,55 @@
             var chart = new google.visualization.BarChart(document.getElementById('barChart'));
 
             chart.draw(data, options);
+            }
+        });
         }
 
 </script>
 
 
 
+
 <script>
     $('#table').bootstrapTable({
         
-        pagination:true,
-        pageNumber:1,
-        pageSize:5,
-        pageList: [20, 50, 100, 150],
-        url: 'http://localhost:8080/barChart1',
+        // pagination:true,
+        // pageNumber:1,
+        // pageSize:5,
+        // pageList: [20, 50, 100, 150],
+        url: 'http://localhost:8080/barChart2',
         columns:[{
             field: 'code',
-            title:'GICS code'
+            title:'Region Code'
         },
         {
             field:'name',
+            sortable:true,
             title:'Name'
         },
         {
-            field:'spersentage',
-            title:'Portfolio'            
+            field:'spercentage',
+            sortable:true,
+            title:'CURR_PORT(%)'            
         },
         {
-            field: 'bpersentage',
-            title: 'Benchmark'
+            field: 'bpercentage',
+            sortable:true,
+            title: 'MSWLD(%)'
         },
         {
             field: 'diff',
-            title: 'Difference'
+            sortable:true,
+            title: 'vs_MSWLD(%)'
         },]   
     });
 
+
     $('#table').on('click-row.bs.table', function(e, row, $element) {
-        //alert(row.name+" "+row.code+" "+row.spresentage+" "+row.bpresentage+" "+ row.diff);
+        //alert(row.name+" "+row.code+" "+row.spercentage+" "+row.bpercentage+" "+ row.diff);
         window.location.assign("http://localhost:8080/details/"+row.code);
         
-         alert(data.code);               
+         alert(row.code);               
     });
 </script>
 

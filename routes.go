@@ -12,6 +12,7 @@ var a = SetStockData()
 var b = SetBMData()
 
 func initializeRoutes() {
+	//pages
 
 	// Handle the index route
 	router.GET("/", func(c *gin.Context) {
@@ -27,38 +28,24 @@ func initializeRoutes() {
 		)
 	})
 
-	router.GET("/line", func(c *gin.Context) {
-
-		stock := a
-		c.JSON(http.StatusOK, stock)
-	})
-
-	router.GET("/barChart1", func(c *gin.Context) {
-		stock := CalGICS(a, b)
-		c.JSON(http.StatusOK, stock)
-	})
-	router.GET("/barChart2", func(c *gin.Context) {
-		stock := CalRegion(a, b)
-		c.JSON(http.StatusOK, stock)
-	})
-	router.GET("/barChart3", func(c *gin.Context) {
-		stock := CalGICS(a, b)
-		c.JSON(http.StatusOK, stock)
-	})
-
-	router.GET("/stock/:id", func(c *gin.Context) {
-		id := c.Param("id")
-		stock := FindCics(id)
-		c.JSON(http.StatusOK, stock)
-	})
-
 	router.GET("/bar/:id", func(c *gin.Context) {
 		id := c.Param("id")
-		address := "bar.html"
+		address := "bar" + id + ".html"
+
 		c.HTML(
 			http.StatusOK,
 			address,
 			gin.H{"id": id},
+		)
+	})
+
+	router.GET("/security", func(c *gin.Context) {
+
+		address := "security.html"
+		c.HTML(
+			http.StatusOK,
+			address,
+			gin.H{},
 		)
 	})
 
@@ -70,6 +57,52 @@ func initializeRoutes() {
 			address,
 			gin.H{"id": id},
 		)
+	})
+
+	router.GET("/account", func(c *gin.Context) {
+		address := "account.html"
+		c.HTML(
+			http.StatusOK,
+			address,
+			gin.H{},
+		)
+	})
+
+	//json api
+	router.GET("/line", func(c *gin.Context) {
+
+		stock := a
+		c.JSON(http.StatusOK, stock)
+	})
+
+	router.GET("/VMQ", func(c *gin.Context) {
+
+		VMQ := SetVMQScore()
+		c.JSON(http.StatusOK, VMQ)
+	})
+
+	router.GET("/barChart1", func(c *gin.Context) {
+		stock := CalGICS(a, b)
+		c.JSON(http.StatusOK, stock)
+	})
+	router.GET("/barChart2", func(c *gin.Context) {
+		stock := CalRegion(a, b)
+		c.JSON(http.StatusOK, stock)
+	})
+	router.GET("/barChart3", func(c *gin.Context) {
+		stock := CalCountry(a, b)
+		c.JSON(http.StatusOK, stock)
+	})
+
+	router.GET("/stock/:id", func(c *gin.Context) {
+		id := c.Param("id")
+		stock := FindID(id, a)
+		c.JSON(http.StatusOK, stock)
+	})
+
+	router.GET("/sec", func(c *gin.Context) {
+		sec := SetSecruityData()
+		c.JSON(http.StatusOK, sec)
 	})
 
 }

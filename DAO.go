@@ -1,5 +1,3 @@
-//DAO.go
-
 package main
 
 import (
@@ -14,8 +12,9 @@ import (
 	"github.com/360EntSecGroup-Skylar/excelize"
 )
 
-// Type list
+// Type lists
 type (
+
 	// StockProprety struct to store information of data
 	StockProprety struct {
 		Date        string `json:"date"`
@@ -37,35 +36,56 @@ type (
 		Gicses    string
 	}
 
+	// SecruityData struct to store information of secruity data
+	SecruityData struct {
+		Name   string  `json:"name"`
+		IsoCty string  `json:"isocty"`
+		Sector string  `json:"sector"`
+		Weight float64 `json:"weight"`
+	}
+
+	// StockVMQ struct to store information of VMQ score
+	StockVMQ struct {
+		Name     string `json:"name"`
+		Date     []string
+		VScore   []float64 `json:"v"`
+		MScore   []float64 `json:"m"`
+		QScore   []float64 `json:"q"`
+		VMQScore []float64 `json:"vmq"`
+	}
+
 	// GICSCalculation struct to store all stock calculation tables
 	GICSCalculation struct {
-		Code        string  `json:"code"`
-		Name        string  `json:"name"`
-		SValue      float64 `json:"svaule"`
-		BValue      float64 `json:"bvaule"`
-		SPresentage float64 `json:"spersentage"`
-		BPresentage float64 `json:"bpersentage"`
+		Code        string `json:"code"`
+		Name        string `json:"name"`
+		SValue      float64
+		BValue      float64
+		SPercentage float64 `json:"spercentage"`
+		BPercentage float64 `json:"bpercentage"`
 		Diff        float64 `json:"diff"`
 	}
 
 	// RegionCalculation struct to store all benchmark calculation tables
 	RegionCalculation struct {
-		Code        string
-		Name        string
+		Code        string `json:"code"`
+		Name        string `json:"name"`
 		SValue      float64
 		BValue      float64
-		SPresentage float64
-		BPresentage float64
-		Diff        float64
+		SPercentage float64 `json:"spercentage"`
+		BPercentage float64 `json:"bpercentage"`
+		Diff        float64 `json:"diff"`
 	}
 
-	// StockVMQ struct to store information of VMQ score
-	StockVMQ struct {
-		Name     string
-		VScore   float64
-		MScore   float64
-		QScore   float64
-		VMQScore float64
+	//CountryCalculation struct to store all calculation based by country
+	CountryCalculation struct {
+		Code        string `json:"code"`
+		Name        string `json:"name"`
+		RegionCode  string `json:"region"`
+		SValue      float64
+		BValue      float64
+		SPercentage float64 `json:"spercentage"`
+		BPercentage float64 `json:"bpercentage"`
+		Diff        float64 `json:"diff"`
 	}
 )
 
@@ -264,7 +284,7 @@ func validationBenchmark(rows [][]string) (bool, []int) {
 func SetStockData() []StockProprety {
 
 	// Read data from excel, pass xlsx filename and spreadsheet name
-	rows := ReadData("Summary Data.xlsx", "Universe", "CALC_DATE")
+	rows := ReadData("data/Summary Data.xlsx", "Universe", "CALC_DATE")
 
 	var stock []StockProprety
 
@@ -294,29 +314,106 @@ func SetStockData() []StockProprety {
 
 }
 
-//FindCics :get stock by gics
-func FindCics(id string) []StockProprety {
-	stock := SetStockData()
-	var theGicsStock []StockProprety
+//FindID :get id from table and return the data
+func FindID(id string, stock []StockProprety) []StockProprety {
 
-	for i := 0; i < len(stock); i++ {
-		var stringID = stock[i].Gics
-		if strings.HasPrefix(stringID, id) {
-			theGicsStock = append(theGicsStock, stock[i])
+	var theStock []StockProprety
+
+	// Check the type of id
+	idtype := CheckID(id)
+
+	if idtype == "gics" {
+		for i := 0; i < len(stock); i++ {
+			var stringID = stock[i].Gics
+			if strings.HasPrefix(stringID, id) {
+				theStock = append(theStock, stock[i])
+			}
+		}
+		if len(theStock) == 0 {
+			return stock
+		}
+
+		return theStock
+	}
+
+	if idtype == "country" {
+		for i := 0; i < len(stock); i++ {
+			var stringID = stock[i].IsoCty
+			if strings.HasPrefix(stringID, id) {
+				theStock = append(theStock, stock[i])
+			}
+		}
+		if len(theStock) == 0 {
+			return stock
+		}
+
+		return theStock
+	}
+
+	if idtype == "region" {
+
+		// Get regionmap
+		regionmap := BuildRegionMap()
+
+		idlist := regionmap[id]
+
+		// Check every isocty according to the map
+		for j := range regionmap[id] {
+
+			for i := 0; i < len(stock); i++ {
+				var stringID = stock[i].IsoCty
+
+				if strings.HasPrefix(stringID, idlist[j]) {
+					theStock = append(theStock, stock[i])
+				}
+			}
+		}
+		if len(theStock) == 0 {
+			return stock
+		}
+		return theStock
+	}
+
+	return nil
+}
+
+// CheckID function to check the type of return id
+func CheckID(id string) string {
+
+	gics := []string{"10", "15", "20", "25", "30", "35",
+		"40", "45", "50", "55", "60"}
+
+	region := []string{"NA", "EURXUK", "GB", "APXJP", "JP"}
+
+	country := []string{"US", "SG", "SE", "PT", "NZ",
+		"NO", "NL", "MX", "KR", "JP",
+		"IT", "IL", "IE", "HK", "GB",
+		"FR", "FI", "ES", "DK", "DE",
+		"CN", "CH", "CA", "BE", "AU", "AT"}
+
+	for i := range gics {
+		if id == gics[i] {
+			return "gics"
 		}
 	}
-	if len(theGicsStock) == 0 {
-		return stock
+	for i := range region {
+		if id == region[i] {
+			return "region"
+		}
 	}
-	fmt.Println(theGicsStock)
-	return theGicsStock
+	for i := range country {
+		if id == country[i] {
+			return "country"
+		}
+	}
+	return ""
 }
 
 // SetBMData function use to read data from excel and return the benchmark struct
 func SetBMData() []BenchMarkProprety {
 
 	// Read data from excel, pass xlsx filename and spreadsheet name
-	rows := ReadData("Benchmark.xlsx", "Sheet1", "CALC_DATE")
+	rows := ReadData("data/Benchmark.xlsx", "Sheet1", "CALC_DATE")
 
 	var bench []BenchMarkProprety
 
@@ -345,13 +442,34 @@ func SetBMData() []BenchMarkProprety {
 
 }
 
-// SetVMQScore function to calculate VMQ score
-func SetVMQScore() []StockVMQ {
+// SetSecruityData function use to read data from excel and return the secruity struct
+func SetSecruityData() []SecruityData {
+
 	// Read data from excel, pass xlsx filename and spreadsheet name
-	rows := ReadData("Summary Data.xlsx", "VMQ Scores", "ISIN")
+	rows := ReadData("data/Summary Data.xlsx", "Portfolio", "prev_date_d0")
 
-	var vmq []StockVMQ
+	var (
+		secruity []SecruityData
+		header   []int
+	)
 
+	for i := range rows[0] {
+		if rows[0][i] == "iso_cty" {
+			header = append(header, i)
+		}
+		if rows[0][i] == "gics_ind" {
+			header = append(header, i)
+		}
+		if rows[0][i] == "name" {
+			header = append(header, i)
+		}
+		if rows[0][i] == "stock_only_wgt" {
+			header = append(header, i)
+		}
+		if rows[0][i] == "GICS_ES" {
+			header = append(header, i)
+		}
+	}
 	// Add data into struct
 	for i := range rows {
 
@@ -360,26 +478,139 @@ func SetVMQScore() []StockVMQ {
 			continue
 		}
 
-		// Check first element is not empty to add
-		if rows[i][0] != "" {
-			v := StringToFloat(rows[i][21])
-			m := StringToFloat(rows[i][22])
-			q := StringToFloat(rows[i][23])
-			vmq = append(vmq, StockVMQ{
-				Name:     rows[i][2],
-				VScore:   v,
-				MScore:   m,
-				QScore:   q,
-				VMQScore: v + m + q,
+		// Get full gics code
+		s := []string{rows[i][header[4]], rows[i][header[1]]}
+		gics := strings.Join(s, "")
+		sector := GetGICSName(gics)
+
+		// Convert % number into float64
+		weightS := rows[i][header[3]]
+		weightS = strings.TrimRight(weightS, "%")
+		weight := StringToFloat(weightS)
+
+		// Check isocty code
+		if len(rows[i][header[0]]) == 2 {
+			secruity = append(secruity, SecruityData{
+				Name:   rows[i][header[2]],
+				IsoCty: rows[i][header[0]],
+				Sector: sector,
+				Weight: weight,
 			})
 		}
+	}
+
+	return secruity
+
+}
+
+// GetGICSName function is to define the gics name by code
+func GetGICSName(s string) string {
+
+	// Set GICS struct
+	stockGICSCode := []string{"10", "15", "20", "25", "30", "35",
+		"40", "45", "50", "55", "60"}
+	stockGICSName := []string{"ENE", "MAT", "IND", "CSD", "CSS",
+		"HLC", "FIN", "IFT", "TEL", "UTI", "REL"}
+	for i := range stockGICSCode {
+		if s[:2] == stockGICSCode[i] {
+			return stockGICSName[i]
+		}
+	}
+	return ""
+}
+
+// SetVMQScore function to calculate VMQ score
+func SetVMQScore() []StockVMQ {
+	// Read data from excel, pass xlsx filename and spreadsheet name
+	rows := ReadData("data/Book1.xlsx", "VMQ Scores", "DATE")
+
+	var (
+		vmq     []StockVMQ
+		date    []string
+		pointer []int
+	)
+
+	// Define date
+	for i := 1; i < len(rows[0]); i++ {
+		if rows[0][i] != "" {
+			date = append(date, rows[0][i])
+		}
+	}
+
+	// Define company name
+	for i := range rows[1] {
+		if rows[1][i] == "SECURITY_NAME" {
+			pointer = append(pointer, i)
+		}
+	}
+
+	// Setup struct
+	for i := 2; i < len(rows); i++ {
+		if rows[i][0] != "" {
+			vmq = append(vmq, StockVMQ{
+				Name:     rows[i][0],
+				Date:     date,
+				VScore:   nil,
+				MScore:   nil,
+				QScore:   nil,
+				VMQScore: nil,
+			})
+		}
+	}
+
+	// Add data into struct
+	for i := range rows {
+
+		// Skip first two rows
+		if i > 1 {
+
+			// Check the name pointer
+			for j := range pointer {
+
+				// Ensure insert non-nil data
+				if rows[i][pointer[j]] != "" {
+					name := rows[i][pointer[j]]
+					v := StringToFloat(rows[i][pointer[j]+1])
+					m := StringToFloat(rows[i][pointer[j]+2])
+					q := StringToFloat(rows[i][pointer[j]+3])
+					vmqs := StringToFloat(rows[i][pointer[j]+4])
+
+					// Check the struct to add data
+					for i := 0; i < len(vmq); i++ {
+						vmq[i].SetVMQ(name, v, m, q, vmqs)
+					}
+				}
+			}
+		}
+	}
+
+	for i := 0; i < len(vmq)-1; i++ {
+		for j := 0; j < len(vmq)-1-i; j++ {
+			if vmq[j].VMQScore[0] < vmq[j+1].VMQScore[0] {
+				temp := vmq[j]
+				vmq[j] = vmq[j+1]
+				vmq[j+1] = temp
+			}
+
+		}
+
 	}
 
 	return vmq
 
 }
 
-// CalGICS function to calculate sum&presentage of stock in order to display
+// SetVMQ function to set vmq score, base on the name
+func (c *StockVMQ) SetVMQ(s string, v float64, m float64, q float64, vmqs float64) {
+	if s == c.Name {
+		c.VScore = append(c.VScore, v)
+		c.MScore = append(c.MScore, m)
+		c.QScore = append(c.QScore, q)
+		c.VMQScore = append(c.VMQScore, vmqs)
+	}
+}
+
+// CalGICS function to calculate sum&Persentage of stock in order to display
 func CalGICS(s []StockProprety, b []BenchMarkProprety) []GICSCalculation {
 	// Set variable
 	var (
@@ -398,8 +629,8 @@ func CalGICS(s []StockProprety, b []BenchMarkProprety) []GICSCalculation {
 			Name:        stockGICSName[i],
 			SValue:      0,
 			BValue:      0,
-			SPresentage: 0,
-			BPresentage: 0,
+			SPercentage: 0,
+			BPercentage: 0,
 			Diff:        0,
 		})
 	}
@@ -433,18 +664,16 @@ func CalGICS(s []StockProprety, b []BenchMarkProprety) []GICSCalculation {
 		totalBSum += number
 	}
 
-	// Set presentage of each item
+	// Set Persentage of each item
 	for i := 0; i < (len(stockGICSCode)); i++ {
-		gics[i].SetPresentage(totalSSum)
-		gics[i].SetBPresentage(totalBSum)
+		gics[i].SetPercentage(totalSSum)
+		gics[i].SetBPercentage(totalBSum)
 	}
-
-	fmt.Println(gics)
 
 	return gics
 }
 
-// CalRegion function to calculate sum&presentage of benchmark in order to display
+// CalRegion function to calculate sum&Persentage of benchmark in order to display
 func CalRegion(s []StockProprety, b []BenchMarkProprety) []RegionCalculation {
 	// Set variable
 	var (
@@ -465,8 +694,8 @@ func CalRegion(s []StockProprety, b []BenchMarkProprety) []RegionCalculation {
 			Name:        benchRegionName[i],
 			SValue:      0,
 			BValue:      0,
-			SPresentage: 0,
-			BPresentage: 0,
+			SPercentage: 0,
+			BPercentage: 0,
 			Diff:        0,
 		})
 	}
@@ -503,13 +732,82 @@ func CalRegion(s []StockProprety, b []BenchMarkProprety) []RegionCalculation {
 		totalBSum += number
 	}
 
-	// Set presentage of each item
+	// Set Persentage of each item
 	for i := 0; i < len(benchRegionCode); i++ {
-		regions[i].SetPresentage(totalSSum)
-		regions[i].SetBPresentage(totalBSum)
+		regions[i].SetPercentage(totalSSum)
+		regions[i].SetBPercentage(totalBSum)
 	}
 
 	return regions
+}
+
+//CalCountry data
+func CalCountry(s []StockProprety, b []BenchMarkProprety) []CountryCalculation {
+	// Set variable
+	var (
+		countrys []CountryCalculation
+		// Total sum of float market values
+		totalSSum float64
+		totalBSum float64
+	)
+
+	// Set Region struct
+	stockCountryCode, stockCountryName := BuildCountryList()
+
+	for i := 0; i < len(stockCountryName); i++ {
+		countrys = append(countrys, CountryCalculation{
+			Code:        stockCountryCode[i],
+			Name:        stockCountryName[i],
+			RegionCode:  "",
+			SValue:      0,
+			BValue:      0,
+			SPercentage: 0,
+			BPercentage: 0,
+			Diff:        0,
+		})
+	}
+
+	// Get every FloatMktCap from struct, convert them to float64, and sum up
+	for i := range s {
+
+		number := StringToFloat(s[i].FloatMktCap)
+		country := s[i].IsoCty
+
+		// Calculate value base by GICS
+		for j := 0; j < len(stockCountryCode); j++ {
+			countrys[j].SetSValue(country, number)
+		}
+
+		// Always add to totalsum
+		totalSSum += number
+	}
+
+	// Get every FloatMktCap from struct, convert them to float64, and sum up
+	for i := range b {
+
+		number := StringToFloat(b[i].IDXMktCap)
+		country := b[i].IsoCty
+
+		// Calculate value base by Region
+		for k := 0; k < len(stockCountryCode); k++ {
+			countrys[k].SetBValue(country, number)
+		}
+
+		// Always add to totalsum
+		totalBSum += number
+	}
+
+	// Set Persentage of each item
+	for i := 0; i < (len(stockCountryCode)); i++ {
+		countrys[i].SetPercentage(totalSSum)
+		countrys[i].SetBPercentage(totalBSum)
+	}
+
+	for i := range countrys {
+		countrys[i].SetRegionCode()
+	}
+
+	return countrys
 }
 
 // BuildGICSList function to provide the list of GICS name&code
@@ -569,6 +867,39 @@ func CheckRegion(s string, m map[string]([]string)) string {
 	return ""
 }
 
+// BuildCountryList function to build the Country map, which key is Country and values is code
+func BuildCountryList() ([]string, []string) {
+
+	a := []string{"US", "SG", "SE", "PT", "NZ",
+		"NO", "NL", "MX", "KR", "JP",
+		"IT", "IL", "IE", "HK", "GB",
+		"FR", "FI", "ES", "DK", "DE",
+		"CN", "CH", "CA", "BE", "AU", "AT"}
+	b := []string{"United States", "Singapore", "Sweden", "Portugal", "New Zealand",
+		"Norway", "Netherlands", "Mexico", "South Korea", "Japan",
+		"Italy", "Israel", "Ireland", "Hong Kong", "Great Britain",
+		"France", "Finland", "Spain", "Denmark", "Germany",
+		"China", "Switzerland", "Canada", "Belgium", "Australia", "Austria"}
+
+	return a, b
+
+}
+
+//CheckCountry function is to
+func CheckCountry(s string, cm map[string]([]string)) string {
+
+	// Check if value exist in map
+	for key, value := range cm {
+		for i := range value {
+			if value[i] == s {
+				return key
+			}
+		}
+	}
+
+	return ""
+}
+
 // GICSCalculation pointer functions below
 
 // SetValue function to add value by getting correct code
@@ -585,17 +916,17 @@ func (c *GICSCalculation) SetBValue(s string, a float64) {
 	}
 }
 
-// SetPresentage function use to set presentage of each data struct
-func (c *GICSCalculation) SetPresentage(a float64) {
-	c.SPresentage = (c.SValue / a) * 100
-	c.SPresentage = math.Round(c.SPresentage*100) / 100
+// SetPercentage function use to set Persentage of each data struct
+func (c *GICSCalculation) SetPercentage(a float64) {
+	c.SPercentage = (c.SValue / a) * 100
+	c.SPercentage = math.Round(c.SPercentage*100) / 100
 }
 
-// SetBPresentage function to
-func (c *GICSCalculation) SetBPresentage(a float64) {
-	c.BPresentage = (c.BValue / a) * 100
-	c.BPresentage = math.Round(c.BPresentage*100) / 100
-	c.Diff = math.Round((c.SPresentage-c.BPresentage)*1000) / 1000
+// SetBPercentage function to
+func (c *GICSCalculation) SetBPercentage(a float64) {
+	c.BPercentage = (c.BValue / a) * 100
+	c.BPercentage = math.Round(c.BPercentage*100) / 100
+	c.Diff = math.Round((c.SPercentage-c.BPercentage)*1000) / 1000
 }
 
 // GICSCalculation pointer functions end
@@ -616,20 +947,57 @@ func (c *RegionCalculation) SetBValue(s string, a float64) {
 	}
 }
 
-// SetPresentage function use to set presentage of each data struct
-func (c *RegionCalculation) SetPresentage(a float64) {
-	c.SPresentage = (c.SValue / a) * 100
-	c.SPresentage = math.Round(c.SPresentage*100) / 100
+// SetPercentage function use to set Persentage of each data struct
+func (c *RegionCalculation) SetPercentage(a float64) {
+	c.SPercentage = (c.SValue / a) * 100
+	c.SPercentage = math.Round(c.SPercentage*100) / 100
 }
 
-// SetBPresentage function use to set presentage of each data struct
-func (c *RegionCalculation) SetBPresentage(a float64) {
-	c.BPresentage = (c.BValue / a) * 100
-	c.BPresentage = math.Round(c.BPresentage*100) / 100
-	c.Diff = math.Round((c.SPresentage-c.BPresentage)*1000) / 1000
+// SetBPercentage function use to set Persentage of each data struct
+func (c *RegionCalculation) SetBPercentage(a float64) {
+	c.BPercentage = (c.BValue / a) * 100
+	c.BPercentage = math.Round(c.BPercentage*100) / 100
+	c.Diff = math.Round((c.SPercentage-c.BPercentage)*1000) / 1000
 }
 
 // RegionCalculation pointer functions end
+
+// CountryCalculation pointer functions below
+
+// SetSValue function to add value by getting correct code
+func (c *CountryCalculation) SetSValue(s string, a float64) {
+	if s == c.Code {
+		c.SValue = c.SValue + a
+	}
+}
+
+// SetBValue function to add value by getting correct code
+func (c *CountryCalculation) SetBValue(s string, a float64) {
+	if s == c.Code {
+		c.BValue = c.BValue + a
+	}
+}
+
+// SetPercentage function use to set Persentage of each data struct
+func (c *CountryCalculation) SetPercentage(a float64) {
+	c.SPercentage = (c.SValue / a) * 100
+	c.SPercentage = math.Round(c.SPercentage*100) / 100
+}
+
+// SetBPercentage function use to set Persentage of each data struct
+func (c *CountryCalculation) SetBPercentage(a float64) {
+	c.BPercentage = (c.BValue / a) * 100
+	c.BPercentage = math.Round(c.BPercentage*100) / 100
+	c.Diff = math.Round((c.SPercentage-c.BPercentage)*1000) / 1000
+}
+
+// SetRegionCode function use to set RegionCode for each data struct
+func (c *CountryCalculation) SetRegionCode() {
+	regionMap := BuildRegionMap()
+	c.RegionCode = CheckRegion(c.Code, regionMap)
+}
+
+// CountryCalculation pointer functions end
 
 // StringToFloat function to convert string to float for further use
 func StringToFloat(s string) float64 {

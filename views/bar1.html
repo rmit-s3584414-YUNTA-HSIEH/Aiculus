@@ -1,0 +1,162 @@
+<!--bar one detail-->
+
+<!--Embed the header.html template at this location-->
+{{ template "header.html" .}}
+<!--page content-->
+<div id="page-content-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-6">
+                <div id="columnChart" style="height:300px"></div>
+            </div>
+            <div class="col-6">
+                <div id="barChart" style="height:300px"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                    <p hidden>{{ .id }}</p>
+                    <h1>GICS Details</h1>                   
+                        <table id="table">
+                        </table>  
+                    
+                    
+            </div>           
+        </div>
+    </div>
+</div>
+
+<script>
+    // Load Charts and the corechart package.
+   google.charts.load('current', { 'packages': ['corechart'] });
+
+    // Draw the bar chart when Charts is loaded.
+    google.charts.setOnLoadCallback(drawcolumnChart);
+    // Draw the column chart when Charts is loaded.
+    google.charts.setOnLoadCallback(drawBarChart);
+
+    function drawcolumnChart() {
+        $.ajax({
+            url: 'http://localhost:8080/barChart1',
+            dataType: 'json',
+            success: function (jsonData) {
+                var data = new google.visualization.DataTable();
+                
+                data.addColumn('string','name');
+                data.addColumn('number','Profolio');
+                data.addColumn({ type: 'string', role: 'annotation' });
+                data.addColumn('number', 'Benchmark');
+                data.addColumn({ type: 'string', role: 'annotation' });
+                
+                for(var i=0;i<jsonData.length;i++){
+                    data.addRows([[jsonData[i].name, jsonData[i].spercentage,""+jsonData[i].spercentage+"",jsonData[i].bpercentage,""+jsonData[i].bpercentage+""]]);
+                }
+                var options = {
+                    title: 'GICS Sectors',
+                    legend: { position: 'top' }
+                }
+
+        var chart = new google.visualization.ColumnChart(
+            document.getElementById('columnChart'));
+
+        chart.draw(data, options);
+    }
+
+    });
+    }
+
+    function drawBarChart() {
+        $.ajax({
+            url: 'http://localhost:8080/barChart1',
+            dataType: 'json',
+            success: function (jsonData) {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'name');
+        data.addColumn('number', 'percentage');
+        data.addColumn({ type: 'string', role: 'annotation' });
+        // var dataName = new Array();
+        // var dataDiff = new Array();
+        // for (var i=0; i< jsonData.length; i++){
+        //     dataName[i]=jsonData[i].name;
+        // }
+        // for (var i=0;i<jsonData.length;i++){
+        //     dataDiff[i]=jsonData[i].diff;
+        // }
+        for (var i = 0; i < 11; i++) {
+            data.addRows([[jsonData[i].name, jsonData[i].diff,''+jsonData[i].diff+'']]);
+        }
+        // for (var i=0; i<dataDiff.length; i++){
+        //     data.addRows([[dataName[i],dataDiff[i]]]);
+        // }
+            var options = {
+                title: 'GICS Sector Active Weight',
+                chartArea: { width: '50%' },
+                hAxis: {
+                    title: 'Total Population',
+                    minValue: 0
+                },
+                vAxis: {
+                    title: 'City'
+                },
+                annotations: {
+          alwaysOutside: true,
+          textStyle: {
+            fontSize: 14,
+            color: '#000',
+            auraColor: 'none'
+          }
+        },
+            };
+
+            var chart = new google.visualization.BarChart(document.getElementById('barChart'));
+
+            chart.draw(data, options);
+            }
+        });
+        }
+
+</script>
+
+
+
+<script>
+    $('#table').bootstrapTable({
+        height: 300 ,
+        url: 'http://localhost:8080/barChart1',
+        columns:[{
+            field: 'code',
+            title:'GICS code'
+        },
+        {
+            field:'name',
+            title:'Name'
+        },
+        {
+            field:'spercentage',
+            sortable: true,
+            title:'Portfolio(%)'            
+        },
+        {
+            field: 'bpercentage',
+            sortable: true,
+            title: 'Benchmark(%)'
+        },
+        {
+            field: 'diff',
+            sortable: true,
+            title: 'Difference(%)'
+        },]   
+    });
+
+    $('#table').on('click-row.bs.table', function(e, row, $element) {
+        //alert(row.name+" "+row.code+" "+row.spresentage+" "+row.bpresentage+" "+ row.diff);
+        window.location.assign("http://localhost:8080/details/"+row.code);
+        
+         alert(data.code);               
+    });
+</script>
+
+
+
+<!--Embed the footer.html template at this location-->
+{{ template "footer.html" .}}

@@ -3,24 +3,31 @@
 <!--Embed the header.html template at this location-->
 {{ template "header.html" .}}
 <!--page content-->
-<div id="page-content-wrapper">
-    <div class="container-fluid">
-       <table id="table">
+    <div id="page-content-wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col">
+                    <table id="table">
+                    </table> 
+                </div>
+            </div>
 
-       </div>
+            <div class="col">
+                <a class="btn btn-primary" href="/bar/1" role="button" style="margin-top:10px;">Back Pre</a>
+            </div>
+
+        </div>
     </div>
 </div>
 
 <script>
     var id = '{{ .id }}';
-    $('#table').bootstrapTable({
 
-        pagination: true,
-        pageNumber: 1,
-        pageSize: 12,
+    $('#table').bootstrapTable({
+        height:600,
+        sortable:true,
         search: true,
         sortable: true,
-        pageList: [20, 50, 100, 150],
         url: 'http://localhost:8080/stock/' + id,
         columns: [{
             field: 'date',
