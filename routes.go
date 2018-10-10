@@ -100,4 +100,9 @@ func initializeRoutes() {
 		c.JSON(http.StatusOK, stock)
 	})
 
+	router.GET("/sec", func(c *gin.Context) {
+		sec := SetSecruityData()
+		c.JSON(http.StatusOK, sec)
+	})
+
 }

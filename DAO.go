@@ -2,8 +2,10 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"math"
+	"os"
 	"strconv"
 	"strings"
 
@@ -32,6 +34,24 @@ type (
 		IsoCty    string
 		IDXMktCap string
 		Gicses    string
+	}
+
+	// SecruityData struct to store information of secruity data
+	SecruityData struct {
+		Name   string  `json:"name"`
+		IsoCty string  `json:"isocty"`
+		Sector string  `json:"sector"`
+		Weight float64 `json:"weight"`
+	}
+
+	// StockVMQ struct to store information of VMQ score
+	StockVMQ struct {
+		Name     string `json:"name"`
+		Date     []string
+		VScore   []float64 `json:"v"`
+		MScore   []float64 `json:"m"`
+		QScore   []float64 `json:"q"`
+		VMQScore []float64 `json:"vmq"`
 	}
 
 	// GICSCalculation struct to store all stock calculation tables
@@ -67,17 +87,101 @@ type (
 		BPercentage float64 `json:"bpercentage"`
 		Diff        float64 `json:"diff"`
 	}
-
-	// StockVMQ struct to store information of VMQ score
-	StockVMQ struct {
-		Name     string `json:"name"`
-		Date     []string
-		VScore   []float64 `json:"v"`
-		MScore   []float64 `json:"m"`
-		QScore   []float64 `json:"q"`
-		VMQScore []float64 `json:"vmq"`
-	}
 )
+
+var sLog = "log/s_reports.log"
+var bmLog = "log/bm_reports.log"
+
+//
+func isError(err error) bool {
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+
+	return (err != nil)
+}
+
+//create file is not exists
+func createFile(path string) {
+	// detect if file exists
+	var _, err = os.Stat(path)
+
+	// create file if not exists
+	if os.IsNotExist(err) {
+		var file, err = os.Create(path)
+		if isError(err) {
+			return
+		}
+		defer file.Close()
+	}
+
+	fmt.Println("==> done creating file", path)
+}
+
+func writeLogFile(path string, rows []int) {
+	// open file using READ & WRITE permission
+	var file, err = os.OpenFile(path, os.O_RDWR, 0644)
+	if isError(err) {
+		return
+	}
+	defer file.Close()
+
+	// write some text line-by-line to file
+	if len(rows) > 0 {
+		if rows[0] == 0 {
+			_, err = file.WriteString("Colomuns missing\n")
+		}
+		for i := range rows {
+			_, err = file.WriteString("row" + strconv.Itoa(i) + "is missing\n")
+		}
+	}
+	// save changes
+	err = file.Sync()
+	if isError(err) {
+		return
+	}
+
+	fmt.Println("==> done writing to file")
+}
+
+func readFile(path string) {
+	// re-open file
+	var file, err = os.OpenFile(path, os.O_RDWR, 0644)
+	if isError(err) {
+		return
+	}
+	defer file.Close()
+
+	// read file, line by line
+	var text = make([]byte, 1024)
+	for {
+		_, err = file.Read(text)
+
+		// break if finally arrived at end of file
+		if err == io.EOF {
+			break
+		}
+
+		// break if error occured
+		if err != nil && err != io.EOF {
+			isError(err)
+			break
+		}
+	}
+
+	fmt.Println("==> done reading from file")
+	fmt.Println(string(text))
+}
+
+func deleteFile(path string) {
+	// delete file
+	var err = os.Remove(path)
+	if isError(err) {
+		return
+	}
+
+	fmt.Println("==> done deleting file")
+}
 
 // ReadData from xlsx
 func ReadData(xlsxName string, sheetName string, header string) [][]string {
@@ -101,6 +205,89 @@ func ReadData(xlsxName string, sheetName string, header string) [][]string {
 	rows := xlsx.GetRows(sheetName)
 
 	return rows
+}
+
+//validate excel file before loading
+func validationSummary(rows [][]string) (bool, []int) {
+	//city := []string{"CA", "US", "MX", "NA", "AU", "HK", "NZ",
+	//	"SG", "CN", "KR", "TW", "APXJP", "AT", "BE", "CH", "DE",
+	//	"DK", "ES", "FI", "FR", "IE", "IL", "IT", "NL", "NO", "PT",
+	//	"CZ", "GR", "HU", "PL", "SE", "EURXUK", "GB", "JP"}
+	//gics := []string{}
+	errorRows := []int{}
+	errorCols := true
+	//var errorLogs = ""
+	//var correctRows int
+	for i := range rows {
+		if i == 0 {
+			var A, B, C bool
+			for j := range rows {
+				if rows[0][j] != "GICS_SI" {
+					A = false
+				}
+				if rows[0][j] != "ISO_CTY_CODE" {
+					B = false
+				}
+				if rows[0][j] != "FFLOAT_MKTCAP_USD" {
+					C = false
+				}
+			}
+			if A || B || C == false {
+				//table columns are missing
+				errorRows = append(errorRows, 0)
+				errorCols = false
+				break
+			}
+		}
+		for j := range rows[i] {
+			if rows[i][j] == "" {
+				errorRows = append(errorRows, i)
+				continue
+			}
+		}
+	}
+	createFile(sLog)
+	writeLogFile(sLog, errorRows)
+	return errorCols, errorRows
+}
+
+//Benchmark validation
+func validationBenchmark(rows [][]string) (bool, []int) {
+	errorRows := []int{}
+	errorCols := true
+	for i := range rows {
+		if i == 0 {
+			var A, B, C, D bool
+			for j := range rows {
+				if rows[0][j] != "GICS_IG" {
+					A = false
+				}
+				if rows[0][j] != "GICS_ES" {
+					B = false
+				}
+				if rows[0][j] != "ISO_CTY_CODE2" {
+					C = false
+				}
+				if rows[0][j] != "REGION" {
+					D = false
+				}
+			}
+			if A || B || C || D == false {
+				//table columns are missing
+				errorRows = append(errorRows, 0)
+				errorCols = false
+				break
+			}
+		}
+		for j := range rows[i] {
+			if rows[i][j] == "" {
+				errorRows = append(errorRows, i)
+			}
+		}
+	}
+	createFile(bmLog)
+	writeLogFile(bmLog, errorRows)
+	return errorCols, errorRows
 }
 
 // SetStockData function use to read data from excel and return the stock struct
@@ -265,6 +452,83 @@ func SetBMData() []BenchMarkProprety {
 
 }
 
+// SetSecruityData function use to read data from excel and return the secruity struct
+func SetSecruityData() []SecruityData {
+
+	// Read data from excel, pass xlsx filename and spreadsheet name
+	rows := ReadData("data/Summary Data.xlsx", "Portfolio", "prev_date_d0")
+
+	var (
+		secruity []SecruityData
+		header   []int
+	)
+
+	for i := range rows[0] {
+		if rows[0][i] == "iso_cty" {
+			header = append(header, i)
+		}
+		if rows[0][i] == "gics_ind" {
+			header = append(header, i)
+		}
+		if rows[0][i] == "name" {
+			header = append(header, i)
+		}
+		if rows[0][i] == "stock_only_wgt" {
+			header = append(header, i)
+		}
+		if rows[0][i] == "GICS_ES" {
+			header = append(header, i)
+		}
+	}
+	// Add data into struct
+	for i := range rows {
+
+		// header location
+		if i == 0 {
+			continue
+		}
+
+		// Get full gics code
+		s := []string{rows[i][header[4]], rows[i][header[1]]}
+		gics := strings.Join(s, "")
+		sector := GetGICSName(gics)
+
+		// Convert % number into float64
+		weightS := rows[i][header[3]]
+		weightS = strings.TrimRight(weightS, "%")
+		weight := StringToFloat(weightS)
+
+		// Check isocty code
+		if len(rows[i][header[0]]) == 2 {
+			secruity = append(secruity, SecruityData{
+				Name:   rows[i][header[2]],
+				IsoCty: rows[i][header[0]],
+				Sector: sector,
+				Weight: weight,
+			})
+		}
+	}
+
+	return secruity
+
+}
+
+// GetGICSName function is to define the gics name by code
+func GetGICSName(s string) string {
+
+	// Set GICS struct
+	stockGICSCode := []string{"10", "15", "20", "25", "30", "35",
+		"40", "45", "50", "55", "60"}
+	stockGICSName := []string{"ENE", "MAT", "IND", "CSD", "CSS",
+		"HLC", "FIN", "IFT", "TEL", "UTI", "REL"}
+	for i := range stockGICSCode {
+		if s[:2] == stockGICSCode[i] {
+			return stockGICSName[i]
+		}
+	}
+	return ""
+}
+
 // SetVMQScore function to calculate VMQ score
 func SetVMQScore() []StockVMQ {
 	// Read data from excel, pass xlsx filename and spreadsheet name
@@ -328,6 +592,18 @@ func SetVMQScore() []StockVMQ {
 				}
 			}
 		}
+	}
+
+	for i := 0; i < len(vmq)-1; i++ {
+		for j := 0; j < len(vmq)-1-i; j++ {
+			if vmq[j].VMQScore[0] < vmq[j+1].VMQScore[0] {
+				temp := vmq[j]
+				vmq[j] = vmq[j+1]
+				vmq[j+1] = temp
+			}
+
+		}
+
 	}
 
 	return vmq
@@ -404,7 +680,6 @@ func CalGICS(s []StockProprety, b []BenchMarkProprety) []GICSCalculation {
 		gics[i].SetBPercentage(totalBSum)
 	}
 
-	//fmt.Println(gics)
 	return gics
 }
 
@@ -473,7 +748,6 @@ func CalRegion(s []StockProprety, b []BenchMarkProprety) []RegionCalculation {
 		regions[i].SetBPercentage(totalBSum)
 	}
 
-	//fmt.Println(regions)
 	return regions
 }
 
@@ -543,7 +817,6 @@ func CalCountry(s []StockProprety, b []BenchMarkProprety) []CountryCalculation {
 		countrys[i].SetRegionCode()
 	}
 
-	// fmt.Println(countrys)
 	return countrys
 }
 
