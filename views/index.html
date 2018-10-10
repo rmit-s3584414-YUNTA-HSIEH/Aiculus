@@ -103,25 +103,21 @@
                 columns: [{
                     field: 'name',
                     title: 'Name',
-                    sortable: true,
                     align: 'center'
                 },
                 {
                     field: 'v.0',
                     title: 'V(%)',
-                    sortable: true,
                     align: 'center'
                 },
                 {
                     field: 'm.0',
                     title: 'M(%)',
-                    sortable: true,
                     align: 'center'
                 },
                 {
                     field: 'q.0',
                     title: 'Q(%)',
-                    sortable: true,
                     align: 'center'
                 },
                 {
@@ -131,6 +127,13 @@
                     align: 'center'
                 },]
             });
+
+    $('#table').on('click-row.bs.table', function (e, row, $element) {
+        //alert(row.name+" "+row.code+" "+row.spresentage+" "+row.bpresentage+" "+ row.diff);
+            window.location.assign("http://localhost:8080/detailsVMQ/" + row.code);
+
+            alert(data.code);
+    });
 
 
 </script>
