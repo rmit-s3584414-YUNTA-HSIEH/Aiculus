@@ -9,12 +9,12 @@
             <div class="row">
             <div class="col-4 col-xs-6" id="col">
                 
-                <div class="card" >
-                    <a href="/bar/1">
-                    <div class="card-body">
-                        <div id="carouselExampleControls" class="carousel slide" data-ride="carousel" data-interval="false">
-                            <div class="carousel-inner">
-                                <div class="carousel-item active">
+            <div class="card" >
+                <a href="/bar/1">
+                <div class="card-body">
+                <div id="carouselExampleControls" class="carousel slide" data-ride="carousel" data-interval="false">
+                <div class="carousel-inner">
+                            <div class="carousel-item active">
                                 <canvas id="barChart1-1"></canvas>
                                 </div>
                                 <div class="carousel-item">
@@ -61,6 +61,11 @@
             </div>
             <div class="col-4" id="col">
                 <div class="card">
+                <div class="table_title">
+                    <a href="VMQ">
+                    <h5>VMQ Scores</h5>
+                    </a>
+                </div>
                     <div class="card-body">
                         <table id="table">
                         </table>
@@ -68,14 +73,17 @@
                 </div>
             </div>   
             <div class="col-4" id="col">
-                <a href="/security">
                 <div class="card">
+                <div class="table_title">
+                    <a href="security">
+                    <h5>Top 10 Holdings for protfolio</h5>
+                    </a>
+                </div>
                     <div class="card-body">
                         <table id="table_country">
                         </table>
                     </div>
                 </div>
-                </a>
             </div>                   
         </div>
         <div class="row" >       
@@ -98,7 +106,7 @@
 <script>
             //VMQ table
            $('#table').bootstrapTable({
-                height: 220,
+                height: 450,
                 url: 'http://localhost:8080/VMQ',
                 columns: [{
                     field: 'name',

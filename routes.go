@@ -3,7 +3,10 @@
 package main
 
 import (
+	"fmt"
+	"io"
 	"net/http"
+	"os"
 
 	"github.com/gin-gonic/gin"
 )
@@ -49,9 +52,15 @@ func initializeRoutes() {
 		)
 	})
 
+<<<<<<< HEAD
 	router.GET("/detailsVMQ", func(c *gin.Context) {
 
 		address := "detailsVMQ.html"
+=======
+	router.GET("/country", func(c *gin.Context) {
+
+		address := "country.html"
+>>>>>>> 7ebfcbb923629fb9800c51619dfafc5939f3a23d
 		c.HTML(
 			http.StatusOK,
 			address,
@@ -76,6 +85,34 @@ func initializeRoutes() {
 			address,
 			gin.H{},
 		)
+	})
+
+	router.POST("/upload", func(c *gin.Context) {
+		// name := c.PostForm("name")
+		// email := c.PostForm("email")
+
+		// Source
+		file, err := c.FormFile("file")
+		if err != nil {
+			c.String(http.StatusBadRequest, fmt.Sprintf("get form err: %s", err.Error()))
+			return
+		}
+
+		if err := c.SaveUploadedFile(file, file.Filename); err != nil {
+			c.String(http.StatusBadRequest, fmt.Sprintf("upload file err: %s", err.Error()))
+			return
+		}
+		src, _ := file.Open()
+		defer src.Close()
+		// Destination
+		dstname := fmt.Sprintf("./data/%s", file.Filename)
+		dst, _ := os.Create(dstname)
+		defer dst.Close()
+		// Copy
+		io.Copy(dst, src)
+
+		c.String(http.StatusOK, fmt.Sprintf("File %s uploaded successfully with fields", file.Filename))
+
 	})
 
 	//json api
