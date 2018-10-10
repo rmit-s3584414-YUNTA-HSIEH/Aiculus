@@ -129,8 +129,8 @@
             });
 
     $('#table').on('click-row.bs.table', function (e, row, $element) {
-        //alert(row.name+" "+row.code+" "+row.spresentage+" "+row.bpresentage+" "+ row.diff);
-            window.location.assign("http://localhost:8080/detailsVMQ/" + row.code);
+        alert(row.name+" "+row.v[0]+" "+row.m[0]+" "+row.q[0]+" "+ row.vmq[0]);
+            window.location.assign("http://localhost:8080/detailsVMQ");
 
             alert(data.code);
     });

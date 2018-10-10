@@ -1,0 +1,115 @@
+#sidebar-wrapper{
+  z-index: 1;
+  position: fixed;
+  width: 120px;
+  background-color:#5a6eaa;
+  height: 100%;
+  overflow-x: hidden;
+  
+}
+
+.sidebar-header {
+  padding: 20px 0;
+ 
+  /*color: #f6f6f7;*/
+   background: #5a6eaa;
+}
+
+/* Sidebar links */
+#sidebar-wrapper a {
+  display: block;
+  color:  #f6f6f7;
+  padding: 16px;
+  text-decoration: none;
+}
+
+/* Active/current link */
+#sidebar-wrapper a.active {
+  color: #f6f6f7;
+    background: #5a6eaa;
+}
+
+/* Links on mouse-over */
+#sidebar-wrapper a:hover:not(.active) {
+  color: #7386D5;
+  background: #f6f6f7;
+}
+
+/* Page content. The value of the margin-left property should match the value of the sidebar's width property */
+
+#page-content-wrapper{
+ width:100%;
+ position: absolute;
+ padding:15px;
+padding-left: 130px;
+background: #f6f6f7;
+}
+
+/* Change with of sidebar from 130px to 80px */
+#wrapper.menuDisplayed #sidebar-wrapper {
+    width: 60px;
+}
+
+
+/* Since we added left padding, we need to shrink the width by 80px */
+#wrapper.menuDisplayed #page-content-wrapper {
+    padding-left: 70px;
+}
+
+.carousel-control-prev-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='#7386D5' viewBox='0 0 8 8'%3E%3Cpath d='M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E");
+}
+
+.carousel-control-next-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='#7386D5' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E");
+}
+
+.carousel-control-prev {
+    left: 0;
+    width:20px
+}
+.carousel-control-next {
+    right: 0;
+    width:20px
+}
+
+/* controll col left and right padding*/
+#col{
+  padding: 0px 5px;
+    height: 100%;
+}
+
+div.card{
+ margin: 5px 0px;
+  width:100%;
+}
+
+div.card-body{
+  padding: 0px;
+}
+
+html, body{
+  background: #fafafa;
+  padding: 0;
+  margin:0;
+}
+
+
+
+/* On screens that are less than 700px wide, make the sidebar into a topbar */
+@media screen and (max-width: 700px) {
+  #sidebar-wrapper {
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+  #sidebar-wrapper a {float: left;}
+}
+
+/* On screens that are less than 400px, display the bar vertically, instead of horizontally */
+@media screen and (max-width: 400px) {
+  #sidebar-wrapper a {
+    text-align: center;
+    float: none;
+  }
+}
