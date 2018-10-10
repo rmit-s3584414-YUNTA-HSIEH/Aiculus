@@ -52,6 +52,16 @@ func initializeRoutes() {
 		)
 	})
 
+	router.GET("/country", func(c *gin.Context) {
+
+		address := "country.html"
+		c.HTML(
+			http.StatusOK,
+			address,
+			gin.H{},
+		)
+	})
+
 	router.GET("/details/:id", func(c *gin.Context) {
 		id := c.Param("id")
 		address := "details.html"
