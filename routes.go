@@ -52,15 +52,19 @@ func initializeRoutes() {
 		)
 	})
 
-<<<<<<< HEAD
-	router.GET("/detailsVMQ", func(c *gin.Context) {
-
-		address := "detailsVMQ.html"
-=======
 	router.GET("/country", func(c *gin.Context) {
 
 		address := "country.html"
->>>>>>> 7ebfcbb923629fb9800c51619dfafc5939f3a23d
+		c.HTML(
+			http.StatusOK,
+			address,
+			gin.H{},
+		)
+	})
+
+	router.GET("/detailsVMQ", func(c *gin.Context) {
+
+		address := "detailsVMQ.html"
 		c.HTML(
 			http.StatusOK,
 			address,
