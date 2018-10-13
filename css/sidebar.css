@@ -89,10 +89,16 @@ div.card-body{
 }
 
 html, body{
-  background: #fafafa;
+  background: #f6f6f7;
   padding: 0;
   margin:0;
 }
+
+
+  #SecurityTablebody{
+    height:500px;
+    overflow-y:auto;
+    }
 
 
 

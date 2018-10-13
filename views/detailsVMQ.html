@@ -1,3 +1,4 @@
+
 <!--Embed the header.html template at this location-->
 {{ template "header.html" .}}
 
@@ -6,76 +7,139 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-5">
-                <table class="table table-bordered table-hover" id="table">
-                    <thead class="thead-light">
-                        <tr>
-                            <th scope="col">Name</th>
-                            <th scope="col">V</th>
-                            <th scope="col">M</th>
-                            <th scope="col">Q</th>
-                            <th scope="col">VMQ</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tableBody">
-                    </tbody>
+                <table id="SecurityTable">
                 </table>
             </div>
             <div class="col-7">
+                <h3 style="text-align:center">Please select security from table</h3>
                 <div id="chart_div"></div>
             </div>
         </div>
-    </div>    
+    </div>
 </div>
-        
+
+
+
+
 
 <script>
-//set up vmq oj=bject array
-var VMQArr =[];
-
-//LOAD TABLE ROW DATA BY AJAX
-$.ajax({
-    url: 'http://localhost:8080/VMQ',
-    dataType: 'json',
-    success: function (data) {
-        var body=document.getElementById("tableBody");
-        var rowData = '';
-        for(var i=0;i<data.length;i++){
-            var VMQObj ={
-                name : data[i].name,
-                v : data[i].v,
-                m : data[i].m,
-                q : data[i].q,
-                vmq : data[i].vmq                           
-            };
-            //alert(VMQObj.name+" "+ VMQObj.v);
-            VMQArr.push(VMQObj);
-                //write data into table        
-                rowData+='<tr>'+ '<td>' + VMQObj.name + '</td>' + '<td>' + VMQObj.v[0] + '</td>' + '<td>' + VMQObj.m[0] + '</td>' +'<td>'+ VMQObj.q[0]+'</td>'+ '<td>' + VMQObj.vmq[0] + '</td>' +'</tr>'
-            }
-            body.innerHTML = rowData;
-                    
-    }
-});
-
-
-//GET ROW DATA WHEN CLICK ROW
-$("#table").on('click','tbody tr',function(event){
-
-    var name,v,m,q,vmq;
-
-    var $row = $(this).closest("tr"),       // Finds the closest row <tr> 
-        $tds = $row.find("td");             // Finds all children <td> elements
-
-    $.each($tds, function () {         // Visits every single <td> element    
-       alert($(this).text());        // Prints out the text within the <td>
+    //VMQ table
+    $('#SecurityTable').bootstrapTable({
+        height: 600,
+        url: 'http://localhost:8080/VMQ',
+        columns: [{
+            field: 'name',
+            title: 'Name',
+            align: 'center'
+        },
+        {
+            field: 'v.0',
+            title: 'V(%)',
+            align: 'center'
+        },
+        {
+            field: 'm.0',
+            title: 'M(%)',
+            align: 'center'
+        },
+        {
+            field: 'q.0',
+            title: 'Q(%)',
+            align: 'center'
+        },
+        {
+            field: 'vmq.0',
+            title: 'VMQ(%)',
+            sortable: true,
+            align: 'center'
+        },]
     });
-});
+
+    var VMQArr = [];
+    var VMQname, VMQIndex;
+    //LOAD TABLE ROW DATA BY AJAX
+    $.ajax({
+        url: 'http://localhost:8080/VMQ',
+        dataType: 'json',
+        success: function (data) {
+            var rowData = '';
+            for (var i = 0; i < data.length; i++) {
+                var VMQObj = {
+                    name: data[i].name,
+                    v: data[i].v,
+                    m: data[i].m,
+                    q: data[i].q,
+                    vmq: data[i].vmq
+                };
+                VMQArr.push(VMQObj);
+            }
+        }
+    });
 
 
 
+    $('#SecurityTable').on('click-row.bs.table', function (e, row, $element) {
+        $("h3").remove();
+        for (var i = 0; i < VMQArr.length; i++) {
+            if (row.name == VMQArr[i].name) {
+                VMQIndex = i;
+            }
+        }
+        //draw line chart when click table row
+        google.charts.load('current', { packages: ['corechart', 'line'] });
+        google.charts.setOnLoadCallback(drawBasic);
+
+        function drawBasic() {
+
+            var data = new google.visualization.DataTable();
+            data.addColumn('date', 'Date');
+            data.addColumn('number', 'V');
+            data.addColumn('number', 'M');
+            data.addColumn('number', 'Q');
+            data.addColumn('number', 'VMQ');
+            var chartData = [
+                [new Date(2018, 8, 24), VMQArr[VMQIndex].v[0], VMQArr[VMQIndex].m[0], VMQArr[VMQIndex].q[0], VMQArr[VMQIndex].vmq[0]],
+                [new Date(2018, 8, 25), VMQArr[VMQIndex].v[1], VMQArr[VMQIndex].m[1], VMQArr[VMQIndex].q[1], VMQArr[VMQIndex].vmq[1]],
+                [new Date(2018, 8, 26), VMQArr[VMQIndex].v[2], VMQArr[VMQIndex].m[2], VMQArr[VMQIndex].q[2], VMQArr[VMQIndex].vmq[2]],
+                [new Date(2018, 8, 27), VMQArr[VMQIndex].v[3], VMQArr[VMQIndex].m[3], VMQArr[VMQIndex].q[3], VMQArr[VMQIndex].vmq[3]],
+                [new Date(2018, 8, 28), VMQArr[VMQIndex].v[4], VMQArr[VMQIndex].m[4], VMQArr[VMQIndex].q[4], VMQArr[VMQIndex].vmq[4]]
+            ];
+            data.addRows(chartData);
+
+            var options = {
+                'height': 600,
+                title: VMQArr[VMQIndex].name,
+                series: {
+                    3: { lineWidth: 4 }
+                },
+                hAxis: {
+                    title: 'Time'
+                },
+                vAxis: {
+                    title: 'percentage'
+                }
+            };
+
+            var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+
+            chart.draw(data, options);
+        }
+
+
+
+
+
+
+    });
+
+
+</script>
+
+<script>
+
+    //draw line chart when click table row
     google.charts.load('current', { packages: ['corechart', 'line'] });
     google.charts.setOnLoadCallback(drawBasic);
-
 
     function drawBasic() {
 
@@ -85,25 +149,25 @@ $("#table").on('click','tbody tr',function(event){
         data.addColumn('number', 'M');
         data.addColumn('number', 'Q');
         data.addColumn('number', 'VMQ');
-        alert(VMQArr[0].v);
-        data.addRows([
-            [new Date(2018, 9, 24), VMQArr[0].v[0], VMQArr[0].m[0], VMQArr[0].q[0], VMQArr[0].vmq[0]],
-            [new Date(2018, 9, 25), VMQArr[0].v[1], VMQArr[0].m[1], VMQArr[0].q[1], VMQArr[0].vmq[1]]
-            //[new Date(2018, 9, 26), VMQArr[0].v[2], VMQArr[0].m[2], VMQArr[0].q[2], VMQArr[0].vmq[2]]
-            //[new Date(2018, 9, 27), VMQArr[0].v[3], VMQArr[0].m[3], VMQArr[0].q[3], VMQArr[0].vmq[3]]
-            //[new Date(2018, 9, 28), VMQArr[0].v[4], VMQArr[0].m[4], VMQArr[0].q[4], VMQArr[0].vmq[4]]
-        
-        
-        
-        ]);
-        
+        var chartData = [
+            [new Date(2018, 8, 24), VMQArr[VMQIndex].v[0], VMQArr[VMQIndex].m[0], VMQArr[VMQIndex].q[0], VMQArr[VMQIndex].vmq[0]],
+            [new Date(2018, 8, 25), VMQArr[VMQIndex].v[1], VMQArr[VMQIndex].m[1], VMQArr[VMQIndex].q[1], VMQArr[VMQIndex].vmq[1]],
+            [new Date(2018, 8, 26), VMQArr[VMQIndex].v[2], VMQArr[VMQIndex].m[2], VMQArr[VMQIndex].q[2], VMQArr[VMQIndex].vmq[2]],
+            [new Date(2018, 8, 27), VMQArr[VMQIndex].v[3], VMQArr[VMQIndex].m[3], VMQArr[VMQIndex].q[3], VMQArr[VMQIndex].vmq[3]],
+            [new Date(2018, 8, 28), VMQArr[VMQIndex].v[4], VMQArr[VMQIndex].m[4], VMQArr[VMQIndex].q[4], VMQArr[VMQIndex].vmq[4]]
+        ];
+        data.addRows(chartData);
 
         var options = {
+            title: VMQArr[VMQIndex].name,
+            series: {
+                3: { lineWidth: 4 }
+            },
             hAxis: {
                 title: 'Time'
             },
             vAxis: {
-                title: 'Popularity'
+                title: 'percentage'
             }
         };
 
@@ -111,10 +175,4 @@ $("#table").on('click','tbody tr',function(event){
 
         chart.draw(data, options);
     }
-
-
 </script>
-
-
-<!--Embed the footer.html template at this location-->
-{{ template "footer.html" .}}

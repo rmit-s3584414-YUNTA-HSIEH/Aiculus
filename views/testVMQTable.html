@@ -1,0 +1,125 @@
+
+<!--page content-->
+<div id="page-content-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-5">
+                <table class="table table-bordered table-hover" id="SecurityTable">
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col">SECURITY_NAME</th>
+                            <th scope="col">V</th>
+                            <th scope="col">M</th>
+                            <th scope="col">Q</th>
+                            <th scope="col">VMQ</th>
+                        </tr>
+                    </thead>
+                    <div>
+                        <tbody id="SecurityTablebody">
+                        </tbody>
+                    </div>
+
+                </table>
+            </div>
+            <div class="col-7">
+                <h3>Please select security from table</h3>
+                <div id="chart_div"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    //set up vmq oj=bject array
+    var VMQArr = [];
+    var VMQname, VMQIndex;
+    //LOAD TABLE ROW DATA BY AJAX
+    $.ajax({
+        url: 'http://localhost:8080/VMQ',
+        dataType: 'json',
+        success: function (data) {
+            var body = document.getElementById("SecurityTablebody");
+            var rowData = '';
+            for (var i = 0; i < data.length; i++) {
+                var VMQObj = {
+                    name: data[i].name,
+                    v: data[i].v,
+                    m: data[i].m,
+                    q: data[i].q,
+                    vmq: data[i].vmq
+                };
+                VMQArr.push(VMQObj);
+                //write data into table        
+                rowData += '<tr>' + '<td>' + VMQObj.name + '</td>' + '<td>' + VMQObj.v[0] + '</td>' + '<td>' + VMQObj.m[0] + '</td>' + '<td>' + VMQObj.q[0] + '</td>' + '<td>' + VMQObj.vmq[0] + '</td>' + '</tr>'
+            }
+            body.innerHTML = rowData;
+        }
+    });
+
+    //GET ROW DATA WHEN CLICK ROW
+    $("#SecurityTable").on('click', 'tbody tr', function (event) {
+        $("h3").remove();
+        var $row = $(this).closest("tr"),       // Finds the closest row <tr>
+            $tds = $row.find("td");             // Finds all children <td> elements
+        VMQname = $tds.first().text();     //get security name from click row
+        /*
+        $.each($tds, function () {         // Visits every single <td> element    
+        alert($(this).text());        // Prints out the text within the <td>
+        });
+        */
+
+        //get VMQArr index which name same as VMQname
+        for (var i = 0; i < VMQArr.length; i++) {
+            if (VMQArr[i].name == VMQname) {
+                VMQIndex = i;
+            }
+        }
+
+        //draw line chart when click table row
+        google.charts.load('current', { packages: ['corechart', 'line'] });
+        google.charts.setOnLoadCallback(drawBasic);
+
+        function drawBasic() {
+
+            var data = new google.visualization.DataTable();
+            data.addColumn('date', 'Date');
+            data.addColumn('number', 'V');
+            data.addColumn('number', 'M');
+            data.addColumn('number', 'Q');
+            data.addColumn('number', 'VMQ');
+            var chartData = [
+                [new Date(2018, 8, 24), VMQArr[VMQIndex].v[0], VMQArr[VMQIndex].m[0], VMQArr[VMQIndex].q[0], VMQArr[VMQIndex].vmq[0]],
+                [new Date(2018, 8, 25), VMQArr[VMQIndex].v[1], VMQArr[VMQIndex].m[1], VMQArr[VMQIndex].q[1], VMQArr[VMQIndex].vmq[1]],
+                [new Date(2018, 8, 26), VMQArr[VMQIndex].v[2], VMQArr[VMQIndex].m[2], VMQArr[VMQIndex].q[2], VMQArr[VMQIndex].vmq[2]],
+                [new Date(2018, 8, 27), VMQArr[VMQIndex].v[3], VMQArr[VMQIndex].m[3], VMQArr[VMQIndex].q[3], VMQArr[VMQIndex].vmq[3]],
+                [new Date(2018, 8, 28), VMQArr[VMQIndex].v[4], VMQArr[VMQIndex].m[4], VMQArr[VMQIndex].q[4], VMQArr[VMQIndex].vmq[4]]
+            ];
+            data.addRows(chartData);
+
+            var options = {
+                height: 450,
+                title: VMQArr[VMQIndex].name,
+                series: {
+                    3: { lineWidth: 4 }
+                },
+                hAxis: {
+                    title: 'Time'
+                },
+                vAxis: {
+                    title: 'percentage'
+                }
+            };
+
+            var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+
+            chart.draw(data, options);
+        }
+    });
+
+</script>
+
+
+<!--Embed the footer.html template at this location-->
+{{ template "footer.html" .}}

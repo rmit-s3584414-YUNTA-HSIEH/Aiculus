@@ -91,6 +91,15 @@ func initializeRoutes() {
 		)
 	})
 
+	router.GET("/testVMQ", func(c *gin.Context) {
+		address := "testVMQTable.html"
+		c.HTML(
+			http.StatusOK,
+			address,
+			gin.H{},
+		)
+	})
+
 	router.POST("/upload", func(c *gin.Context) {
 		// name := c.PostForm("name")
 		// email := c.PostForm("email")

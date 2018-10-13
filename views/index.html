@@ -138,10 +138,10 @@
             });
 
     $('#table').on('click-row.bs.table', function (e, row, $element) {
-        alert(row.name+" "+row.v[0]+" "+row.m[0]+" "+row.q[0]+" "+ row.vmq[0]);
+       // alert(row.name+" "+row.v[0]+" "+row.m[0]+" "+row.q[0]+" "+ row.vmq[0]);
             window.location.assign("http://localhost:8080/detailsVMQ");
 
-            alert(data.code);
+            //alert(data.code);
     });
 
 
@@ -189,7 +189,7 @@
             url:'http://localhost:8080/line',
             dataType:'json',
             success: function(data){
-                alert("stock:"+data.name+"\nprice:"+data.Price);
+                //alert("stock:"+data.name+"\nprice:"+data.Price);
             }
         });
     });
