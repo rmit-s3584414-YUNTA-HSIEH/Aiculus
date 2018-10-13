@@ -107,11 +107,7 @@
 
 <script>
     $('#table').bootstrapTable({
-        
-        // pagination:true,
-        // pageNumber:1,
-        // pageSize:5,
-        // pageList: [20, 50, 100, 150],
+
         url: 'http://localhost:8080/barChart2',
         columns:[{
             field: 'code',
@@ -144,7 +140,7 @@
         //alert(row.name+" "+row.code+" "+row.spercentage+" "+row.bpercentage+" "+ row.diff);
         window.location.assign("http://localhost:8080/details/"+row.code);
         
-         alert(row.code);               
+         //alert(row.code);               
     });
 </script>
 

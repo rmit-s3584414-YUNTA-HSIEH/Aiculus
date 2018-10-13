@@ -51,6 +51,7 @@
                 data.addColumn('number', 'Benchmark');
                 data.addColumn({ type: 'string', role: 'annotation' });
                 
+                
                 for(var i=0;i<jsonData.length;i++){
                     data.addRows([[jsonData[i].name, jsonData[i].spercentage,""+jsonData[i].spercentage+"",jsonData[i].bpercentage,""+jsonData[i].bpercentage+""]]);
                 }

@@ -5,16 +5,115 @@
 <div id="page-content-wrapper">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-4">
-                <img src="Outlook-1512471420.png">
+            <div class="col-5">
+                <table class="table table-bordered table-hover" id="table">
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">V</th>
+                            <th scope="col">M</th>
+                            <th scope="col">Q</th>
+                            <th scope="col">VMQ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                    </tbody>
+                </table>
             </div>
-            <div class="col-8">
-                
+            <div class="col-7">
+                <div id="chart_div"></div>
             </div>
         </div>
     </div>    
 </div>
         
+
+<script>
+//set up vmq oj=bject array
+var VMQArr =[];
+
+//LOAD TABLE ROW DATA BY AJAX
+$.ajax({
+    url: 'http://localhost:8080/VMQ',
+    dataType: 'json',
+    success: function (data) {
+        var body=document.getElementById("tableBody");
+        var rowData = '';
+        for(var i=0;i<data.length;i++){
+            var VMQObj ={
+                name : data[i].name,
+                v : data[i].v,
+                m : data[i].m,
+                q : data[i].q,
+                vmq : data[i].vmq                           
+            };
+            //alert(VMQObj.name+" "+ VMQObj.v);
+            VMQArr.push(VMQObj);
+                //write data into table        
+                rowData+='<tr>'+ '<td>' + VMQObj.name + '</td>' + '<td>' + VMQObj.v[0] + '</td>' + '<td>' + VMQObj.m[0] + '</td>' +'<td>'+ VMQObj.q[0]+'</td>'+ '<td>' + VMQObj.vmq[0] + '</td>' +'</tr>'
+            }
+            body.innerHTML = rowData;
+                    
+    }
+});
+
+
+//GET ROW DATA WHEN CLICK ROW
+$("#table").on('click','tbody tr',function(event){
+
+    var name,v,m,q,vmq;
+
+    var $row = $(this).closest("tr"),       // Finds the closest row <tr> 
+        $tds = $row.find("td");             // Finds all children <td> elements
+
+    $.each($tds, function () {         // Visits every single <td> element    
+       alert($(this).text());        // Prints out the text within the <td>
+    });
+});
+
+
+
+    google.charts.load('current', { packages: ['corechart', 'line'] });
+    google.charts.setOnLoadCallback(drawBasic);
+
+
+    function drawBasic() {
+
+        var data = new google.visualization.DataTable();
+        data.addColumn('date', 'Date');
+        data.addColumn('number', 'V');
+        data.addColumn('number', 'M');
+        data.addColumn('number', 'Q');
+        data.addColumn('number', 'VMQ');
+        alert(VMQArr[0].v);
+        data.addRows([
+            [new Date(2018, 9, 24), VMQArr[0].v[0], VMQArr[0].m[0], VMQArr[0].q[0], VMQArr[0].vmq[0]],
+            [new Date(2018, 9, 25), VMQArr[0].v[1], VMQArr[0].m[1], VMQArr[0].q[1], VMQArr[0].vmq[1]]
+            //[new Date(2018, 9, 26), VMQArr[0].v[2], VMQArr[0].m[2], VMQArr[0].q[2], VMQArr[0].vmq[2]]
+            //[new Date(2018, 9, 27), VMQArr[0].v[3], VMQArr[0].m[3], VMQArr[0].q[3], VMQArr[0].vmq[3]]
+            //[new Date(2018, 9, 28), VMQArr[0].v[4], VMQArr[0].m[4], VMQArr[0].q[4], VMQArr[0].vmq[4]]
+        
+        
+        
+        ]);
+        
+
+        var options = {
+            hAxis: {
+                title: 'Time'
+            },
+            vAxis: {
+                title: 'Popularity'
+            }
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+
+        chart.draw(data, options);
+    }
+
+
+</script>
 
 
 <!--Embed the footer.html template at this location-->
