@@ -260,7 +260,7 @@
 
     function drawChart() {
         var data = google.visualization.arrayToDataTable([
-            ['Year', 'Sales', 'Expenses'],
+            ['Year', 'Portfolio', 'Benchmark'],
             ['2004', 1000, 400],
             ['2005', 1170, 460],
             ['2006', 660, 1120],
@@ -268,8 +268,9 @@
         ]);
 
         var options = {
-            title: 'Company Performance',
+            title: 'Portfolio Performance',
             curveType: 'function',
+            colors: [`#3e95cd`, `#8e5ea2`],
            
         };
 
@@ -366,7 +367,7 @@ $.ajax({
                     {
                         label: "CURR_PORT",
                         fill: true,
-                        backgroundColor: "#49b6bb",
+                        backgroundColor: "#3e95cd",
                         borderColor: "rgba(179,181,198,1)",
                         pointBorderColor: "#fff",
                         pointBackgroundColor: "rgba(179,181,198,1)",
@@ -374,7 +375,7 @@ $.ajax({
                     }, {
                         label: "MSWLD",
                         fill: true,
-                        backgroundColor: "#beb6bb",
+                        backgroundColor: "#8e5ea2",
                         borderColor: "rgba(255,99,132,1)",
                         pointBorderColor: "#fff",
                         pointBackgroundColor: "rgba(255,99,132,1)",
