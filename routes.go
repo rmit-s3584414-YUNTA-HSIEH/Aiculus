@@ -138,7 +138,21 @@ func initializeRoutes() {
 	router.GET("/VMQ", func(c *gin.Context) {
 
 		VMQ := SetVMQScore()
+
 		c.JSON(http.StatusOK, VMQ)
+	})
+
+	router.GET("/VMQTOP10", func(c *gin.Context) {
+
+		VMQ := SetVMQScore()
+
+		var TOPTen []StockVMQ
+
+		for i := 0; i < 10; i++ {
+			TOPTen = append(TOPTen, VMQ[i])
+		}
+
+		c.JSON(http.StatusOK, TOPTen)
 	})
 
 	router.GET("/barChart1", func(c *gin.Context) {
