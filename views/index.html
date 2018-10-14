@@ -81,8 +81,8 @@
                     </a>
                 </div>
                     <div class="card-body">
-                        <table id="table_country">
-                        </table>
+                        <div id="securitytable">
+                        </div>
                     </div>
                 </div>
             </div>                   
@@ -149,37 +149,48 @@
 
 <script>
 
-    $('#table_country').bootstrapTable({
-         height: 450,
-         url: 'http://localhost:8080/sec',
-         columns: [{
-             field: 'name',
-             title: 'Name',
-             sortable:true,
-             align:'center'
-         },
-         {
-             field: 'isocty',
-             title: 'Country',
-             sortable:true,
-             align:'center'
-         },
-        {
-            field: 'sector',
-            title: 'Sector',
-            sortable: true,
-            align: 'center'
-        },
-        {
-            field: 'weight',
-            title: 'Weight',
-            sortable: true,
-            align: 'center'
-        },
-        ]
-     });
+        $.ajax({
+            url: 'http://localhost:8080/sec',
+            dataType: 'json',
+            success: function(jsonData) {
 
+                google.charts.load('current', { 'packages': ['table'] });
+                google.charts.setOnLoadCallback(drawTable);
 
+                function drawTable() {
+                    var data = new google.visualization.DataTable();
+
+                    data.addColumn('string', 'Name');
+                    data.addColumn('string', 'Country');
+                    data.addColumn('string', 'Sector');
+                    data.addColumn('number', 'Weight');
+
+                    for (var i = 0; i < 10; i++) {
+                        data.addRows([[jsonData[i].name, jsonData[i].isocty, jsonData[i].sector, jsonData[i].weight]]);
+                    }
+
+                    var options = {
+                        showRowNumber: true, 
+                        width: '100%', 
+                        height: '100%'
+                    }
+
+                    var table = new google.visualization.Table(
+                        document.getElementById('securitytable'));
+                        
+                    var formatter = new google.visualization.NumberFormat(
+                        {
+                            suffix: '%',
+                        }
+                    );
+
+                    formatter.format(data, 3);
+                    
+                    table.draw(data,options);
+                }
+            }
+        })
+        
 </script>
 
 <script>
