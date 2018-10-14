@@ -30,28 +30,45 @@
         columns: [{
             field: 'name',
             title: 'Security_Name',
-            align: 'center'
+            sortable: true,
+            align: 'center',
+            valign: 'middle',
         },
         {
             field: 'v.0',
             title: 'V(%)',
-            align: 'center'
+            sortable: true,
+            align: 'center',
+            valign: 'middle',
+            cellStyle: format,
+            formatter: numberFormatter,
         },
         {
             field: 'm.0',
             title: 'M(%)',
-            align: 'center'
+            sortable: true,
+            align: 'center',
+            valign: 'middle',
+            cellStyle: format,
+            formatter: numberFormatter,
         },
         {
             field: 'q.0',
             title: 'Q(%)',
-            align: 'center'
+            sortable: true,
+            align: 'center',
+            valign: 'middle',
+            cellStyle: format,
+            formatter: numberFormatter,
         },
         {
             field: 'vmq.0',
             title: 'VMQ(%)',
             sortable: true,
-            align: 'center'
+            align: 'center',
+            valign: 'middle',
+            cellStyle: format,
+            formatter: numberFormatter,
         },]
     });
 
@@ -128,13 +145,21 @@
             chart.draw(data, options);
         }
 
-
-
-
-
-
     });
 
+    function format(data) {
+        if (data > 0) {
+            return { css: { "color": "red" } };
+        } else if (data < 0) {
+            return { css: { "color": "green" } };
+        } else {
+            return { css: { "color": "black" } };
+        }
+    }
+
+    function numberFormatter(data) {
+        return data + '%';
+    }
 
 </script>
 

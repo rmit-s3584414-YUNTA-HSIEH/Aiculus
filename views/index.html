@@ -62,14 +62,15 @@
             <div class="col-4" id="col">
                 <div class="card">
                 <div class="table_title">
+                
+                    <style>
+                        .google-visualization-table-td {text-align: center !important;}
+                    </style>
+                    
                     <h5 style="text-align:center">VMQ Scores</h5>
                 </div>
                 
                     <div class="card-body">
-                    <!--    
-                        <table id="table">
-                        </table>
-                    -->
                     <div id="table_div"></div>
                     </div>
 
@@ -77,9 +78,9 @@
             </div>   
             <div class="col-4" id="col">
                 <div class="card">
-                <div class="table_title">
-                    <h5 style="text-align:center">Top 10 Holdings for portfolio</h5>
-                </div>
+                    <div class="table_title">
+                        <h5 style="text-align:center">Top 10 Holdings for portfolio</h5>
+                    </div>
                     <div class="card-body">
                         <div id="securitytable">
                         </div>
@@ -112,88 +113,60 @@
         dataType: 'json',
         success: function (jsonData) {
 
-        google.charts.load('current', { 'packages': ['table'] });
-        google.charts.setOnLoadCallback(drawTable);
+            google.charts.load('current', { 'packages': ['table'] });
+            google.charts.setOnLoadCallback(drawTable);
 
-        function drawTable() {
-            var data = new google.visualization.DataTable();
-            data.addColumn('string', 'Name');
-            data.addColumn('number', 'V');
-            data.addColumn('number', 'M');
-            data.addColumn('number', 'Q');
-            data.addColumn('number', 'VMQ');
-            
+            function drawTable() {
+                var data = new google.visualization.DataTable();
+                data.addColumn('number', 'Rank');
+                data.addColumn('string', 'Name');
+                data.addColumn('number', 'V');
+                data.addColumn('number', 'M');
+                data.addColumn('number', 'Q');
+                data.addColumn('number', 'VMQ');
+                
 
-            for (var i = 0; i < 10; i++) {
-                data.addRows([[jsonData[i].name, jsonData[i].v[0], jsonData[i].m[0], jsonData[i].q[0],jsonData[i].vmq[0]]]);
+                for (var i = 0; i < 10; i++) {
+                    data.addRows([[i+1, jsonData[i].name, jsonData[i].v[0], jsonData[i].m[0], jsonData[i].q[0],jsonData[i].vmq[0]]]);
+                }
+
+                var options = {
+                    allowHtml: true,
+                    width: '100%',
+                    height: '400',
+                }
+
+                var table = new google.visualization.Table(
+                    document.getElementById('table_div'));
+
+                var formatter1 = new google.visualization.NumberFormat(
+                    {
+                        suffix: '%',
+                        negativeColor: 'red', 
+                    }
+                );
+                formatter1.format(data, 2);
+                formatter1.format(data, 3);
+                formatter1.format(data, 4);
+                formatter1.format(data, 5);
+
+                var formatter2 = new google.visualization.ArrowFormat();
+                formatter2.format(data, 2);
+                formatter2.format(data, 3);
+                formatter2.format(data, 4);
+                formatter2.format(data, 5);
+
+                table.draw(data, options);
+
+                google.visualization.events.addListener(table, 'select', selectHandler);
+
+                function selectHandler() {
+                    window.location.assign("http://localhost:8080/detailsVMQ");
+                }
             }
-    /*
-            data.addRows([
-                ['Mike', { v: 10000, f: '$10,000' }, true],
-                ['Jim', { v: 8000, f: '$8,000' }, false],
-                ['Alice', { v: 12500, f: '$12,500' }, true],
-                ['Bob', { v: 7000, f: '$7,000' }, true]
-            ]);
-    */
-            var table = new google.visualization.Table(document.getElementById('table_div'));
-
-            table.draw(data, { showRowNumber: true, width: '100%', height: '100%' });
-        }
-    
-
-
+        
         }
     });
-
-
-
-
-       
-
-
-
-
-
-
-            /*
-           $('#table').bootstrapTable({
-                height: 450,
-                url: 'http://localhost:8080/VMQTOP10',
-                columns: [{
-                    field: 'name',
-                    title: 'Name',
-                    align: 'center'
-                },
-                {
-                    field: 'v.0',
-                    title: 'V(%)',
-                    align: 'center'
-                },
-                {
-                    field: 'm.0',
-                    title: 'M(%)',
-                    align: 'center'
-                },
-                {
-                    field: 'q.0',
-                    title: 'Q(%)',
-                    align: 'center'
-                },
-                {
-                    field: 'vmq.0',
-                    title: 'VMQ(%)',
-                    sortable: true,
-                    align: 'center'
-                },]
-            });
-
-    $('#table').on('click-row.bs.table', function (e, row, $element) {
-       // alert(row.name+" "+row.v[0]+" "+row.m[0]+" "+row.q[0]+" "+ row.vmq[0]);
-            window.location.assign("http://localhost:8080/detailsVMQ");
-
-            //alert(data.code);
-    });
-*/
 
 </script>
 
@@ -210,29 +183,25 @@
                 function drawTable() {
                     var data = new google.visualization.DataTable();
 
-<<<<<<< HEAD
+                    data.addColumn('number', 'Rank');
                     data.addColumn('string', 'Name');
                     data.addColumn('string', 'Country');
                     data.addColumn('string', 'Sector');
                     data.addColumn('number', 'Weight');
-=======
-         $('#table_country').on('click-row.bs.table', function (e, row, $element) {
-                // alert(row.name+" "+row.v[0]+" "+row.m[0]+" "+row.q[0]+" "+ row.vmq[0]);
-                window.location.assign("http://localhost:8080/security");
 
-                //alert(data.code);
-            });
-
->>>>>>> f42aba3f60f28250f96e0fa300a9947247ba1f8c
-
+                    var total = 0;
                     for (var i = 0; i < 10; i++) {
-                        data.addRows([[jsonData[i].name, jsonData[i].isocty, jsonData[i].sector, jsonData[i].weight]]);
+                        data.addRows([[i+1, jsonData[i].name, jsonData[i].isocty, jsonData[i].sector, jsonData[i].weight]]);
+                        total = total + jsonData[i].weight;
                     }
 
+                    data.addRows([[ ,'Total', , , total]])
+
                     var options = {
-                        showRowNumber: true, 
+                        allowHtml: true,
+                        sort: 'disbale',
                         width: '100%', 
-                        height: '100%'
+                        height: '400',
                     }
 
                     var table = new google.visualization.Table(
@@ -244,9 +213,15 @@
                         }
                     );
 
-                    formatter.format(data, 3);
+                    formatter.format(data, 4);
                     
                     table.draw(data,options);
+
+                    google.visualization.events.addListener(table, 'select', selectHandler);
+
+                    function selectHandler() {
+                        window.location.assign("http://localhost:8080/security");
+                    }
                 }
             }
         })
@@ -307,21 +282,23 @@ $.ajax({
         data: {
             labels: ["ENE", "MAT", "IND", "CSD", "CSS", "HLC", "FIN", "IFT", "TEL", "UTI","REL"],
             datasets: [{
-                label: "profolio",
+                label: "Portfolio",
                 backgroundColor:"#3e95cd",
                 data: [data[0].spercentage, data[1].spercentage, data[2].spercentage, data[3].spercentage, data[4].spercentage, data[5].spercentage, data[6].spercentage, data[7].spercentage, data[8].spercentage, data[9].spercentage, data[10].spercentage]
             },
             {
                 label: "Benchmark",
                 backgroundColor:"#8e5ea2",
-                data: [data[0].bpercentage, data[1].bpercentage, data[2].bpercentage, data[3].bpercentage, data[4].bpercentage, data[5].bpercentage, data[6].spercentage, data[7].spercentage, data[8].spercentage, data[9].spercentage, data[10].spercentage]
+                data: [data[0].bpercentage, data[1].bpercentage, data[2].bpercentage, data[3].bpercentage, data[4].bpercentage, data[5].bpercentage, data[6].bpercentage, data[7].bpercentage, data[8].bpercentage, data[9].bpercentage, data[10].bpercentage]
 
             }]
         },
         options: {
-            legend: { display: false },
+            legend: { display: true },
             title: {
                 display: true,
+                fontSize: 18,
+                // fontColor: "#3cba9f",
                 text: 'GICS Sectors'},
         }
             
@@ -333,35 +310,36 @@ $.ajax({
                 //labels: ["EN", "MA", "IN", "CD", "CS", "HC", "FIN", "IT", "Tele", "Uti", "RE"],
                 labels: ["ENE", "MAT", "IND", "CSD", "CSS", "HLC", "FIN", "IFT", "TEL", "UTI","REL"],
                 datasets: [{
-                    label: "%",
+                    label: "Difference",
                     backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850", "#493e8e", "#49b6bb", "#beb6bb", "#beffbb", "#beffff", "#6d844e"],
                     data: [data[0].diff, data[1].diff, data[2].diff, data[3].diff, data[4].diff, data[5].diff, data[6].diff, data[7].diff, data[8].diff, data[9].diff, data[10].diff]
                 }]
             },
             options: {
-                legend: { display: false },
+                legend: { display: true },
                 title: {
                     display: true,
+                    fontSize: 18,
                     text: 'GICS Sectors Active Weight'
                 },
-                animation: {
-                onComplete:function(){
-                    var chartInstance = this.chart,
-                    ctx = chartInstance.ctx;
-                    ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
-                    ctx.fillStyle = "black";
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'bottomtip';
-                    this.data.datasets.forEach(function (dataset, i) {
-                        var meta = chartInstance.controller.getDatasetMeta(i);
-                        meta.data.forEach(function (bar, index) {
-                            var data = dataset.data[index];
-                            ctx.fillText(data, bar._model.x, bar._model.y - 5);
-                        });
-                    });
-            }
+            //     animation: {
+            //     onComplete:function(){
+            //         var chartInstance = this.chart,
+            //         ctx = chartInstance.ctx;
+            //         ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+            //         ctx.fillStyle = "black";
+            //         ctx.textAlign = 'center';
+            //         ctx.textBaseline = 'bottomtip';
+            //         this.data.datasets.forEach(function (dataset, i) {
+            //             var meta = chartInstance.controller.getDatasetMeta(i);
+            //             meta.data.forEach(function (bar, index) {
+            //                 var data = dataset.data[index];
+            //                 ctx.fillText(data, bar._model.x, bar._model.y - 5);
+            //             });
+            //         });
+            // }
 
-                },
+            //     },
             }
         });
     }
@@ -379,49 +357,50 @@ $.ajax({
                 labels: [data[0].code,data[1].code,data[2].code,data[3].code,data[4].code],
                 datasets: [
                     {
-                        label: "CURR_PORT",
+                        label: "Portfolio",
                         fill: true,
                         backgroundColor: "#3e95cd",
-                        borderColor: "rgba(179,181,198,1)",
-                        pointBorderColor: "#fff",
-                        pointBackgroundColor: "rgba(179,181,198,1)",
+                        // borderColor: "rgba(179,181,198,1)",
+                        // pointBorderColor: "#fff",
+                        // pointBackgroundColor: "rgba(179,181,198,1)",
                         data: [data[0].spercentage,data[1].spercentage,data[2].spercentage,data[3].spercentage,data[4].spercentage]
                     }, {
-                        label: "MSWLD",
+                        label: "Benchmark",
                         fill: true,
                         backgroundColor: "#8e5ea2",
-                        borderColor: "rgba(255,99,132,1)",
-                        pointBorderColor: "#fff",
-                        pointBackgroundColor: "rgba(255,99,132,1)",
-                        pointBorderColor: "#fff",
+                        // borderColor: "rgba(255,99,132,1)",
+                        // pointBorderColor: "#fff",
+                        // pointBackgroundColor: "rgba(255,99,132,1)",
+                        // pointBorderColor: "#fff",
                         data: [data[0].bpercentage,data[1].bpercentage,data[2].bpercentage,data[3].bpercentage,data[4].bpercentage]
                     }
                 ]
             },
             options: {
-                legend: { display: false },
+                legend: { display: true },
                 title: {
                     display: true,
+                    fontSize: 18,
                     text: 'Regional Weights'
                 },
-                animation: {
-                onComplete:function(){
-                    var chartInstance = this.chart,
-                    ctx = chartInstance.ctx;
-                    ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
-                    ctx.fillStyle = "black";
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'bottom';
-                    this.data.datasets.forEach(function (dataset, i) {
-                        var meta = chartInstance.controller.getDatasetMeta(i);
-                        meta.data.forEach(function (bar, index) {
-                            var data = dataset.data[index];
-                            ctx.fillText(data, bar._model.x, bar._model.y - 5);
-                        });
-                    });
-                }
+                // animation: {
+                // onComplete:function(){
+                //     var chartInstance = this.chart,
+                //     ctx = chartInstance.ctx;
+                //     ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                //     ctx.fillStyle = "black";
+                //     ctx.textAlign = 'center';
+                //     ctx.textBaseline = 'bottom';
+                //     this.data.datasets.forEach(function (dataset, i) {
+                //         var meta = chartInstance.controller.getDatasetMeta(i);
+                //         meta.data.forEach(function (bar, index) {
+                //             var data = dataset.data[index];
+                //             ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                //         });
+                //     });
+                // }
 
-                },
+                // },
             }
         });
 
@@ -433,36 +412,37 @@ new Chart(document.getElementById("barChart2-2"), {
             labels: [data[0].code,data[1].code,data[2].code,data[3].code,data[4].code],
             datasets: [
                 {
-                    label: "vs_MSWLD",
+                    label: "Difference",
                     backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850"],
                     data: [data[0].diff,data[1].diff,data[2].diff,data[3].diff,data[4].diff]
                 }
             ]
         },
         options: {
-            legend: { display: false },
+            legend: { display: true },
             title: {
                 display: true,
+                fontSize: 18,
                 text: 'Regional Active Weight'
             },
-            animation: {
-                onComplete:function(){
-                    var chartInstance = this.chart,
-                    ctx = chartInstance.ctx;
-                    ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
-                    ctx.fillStyle = "black";
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'bottomtip';
-                    this.data.datasets.forEach(function (dataset, i) {
-                        var meta = chartInstance.controller.getDatasetMeta(i);
-                        meta.data.forEach(function (bar, index) {
-                            var data = dataset.data[index];
-                            ctx.fillText(data, bar._model.x, bar._model.y - 5);
-                        });
-                    });
-            }
+            // animation: {
+            //     onComplete:function(){
+            //         var chartInstance = this.chart,
+            //         ctx = chartInstance.ctx;
+            //         ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+            //         ctx.fillStyle = "black";
+            //         ctx.textAlign = 'center';
+            //         ctx.textBaseline = 'bottomtip';
+            //         this.data.datasets.forEach(function (dataset, i) {
+            //             var meta = chartInstance.controller.getDatasetMeta(i);
+            //             meta.data.forEach(function (bar, index) {
+            //                 var data = dataset.data[index];
+            //                 ctx.fillText(data, bar._model.x, bar._model.y - 5);
+            //             });
+            //         });
+            // }
 
-                },
+            //     },
         }
     });
         }

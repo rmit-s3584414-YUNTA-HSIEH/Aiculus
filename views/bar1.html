@@ -47,18 +47,20 @@
                 
                 data.addColumn('string','name');
                 data.addColumn('number','Portfolio');
-                data.addColumn({ type: 'string', role: 'annotation' });
+                // data.addColumn({ type: 'string', role: 'annotation' });
                 data.addColumn('number', 'Benchmark');
-                data.addColumn({ type: 'string', role: 'annotation' });
+                // data.addColumn({ type: 'string', role: 'annotation' });
                 
                 
                 for(var i=0;i<jsonData.length;i++){
-                    data.addRows([[jsonData[i].name, jsonData[i].spercentage,""+jsonData[i].spercentage+"",jsonData[i].bpercentage,""+jsonData[i].bpercentage+""]]);
+                    // data.addRows([[jsonData[i].name, jsonData[i].spercentage,""+jsonData[i].spercentage+"",jsonData[i].bpercentage,""+jsonData[i].bpercentage+""]]);
+                    data.addRows([[jsonData[i].name, jsonData[i].spercentage, jsonData[i].bpercentage]]);
                 }
                 var options = {
                     title: 'GICS Sectors',
                     legend: { position: 'top' },
                     colors: [`#3e95cd`, `#8e5ea2`],
+                    width: '100%',
                 }
 
         var chart = new google.visualization.ColumnChart(
@@ -105,13 +107,13 @@
                     title: 'City'
                 },
                 annotations: {
-          alwaysOutside: true,
-          textStyle: {
-            fontSize: 14,
-            color: '#000',
-            auraColor: 'none'
-          }
-        },
+                    alwaysOutside: true,
+                    textStyle: {
+                    fontSize: 14,
+                    color: '#000',
+                    auraColor: 'none'
+                    }
+                },
             };
 
             var chart = new google.visualization.BarChart(document.getElementById('barChart'));
@@ -131,26 +133,42 @@
         url: 'http://localhost:8080/barChart1',
         columns:[{
             field: 'code',
+            align: 'center',
+            valign: 'middle',
+            sortable: true,
             title:'GICS code'
         },
         {
             field:'name',
+            align: 'center',
+            valign: 'middle',
+            sortable: true,
             title:'Name'
         },
         {
             field:'spercentage',
+            align: 'center',
+            valign: 'middle',
             sortable: true,
-            title:'portfolio(%)'            
+            title:'Portfolio',
+            formatter: numberFormatter,           
         },
         {
             field: 'bpercentage',
+            align: 'center',
+            valign: 'middle',
             sortable: true,
-            title: 'Benchmark(%)'
+            title: 'Benchmark',
+            formatter: numberFormatter,
         },
         {
             field: 'diff',
+            align: 'center',
+            valign: 'middle',
             sortable: true,
-            title: 'Difference(%)'
+            title: 'Difference',
+            cellStyle: format,
+            formatter: numberFormatter,
         },]   
     });
 
@@ -160,6 +178,20 @@
         
          alert(data.code);               
     });
+
+    function format(data){
+        if (data > 0){
+            return{css: {"color": "red"}};
+        }else if (data <0){
+            return {css:{"color": "green"}};
+        }else{
+            return {css:{"color": "black"}};
+        }
+    }
+
+    function numberFormatter(data){
+        return data + '%';
+    }
 </script>
 
 

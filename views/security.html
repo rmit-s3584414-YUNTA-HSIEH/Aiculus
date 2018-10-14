@@ -41,10 +41,11 @@
 
                 data.addColumn('string', 'name');
                 data.addColumn('number', 'weight');
-                data.addColumn({ type: 'string', role: 'annotation' });
+                // data.addColumn({ type: 'string', role: 'annotation' });
 
                 for (var i = 0; i < jsonData.length; i++) {
-                    data.addRows([[jsonData[i].name, jsonData[i].weight, "" + jsonData[i].weight + ""]]);
+                    data.addRows([[jsonData[i].name, jsonData[i].weight]]);
+                    // data.addRows([[jsonData[i].name, jsonData[i].weight, "" + jsonData[i].weight + ""]]);
                 }
                 var options = {
                     title: 'Portfolio Weights',
@@ -71,25 +72,31 @@
             field: 'name',
             title: 'Name',
             sortable: true,
-            align: 'center'
+            align: 'center',
+            valign: 'middle',
         },
         {
             field: 'isocty',
             title: 'Country',
             sortable: true,
-            align: 'center'
+            align: 'center',
+            valign: 'middle',
         },
         {
             field: 'sector',
             title: 'Sector',
             sortable: true,
-            align: 'center'
+            align: 'center',
+            valign: 'middle',
         },
         {
             field: 'weight',
             title: 'Weight',
             sortable: true,
-            align: 'center'
+            align: 'center',
+            valign: 'middle',
+            cellStyle: format,
+            formatter: numberFormatter,
         },]
     });
 
@@ -99,6 +106,20 @@
 
         alert(data.code);
     });
+
+    function format(data) {
+        if (data > 0) {
+            return { css: { "color": "red" } };
+        } else if (data < 0) {
+            return { css: { "color": "green" } };
+        } else {
+            return { css: { "color": "black" } };
+        }
+    }
+
+    function numberFormatter(data) {
+        return data + '%';
+    }
 </script>
 
 

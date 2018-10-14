@@ -50,14 +50,16 @@
                 data.addColumn('string','name',);
                // data.addColumn({ type: 'string', role: 'annotation' });
                 data.addColumn('number','CURR_PORT');
-                data.addColumn({ type: 'string', role: 'annotation' });
+                // data.addColumn({ type: 'string', role: 'annotation' });
                 data.addColumn('number', 'MSWLD');
-                data.addColumn({ type: 'string', role: 'annotation' });
+                // data.addColumn({ type: 'string', role: 'annotation' });
                 for(var i=0;i<5;i++){
-                    data.addRows([[jsonData[i].name, jsonData[i].spercentage,''+jsonData[i].spercentage+'',jsonData[i].bpercentage,''+jsonData[i].bpercentage+'']]);
+                    data.addRows([[jsonData[i].name, jsonData[i].spercentage, jsonData[i].bpercentage]]);
+                    // data.addRows([[jsonData[i].name, jsonData[i].spercentage, jsonData[i].bpercentage]]);
                 }
                 var options = {
                     title: 'Regional Weights',
+                    legend:{position:'top'},
                     colors:[`#3e95cd`, `#8e5ea2`],
                 }
 
@@ -92,7 +94,16 @@
                 },
                 vAxis: {
                     title: 'City'
+                },
+                annotations: {
+                    alwaysOutside: true,
+                    textStyle: {
+                        fontSize: 14,
+                        color: '#000',
+                        auraColor: 'none'
+                    }
                 }
+                
             };
 
             var chart = new google.visualization.BarChart(document.getElementById('barChart'));
@@ -113,27 +124,42 @@
         url: 'http://localhost:8080/barChart2',
         columns:[{
             field: 'code',
+            align: 'center',
+            valign: 'middle',
+            sortable: true,
             title:'Region Code'
         },
         {
             field:'name',
+            align: 'center',
+            valign: 'middle',
             sortable:true,
             title:'Name'
         },
         {
             field:'spercentage',
+            align: 'center',
+            valign: 'middle',
             sortable:true,
-            title:'CURR_PORT(%)'            
+            title:'CURR_PORT',
+            formatter: numberFormatter,            
         },
         {
             field: 'bpercentage',
+            align: 'center',
+            valign: 'middle',
             sortable:true,
-            title: 'MSWLD(%)'
+            title: 'MSWLD',
+            formatter: numberFormatter, 
         },
         {
             field: 'diff',
+            align: 'center',
+            valign: 'middle',
             sortable:true,
-            title: 'vs_MSWLD(%)'
+            title: 'vs_MSWLD',
+            cellStyle: format,
+            formatter: numberFormatter,
         },]   
     });
 
@@ -144,6 +170,20 @@
         
          //alert(row.code);               
     });
+
+    function format(data) {
+        if (data > 0) {
+            return { css: { "color": "red" } };
+        } else if (data < 0) {
+            return { css: { "color": "green" } };
+        } else {
+            return { css: { "color": "black" } };
+        }
+    }
+
+    function numberFormatter(data) {
+        return data + '%';
+    }
 </script>
 
 

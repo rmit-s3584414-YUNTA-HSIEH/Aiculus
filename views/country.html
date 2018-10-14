@@ -48,12 +48,13 @@
                 
                 data.addColumn('string','name');
                 data.addColumn('number','Profolio');
-                data.addColumn({ type: 'string', role: 'annotation' });
+                // data.addColumn({ type: 'string', role: 'annotation' });
                 data.addColumn('number', 'Benchmark');
-                data.addColumn({ type: 'string', role: 'annotation' });
+                // data.addColumn({ type: 'string', role: 'annotation' });
                 
                 for(var i=0;i<jsonData.length;i++){
-                    data.addRows([[jsonData[i].name, jsonData[i].spercentage,""+jsonData[i].spercentage+"",jsonData[i].bpercentage,""+jsonData[i].bpercentage+""]]);
+                    data.addRows([[jsonData[i].name, jsonData[i].spercentage, jsonData[i].bpercentage]]);
+                    // data.addRows([[jsonData[i].name, jsonData[i].spercentage,""+jsonData[i].spercentage+"",jsonData[i].bpercentage,""+jsonData[i].bpercentage+""]]);
                 }
                 var options = {
                     title: 'Country Weights',
@@ -132,27 +133,41 @@
         columns:[{
             field: 'code',
             sortable:true,
-            title:'Country code'
+            title:'Country code',
+            align: 'center',
+            valign: 'middle',
         },
         {
             field:'name',
             sortable:true,
-            title:'Country Name'
+            title:'Country Name',
+            align: 'center',
+            valign: 'middle',
         },
         {
             field:'spercentage',
             sortable:true,
-            title:'Portfolio(%)'            
+            title:'Portfolio',
+            align: 'center',
+            valign: 'middle',
+            formatter: numberFormatter,             
         },
         {
             field: 'bpercentage',
             sortable:true,
-            title: 'Benchmark(%)'
+            title: 'Benchmark',
+            align: 'center',
+            valign: 'middle',
+            formatter: numberFormatter, 
         },
         {
             field: 'diff',
             sortable:true,
-            title: 'Difference(%)'
+            title: 'Difference',
+            align: 'center',
+            valign: 'middle',
+            cellStyle: format,
+            formatter: numberFormatter, 
         },]   
     });
 
@@ -162,6 +177,20 @@
         
          alert(data.code);               
     });
+
+    function format(data) {
+        if (data > 0) {
+            return { css: { "color": "red" } };
+        } else if (data < 0) {
+            return { css: { "color": "green" } };
+        } else {
+            return { css: { "color": "black" } };
+        }
+    }
+
+    function numberFormatter(data) {
+        return data + '%';
+    }
 </script>
 
 
