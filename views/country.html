@@ -57,7 +57,8 @@
                 }
                 var options = {
                     title: 'Country Weights',
-                    legend: { position: 'top' }
+                    legend: { position: 'top' },
+                    colors: [`#3e95cd`, `#8e5ea2`],
                 }
 
         var chart = new google.visualization.ColumnChart(
@@ -94,6 +95,7 @@
         // }
             var options = {
                 title: 'Country Active Weight',
+                colors: ['#dc3912'],
                 chartArea: { width: '50%' },
                 hAxis: {
                     title: 'Weight',
