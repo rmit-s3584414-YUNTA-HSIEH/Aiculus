@@ -119,3 +119,17 @@ html, body{
     float: none;
   }
 }
+
+/* header logo */
+object.Slogo1{
+  margin-left: 10px;
+  margin-bottom: 0%;
+  height: 100px;
+  width: 100px;
+}
+
+object.Slogo2{
+  margin-left: 3px;
+  height: 50px;
+  width: 50px;
+}
