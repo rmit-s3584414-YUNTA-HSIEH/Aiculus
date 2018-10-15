@@ -107,13 +107,13 @@ func initializeRoutes() {
 		// Source
 		file, err := c.FormFile("file")
 		if err != nil {
-			c.String(http.StatusBadRequest, fmt.Sprintf("get form err: %s", err.Error()))
-			return
+			//c.String(http.StatusBadRequest, fmt.Sprintf("get form err: %s", err.Error()))
+			//return
 		}
 
 		if err := c.SaveUploadedFile(file, file.Filename); err != nil {
-			c.String(http.StatusBadRequest, fmt.Sprintf("upload file err: %s", err.Error()))
-			return
+			//c.String(http.StatusBadRequest, fmt.Sprintf("upload file err: %s", err.Error()))
+			//return
 		}
 		src, _ := file.Open()
 		defer src.Close()
@@ -124,7 +124,7 @@ func initializeRoutes() {
 		// Copy
 		io.Copy(dst, src)
 
-		c.String(http.StatusOK, fmt.Sprintf("File %s uploaded successfully with fields", file.Filename))
+		c.Redirect(http.StatusMovedPermanently, "/")
 
 	})
 
