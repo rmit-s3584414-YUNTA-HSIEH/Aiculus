@@ -128,10 +128,10 @@ func writeLogFile(path string, rows []int) {
 	// write some text line-by-line to file
 	if len(rows) > 0 {
 		if rows[0] == 0 {
-			_, err = file.WriteString("Colomuns missing\n")
+			_, err = file.WriteString("Colomuns missing\r\n")
 		}
 		for i := range rows {
-			_, err = file.WriteString("row" + strconv.Itoa(i) + "is missing\n")
+			_, err = file.WriteString("row" + strconv.Itoa(rows[i]) + "is missing\r\n")
 		}
 	}
 	// save changes
@@ -214,34 +214,45 @@ func validationSummary(rows [][]string) (bool, []int) {
 	//	"CZ", "GR", "HU", "PL", "SE", "EURXUK", "GB", "JP"}
 	//gics := []string{}
 	errorRows := []int{}
-	errorCols := true
+	errorCols := false
+	pointer := []int{}
+	counter := 0
+
 	//var errorLogs = ""
 	//var correctRows int
-	for i := range rows {
-		if i == 0 {
-			var A, B, C bool
-			for j := range rows {
-				if rows[0][j] != "GICS_SI" {
-					A = false
-				}
-				if rows[0][j] != "ISO_CTY_CODE" {
-					B = false
-				}
-				if rows[0][j] != "FFLOAT_MKTCAP_USD" {
-					C = false
-				}
-			}
-			if A || B || C == false {
-				//table columns are missing
-				errorRows = append(errorRows, 0)
-				errorCols = false
-				return errorCols, errorRows
-			}
+	for j := range rows[0] {
+		if rows[0][j] == "GICS_SI" {
+			counter++
+			pointer = append(pointer, j)
 		}
-		for j := range rows[i] {
-			if rows[i][j] == "" {
-				errorRows = append(errorRows, i)
-				continue
+		if rows[0][j] == "ISO_CTY_CODE" {
+			counter++
+			pointer = append(pointer, j)
+		}
+		if rows[0][j] == "FFLOAT_MKTCAP_USD" {
+			counter++
+			pointer = append(pointer, j)
+		}
+
+	}
+	if counter != 3 {
+		//table columns are missing
+		errorRows = append(errorRows, 0)
+		errorCols := true
+		return errorCols, errorRows
+	}
+	for i := range rows {
+
+		if i == 0 {
+			continue
+		}
+
+		if rows[i][0] != "" {
+			for j := range pointer {
+				if len(rows[i][pointer[j]]) == 0 {
+					errorRows = append(errorRows, i)
+					continue
+				}
 			}
 		}
 	}
@@ -253,37 +264,50 @@ func validationSummary(rows [][]string) (bool, []int) {
 //Benchmark validation
 func validationBenchmark(rows [][]string) (bool, []int) {
 	errorRows := []int{}
-	errorCols := true
-	for i := range rows {
-		if i == 0 {
-			var A, B, C, D bool
-			for j := range rows {
-				if rows[0][j] != "GICS_IG" {
-					A = false
-				}
-				if rows[0][j] != "GICS_ES" {
-					B = false
-				}
-				if rows[0][j] != "ISO_CTY_CODE2" {
-					C = false
-				}
-				if rows[0][j] != "REGION" {
-					D = false
-				}
-			}
-			if A || B || C || D == false {
-				//table columns are missing
-				errorRows = append(errorRows, 0)
-				errorCols = false
-				return errorCols, errorRows
-			}
+	errorCols := false
+	pointer := []int{}
+	counter := 0
+
+	for j := range rows[0] {
+		if rows[0][j] == "GICS_IG" {
+			counter++
+			pointer = append(pointer, j)
 		}
-		for j := range rows[i] {
-			if rows[i][j] == "" {
-				errorRows = append(errorRows, i)
+		if rows[0][j] == "GICS_ES" {
+			counter++
+			pointer = append(pointer, j)
+		}
+		if rows[0][j] == "ISO_CTY_CODE2" {
+			counter++
+			pointer = append(pointer, j)
+		}
+		if rows[0][j] == "REGION" {
+			counter++
+			pointer = append(pointer, j)
+		}
+	}
+	if counter != 4 {
+		//table columns are missing
+		errorRows = append(errorRows, 0)
+		errorCols = true
+		return errorCols, errorRows
+	}
+
+	for i := range rows {
+
+		if i == 0 {
+			continue
+		}
+		if rows[i][0] != "" {
+			for j := range pointer {
+				if len(rows[i][pointer[j]]) == 0 {
+					errorRows = append(errorRows, i)
+					continue
+				}
 			}
 		}
 	}
+
 	createFile(bmLog)
 	writeLogFile(bmLog, errorRows)
 	return errorCols, errorRows
@@ -295,13 +319,24 @@ func SetStockData() []StockProprety {
 	// Read data from excel, pass xlsx filename and spreadsheet name
 	rows := ReadData("data/Summary Data.xlsx", "Universe", "CALC_DATE")
 
+	dataFail, errorRows := validationSummary(rows)
+	fmt.Println(dataFail)
 	var stock []StockProprety
-
 	// Add data into struct
 	for i := range rows {
 
+		A := false
 		// header location
 		if i == 0 {
+			continue
+		}
+
+		for j := range errorRows {
+			if i == errorRows[j] {
+				A = true
+			}
+		}
+		if A == true {
 			continue
 		}
 
@@ -317,10 +352,9 @@ func SetStockData() []StockProprety {
 				FloatMktCap: rows[i][9],
 			})
 		}
+
 	}
-
 	return stock
-
 }
 
 //FindID :get id from table and return the data
@@ -424,13 +458,26 @@ func SetBMData() []BenchMarkProprety {
 	// Read data from excel, pass xlsx filename and spreadsheet name
 	rows := ReadData("data/Benchmark.xlsx", "Sheet1", "CALC_DATE")
 
+	dataFail, errorRows := validationBenchmark(rows)
+	fmt.Println(dataFail)
+	fmt.Println(errorRows)
 	var bench []BenchMarkProprety
 
 	// Add data into struct
 	for i := range rows {
 
+		A := false
 		// header location
 		if i == 0 {
+			continue
+		}
+
+		for j := range errorRows {
+			if i == errorRows[j] {
+				A = true
+			}
+		}
+		if A == true {
 			continue
 		}
 
