@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"io"
-	"log"
 	"math"
 	"os"
 	"strconv"
@@ -236,7 +235,7 @@ func validationSummary(rows [][]string) (bool, []int) {
 				//table columns are missing
 				errorRows = append(errorRows, 0)
 				errorCols = false
-				break
+				return errorCols, errorRows
 			}
 		}
 		for j := range rows[i] {
@@ -276,7 +275,7 @@ func validationBenchmark(rows [][]string) (bool, []int) {
 				//table columns are missing
 				errorRows = append(errorRows, 0)
 				errorCols = false
-				break
+				return errorCols, errorRows
 			}
 		}
 		for j := range rows[i] {
@@ -578,6 +577,7 @@ func SetVMQScore() []StockVMQ {
 			for j := range pointer {
 
 				// Ensure insert non-nil data
+
 				if rows[i][pointer[j]] != "" {
 					name := rows[i][pointer[j]]
 					v := StringToFloat(rows[i][pointer[j]+1])
@@ -1013,9 +1013,8 @@ func (c *CountryCalculation) SetRegionCode() {
 func StringToFloat(s string) float64 {
 	var n float64
 	n, err := strconv.ParseFloat(s, 64)
-	if err != nil {
-		log.Fatal(err)
+	if err == nil {
+		n = math.Round(n*1000) / 1000
 	}
-	n = math.Round(n*1000) / 1000
 	return n
 }
