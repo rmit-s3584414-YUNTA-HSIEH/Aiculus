@@ -140,7 +140,7 @@
         },
         {
             field:'name',
-            align: 'center',
+            align: 'left',
             valign: 'middle',
             sortable: true,
             title:'Name'
@@ -181,9 +181,9 @@
 
     function format(data){
         if (data > 0){
-            return{css: {"color": "red"}};
+            return{css: {"color": "green"}};
         }else if (data <0){
-            return {css:{"color": "green"}};
+            return {css:{"color": "red"}};
         }else{
             return {css:{"color": "black"}};
         }
