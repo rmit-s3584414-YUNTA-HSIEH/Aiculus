@@ -74,7 +74,10 @@
         },
         ]
     });
+    
     function getFormattedCurrency(data) {
-        return data.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+        data = parseFloat(data);
+        data = data.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+        return data;
     }
 </script>
