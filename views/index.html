@@ -126,9 +126,14 @@
                 data.addColumn('number', 'Q');
                 data.addColumn('number', 'VMQ');
                 
-
-                for (var i = 0; i < 10; i++) {
-                    data.addRows([[i+1, jsonData[i].name, jsonData[i].v[0], jsonData[i].m[0], jsonData[i].q[0],jsonData[i].vmq[0]]]);
+                if (jsonData.length <10){
+                    for (var i = 0; i < jsonData.length; i++) {
+                        data.addRows([[i + 1, jsonData[i].name, jsonData[i].v[0], jsonData[i].m[0], jsonData[i].q[0], jsonData[i].vmq[0]]]);
+                    }
+                }else{
+                    for (var i = 0; i < 10; i++) {
+                        data.addRows([[i+1, jsonData[i].name, jsonData[i].v[0], jsonData[i].m[0], jsonData[i].q[0],jsonData[i].vmq[0]]]);
+                    }
                 }
 
                 var options = {
@@ -191,9 +196,17 @@
                     data.addColumn('number', 'Weight');
 
                     var total = 0;
-                    for (var i = 0; i < 10; i++) {
-                        data.addRows([[i+1, jsonData[i].name, jsonData[i].isocty, jsonData[i].sector, jsonData[i].weight]]);
-                        total = total + jsonData[i].weight;
+
+                    if (jsonData.length <10){
+                        for (var i = 0; i < jsonData.length; i++) {
+                            data.addRows([[i + 1, jsonData[i].name, jsonData[i].v[0], jsonData[i].m[0], jsonData[i].q[0], jsonData[i].vmq[0]]]);
+                            total = total + jsonData[i].weight;
+                        }
+                    }else{
+                        for (var i = 0; i < 10; i++) {
+                            data.addRows([[i+1, jsonData[i].name, jsonData[i].isocty, jsonData[i].sector, jsonData[i].weight]]);
+                            total = total + jsonData[i].weight;
+                        }
                     }
 
                     data.addRows([[ ,'Total', , , total]])
