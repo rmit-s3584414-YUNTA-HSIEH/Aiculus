@@ -13,7 +13,7 @@
             </div>
 
             <div class="col">
-                <a class="btn btn-primary" href="/" role="button" style="margin-top:10px;">Mainpage</a>
+                <a class="btn btn-primary" href="/bar/1" role="button" style="margin-top:10px;">Mainpage</a>
             </div>
 
         </div>
@@ -31,32 +31,50 @@
         url: 'http://localhost:8080/stock/' + id,
         columns: [{
             field: 'date',
-            title: 'Date'
+            title: 'Date',
+            valign: 'middle',
+            sortable: true,
         },
         {
             field: 'isin',
-            title: 'ISIN'
+            title: 'ISIN',
+            valign: 'middle',
+            sortable: true,
         },
         {
             field: 'ric',
-            title: 'RIC'
+            title: 'RIC',
+            valign: 'middle',
+            sortable: true,
         },
         {
             field: 'name',
-            title: 'Name'
+            title: 'Name',
+            valign: 'middle',
+            sortable: true,
         },
         {
             field: 'isocty',
-            title: 'isocty'
+            title: 'isocty',
+            valign: 'middle',
+            sortable: true,
         },
         {
             field: 'gics',
-            title: 'GICS'
+            title: 'GICS',
+            valign: 'middle',
+            sortable: true,
         },
         {
             field: 'float',
-            title: 'float'
+            title: 'Portfolio',
+            valign: 'middle',
+            sortable: true, 
+            formatter: getFormattedCurrency,
         },
         ]
     });
+    function getFormattedCurrency(data) {
+        return data.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+    }
 </script>
