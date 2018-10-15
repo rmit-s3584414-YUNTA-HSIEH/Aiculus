@@ -13,7 +13,11 @@
             </div>
 
             <div class="col">
+<<<<<<< HEAD
+                <a class="btn btn-primary" onclick="previous()" role="button" style="margin-top:10px;">previous</a>
+=======
                 <a class="btn btn-primary" href="/bar/1" role="button" style="margin-top:10px;">Mainpage</a>
+>>>>>>> 0ceacf7f355f733f2033384d7c51fb98de421615
             </div>
 
         </div>
@@ -22,6 +26,10 @@
 
 <script>
     var id = '{{ .id }}';
+
+    function previous() {
+            window.history.back();
+        }
 
     $('#table').bootstrapTable({
         height:600,
