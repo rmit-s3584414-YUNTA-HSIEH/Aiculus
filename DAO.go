@@ -460,7 +460,6 @@ func SetBMData() []BenchMarkProprety {
 
 	dataFail, errorRows := validationBenchmark(rows)
 	fmt.Println(dataFail)
-	fmt.Println(errorRows)
 	var bench []BenchMarkProprety
 
 	// Add data into struct
