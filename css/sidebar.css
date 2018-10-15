@@ -88,6 +88,11 @@ div.card-body{
   padding: 0px;
 }
 
+div.card-bodyleft{
+  height: 212px;
+  padding: 0px;
+}
+
 html, body{
   background: #f6f6f7;
   padding: 0;
@@ -132,4 +137,7 @@ object.Slogo2{
   margin-left: 3px;
   height: 50px;
   width: 50px;
+}
+html{
+  font-family: Lato;
 }

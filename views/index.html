@@ -11,7 +11,7 @@
                 
             <div class="card" >
                 <a href="/bar/1">
-                <div class="card-body">
+                <div class="card-bodyleft">
                 <div id="carouselExampleControls" class="carousel slide" data-ride="carousel" data-interval="false">
                 <div class="carousel-inner">
                             <div class="carousel-item active">
@@ -36,7 +36,7 @@
 
                  <div class="card">
                     <a href="/bar/2">
-                    <div class="card-body">
+                    <div class="card-bodyleft">
                         <div id="carouselExampleControls2" class="carousel slide" data-ride="carousel" data-interval="false">
                             <div class="carousel-inner">
                                 <div class="carousel-item active">
@@ -64,10 +64,10 @@
                 <div class="table_title">
                 
                     <style>
-                        .google-visualization-table-td {text-align: center !important;}
+                        .google-visualization-table-td {text-align: center !important;font-family: 'Lato'}
                     </style>
                     
-                    <h5 style="text-align:center">VMQ Scores</h5>
+                    <h5 style="text-align:center;font-family:Lato;font-weight:bolder;">VMQ Scores</h5>
                 </div>
                 
                     <div class="card-body">
@@ -79,7 +79,10 @@
             <div class="col-4" id="col">
                 <div class="card">
                     <div class="table_title">
-                        <h5 style="text-align:center">Top 10 Holdings for portfolio</h5>
+                            <style>
+                                    .google-visualization-table-td {text-align: center !important;font-family: 'Lato'}
+                                </style>
+                        <h5 style="text-align:center;font-family:Lato;font-weight:bolder;">Top 10 Holdings for portfolio</h5>
                     </div>
                     <div class="card-body">
                         <div id="securitytable">
@@ -297,7 +300,7 @@ $.ajax({
             legend: { display: true },
             title: {
                 display: true,
-                fontSize: 18,
+                fontSize: 16,
                 // fontColor: "#3cba9f",
                 text: 'GICS Sectors'},
         }
@@ -319,7 +322,7 @@ $.ajax({
                 legend: { display: true },
                 title: {
                     display: true,
-                    fontSize: 18,
+                    fontSize: 16,
                     text: 'GICS Sectors Active Weight'
                 },
             //     animation: {
