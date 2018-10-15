@@ -235,7 +235,7 @@ func validationSummary(rows [][]string) (bool, []int) {
 				//table columns are missing
 				errorRows = append(errorRows, 0)
 				errorCols = false
-				break
+				return errorCols, errorRows
 			}
 		}
 		for j := range rows[i] {
@@ -275,7 +275,7 @@ func validationBenchmark(rows [][]string) (bool, []int) {
 				//table columns are missing
 				errorRows = append(errorRows, 0)
 				errorCols = false
-				break
+				return errorCols, errorRows
 			}
 		}
 		for j := range rows[i] {
