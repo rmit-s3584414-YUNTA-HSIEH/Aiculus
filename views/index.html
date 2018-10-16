@@ -148,10 +148,17 @@
                 var table = new google.visualization.Table(
                     document.getElementById('table_div'));
 
+                var formatter3 = new google.visualization.ColorFormat();
+                formatter3.addRange(0, null, 'green', null);
+                formatter3.addRange(null, 0, 'red', null);
+                formatter3.format(data, 2);
+                formatter3.format(data, 3);
+                formatter3.format(data, 4);
+                formatter3.format(data, 5);
+
                 var formatter1 = new google.visualization.NumberFormat(
                     {
                         suffix: '%',
-                        negativeColor: 'red', 
                     }
                 );
                 formatter1.format(data, 2);
@@ -159,11 +166,12 @@
                 formatter1.format(data, 4);
                 formatter1.format(data, 5);
 
-                var formatter2 = new google.visualization.ArrowFormat();
-                formatter2.format(data, 2);
-                formatter2.format(data, 3);
-                formatter2.format(data, 4);
-                formatter2.format(data, 5);
+
+                // var formatter2 = new google.visualization.ArrowFormat();
+                // formatter2.format(data, 2);
+                // formatter2.format(data, 3);
+                // formatter2.format(data, 4);
+                // formatter2.format(data, 5);
 
                 table.draw(data, options);
 

@@ -42,6 +42,26 @@ func initializeRoutes() {
 		)
 	})
 
+	router.GET("/support", func(c *gin.Context) {
+
+		address := "support.html"
+		c.HTML(
+			http.StatusOK,
+			address,
+			gin.H{},
+		)
+	})
+
+	router.GET("/about", func(c *gin.Context) {
+
+		address := "about.html"
+		c.HTML(
+			http.StatusOK,
+			address,
+			gin.H{},
+		)
+	})
+
 	router.GET("/security", func(c *gin.Context) {
 
 		address := "security.html"
