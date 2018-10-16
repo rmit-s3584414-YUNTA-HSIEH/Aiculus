@@ -114,10 +114,10 @@ func createFile(path string) {
 		defer file.Close()
 	}
 
-	fmt.Println("==> done creating file", path)
+	// fmt.Println("==> done creating file", path)
 }
 
-func writeLogFile(path string, rows []int) {
+func writeLogFile(path string, rows []int, number int) {
 	// open file using READ & WRITE permission
 	var file, err = os.OpenFile(path, os.O_RDWR, 0644)
 	if isError(err) {
@@ -128,11 +128,16 @@ func writeLogFile(path string, rows []int) {
 	// write some text line-by-line to file
 	if len(rows) > 0 {
 		if rows[0] == 0 {
-			_, err = file.WriteString("Colomuns missing\r\n")
+			_, err = file.WriteString("Colomuns missing.\r\n")
 		}
+		file.WriteString(strconv.Itoa(number) + " records are imported.\r\n")
+		file.WriteString(strconv.Itoa(len(rows)) + " records are failed.\r\n")
 		for i := range rows {
-			_, err = file.WriteString("row" + strconv.Itoa(rows[i]) + "is missing\r\n")
+			_, err = file.WriteString("row" + " " + strconv.Itoa(rows[i]) + "is missing.\r\n")
 		}
+	} else {
+		file.WriteString(strconv.Itoa(number) + " records are imported.\r\n")
+		file.WriteString("No error.")
 	}
 	// save changes
 	err = file.Sync()
@@ -140,7 +145,7 @@ func writeLogFile(path string, rows []int) {
 		return
 	}
 
-	fmt.Println("==> done writing to file")
+	// fmt.Println("==> done writing to file")
 }
 
 func readFile(path string) {
@@ -217,6 +222,7 @@ func validationSummary(rows [][]string) (bool, []int) {
 	errorCols := false
 	pointer := []int{}
 	counter := 0
+	success := 0
 
 	//var errorLogs = ""
 	//var correctRows int
@@ -251,13 +257,13 @@ func validationSummary(rows [][]string) (bool, []int) {
 			for j := range pointer {
 				if len(rows[i][pointer[j]]) == 0 {
 					errorRows = append(errorRows, i)
-					continue
 				}
 			}
+			success++
 		}
 	}
 	createFile(sLog)
-	writeLogFile(sLog, errorRows)
+	writeLogFile(sLog, errorRows, success)
 	return errorCols, errorRows
 }
 
@@ -267,6 +273,7 @@ func validationBenchmark(rows [][]string) (bool, []int) {
 	errorCols := false
 	pointer := []int{}
 	counter := 0
+	success := 0
 
 	for j := range rows[0] {
 		if rows[0][j] == "GICS_IG" {
@@ -302,14 +309,15 @@ func validationBenchmark(rows [][]string) (bool, []int) {
 			for j := range pointer {
 				if len(rows[i][pointer[j]]) == 0 {
 					errorRows = append(errorRows, i)
-					continue
 				}
 			}
+			success++
 		}
+
 	}
 
 	createFile(bmLog)
-	writeLogFile(bmLog, errorRows)
+	writeLogFile(bmLog, errorRows, success)
 	return errorCols, errorRows
 }
 
@@ -354,6 +362,7 @@ func SetStockData() []StockProprety {
 		}
 
 	}
+
 	return stock
 }
 
@@ -492,7 +501,6 @@ func SetBMData() []BenchMarkProprety {
 			})
 		}
 	}
-
 	return bench
 
 }
@@ -585,19 +593,30 @@ func SetVMQScore() []StockVMQ {
 		pointer []int
 	)
 
-	// Define date
-	for i := 1; i < len(rows[0]); i++ {
-		if rows[0][i] != "" {
-			date = append(date, rows[0][i])
-		}
-	}
-
 	// Define company name
 	for i := range rows[1] {
 		if rows[1][i] == "SECURITY_NAME" {
-			pointer = append(pointer, i)
+			var A bool
+			for j := 1; j < 4; j++ {
+				if rows[1][i+j] == "" {
+					A = false
+				} else {
+					A = true
+				}
+			}
+			if A != false {
+				pointer = append(pointer, i)
+				date = append(date, rows[0][i+4])
+			}
 		}
 	}
+
+	// // Define date
+	// for i := 1; i < len(rows[0]); i++ {
+	// 	if rows[0][i] != "" {
+	// 		date = append(date, rows[0][i])
+	// 	}
+	// }
 
 	// Setup struct
 	for i := 2; i < len(rows); i++ {
@@ -639,17 +658,18 @@ func SetVMQScore() []StockVMQ {
 			}
 		}
 	}
+	if len(pointer) > 0 {
+		for i := 0; i < len(vmq)-1; i++ {
+			for j := 0; j < len(vmq)-1-i; j++ {
+				if vmq[j].VMQScore[0] < vmq[j+1].VMQScore[0] {
+					temp := vmq[j]
+					vmq[j] = vmq[j+1]
+					vmq[j+1] = temp
+				}
 
-	for i := 0; i < len(vmq)-1; i++ {
-		for j := 0; j < len(vmq)-1-i; j++ {
-			if vmq[j].VMQScore[0] < vmq[j+1].VMQScore[0] {
-				temp := vmq[j]
-				vmq[j] = vmq[j+1]
-				vmq[j+1] = temp
 			}
 
 		}
-
 	}
 
 	return vmq
