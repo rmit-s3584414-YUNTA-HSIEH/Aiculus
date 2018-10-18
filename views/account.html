@@ -37,15 +37,17 @@
                 valid= true;
             }
                 return valid; // valid file extension
-        return false;
+        return valid;
     }
 
 
     function valid_form() {
         if(valid==false){
             alert("please upload .xlsx file");
+        }else{
+            alert("upload success");
         }
-        alert("upload success");
+        
         return valid;
     }
 
