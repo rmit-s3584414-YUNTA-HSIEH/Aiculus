@@ -7,6 +7,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-6">
+
                 <head>
                     <meta charset="utf-8">
                     <title>Single file upload</title>
@@ -33,16 +34,16 @@
         var allowed_extensions = "xlsx";
         var file_extension = fileName.split('.').pop().toLowerCase(); // split function will split the filename by dot(.), and pop function will pop the last element from the array which will give you the extension as well. If there will be no extension then it will return the filename.
 
-            if (allowed_extensions == file_extension) {
-                valid= true;
-            }
-                return valid; // valid file extension
+        if (allowed_extensions == file_extension) {
+            valid = true;
+        }
+        return valid; // valid file extension
         return false;
     }
 
 
     function valid_form() {
-        if(valid==false){
+        if (valid == false) {
             alert("please upload .xlsx file");
         }
         alert("upload success");
@@ -51,5 +52,5 @@
 
 </script>
 
-                <!--Embed the footer.html template at this location-->
-                {{ template "footer.html" .}}
+<!--Embed the footer.html template at this location-->
+{{ template "footer.html" .}}
