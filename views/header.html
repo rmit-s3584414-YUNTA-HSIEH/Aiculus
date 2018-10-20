@@ -63,7 +63,7 @@
                 <i class="fa fa-home"></i> &nbsp;Home</a>
             <a href="/account">
                 <i class="fa fa-user-o"></i>&nbsp;Account</a>
-            <a href="https://www.news.com.au/finance/markets">
+            <a href="#" onclick='myFunction()'>
                 <i class="fa fa-newspaper-o"></i>&nbsp;News</a>
             <a href="/support">
                 <i class="fa fa-commenting-o"></i>&nbsp;Support</a>
@@ -85,7 +85,7 @@
                                 <i class="fa fa-home"></i></a>
                 <a href="#news" title="Account" >
                                 <i class="fa fa-user-o"></i></a>
-                <a href="https://www.google.com/" title="News">
+                <a href="#" onclick='myFunction()' title="News">
                                 <i class="fa fa-newspaper-o"></i></a>
                 <a href="#contact" title="Contact">
                                 <i class="fa fa-commenting-o"></i></a>
@@ -105,4 +105,10 @@
                 $("#acted-side-bar").toggle();
 
             });
+
+
+
+            function myFunction() {
+                window.open("https://www.news.com.au/finance/markets");
+            }
         </script>
