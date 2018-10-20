@@ -106,11 +106,20 @@ div.row{
   width: 1130px;
 }
 
+#row_securityTable{
+  width: 1220px;
+  margin-right: 0px;
+  padding-right:0px;
+}
 
-  #SecurityTablebody{
-    height:500px;
-    overflow-y:auto;
-    }
+#col_securityTable{
+  padding-left: 0px;
+}
+
+#SecurityTablebody{
+  height:500px;
+  overflow-y:auto;
+}
 
 
 
