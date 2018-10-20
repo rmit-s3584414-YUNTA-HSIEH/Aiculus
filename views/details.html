@@ -3,33 +3,33 @@
 <!--Embed the header.html template at this location-->
 {{ template "header.html" .}}
 <!--page content-->
-    <div id="page-content-wrapper">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col">
-                    <table id="table">
-                    </table> 
-                </div>
-            </div>
-
+<div id="page-content-wrapper">
+    <div class="container-fluid">
+        <div class="row">
             <div class="col">
-                <a class="btn btn-primary" onclick="previous()" role="button" style="margin-top:10px;">Previous</a>
+                <table id="table">
+                </table>
             </div>
-
         </div>
+
+        <div class="col">
+            <a class="btn btn-primary" onclick="previous()" role="button" style="margin-top:10px;">Previous</a>
+        </div>
+
     </div>
+</div>
 </div>
 
 <script>
     var id = '{{ .id }}';
 
     function previous() {
-            window.history.back();
-        }
+        window.history.back();
+    }
 
     $('#table').bootstrapTable({
-        height:600,
-        sortable:true,
+        height: 600,
+        sortable: true,
         search: true,
         sortable: true,
         url: 'http://localhost:8080/stock/' + id,
@@ -73,12 +73,12 @@
             field: 'float',
             title: 'Portfolio',
             valign: 'middle',
-            sortable: true, 
+            sortable: true,
             formatter: getFormattedCurrency,
         },
         ]
     });
-    
+
     function getFormattedCurrency(data) {
         data = parseFloat(data);
         data = data.toLocaleString('en-US', { style: 'currency', currency: 'USD' });

@@ -18,20 +18,20 @@
         </div>
         <div class="row">
             <div class="col">
-                    <p hidden>{{ .id }}</p>
-                    <h1>GICS Details</h1>                   
-                        <table id="table">
-                        </table>  
-                    
-                    
-            </div>           
+                <p hidden>{{ .id }}</p>
+                <h1>GICS Details</h1>
+                <table id="table">
+                </table>
+
+
+            </div>
         </div>
     </div>
 </div>
 
 <script>
     // Load Charts and the corechart package.
-   google.charts.load('current', { 'packages': ['corechart'] });
+    google.charts.load('current', { 'packages': ['corechart'] });
 
     // Draw the bar chart when Charts is loaded.
     google.charts.setOnLoadCallback(drawcolumnChart);
@@ -44,15 +44,15 @@
             dataType: 'json',
             success: function (jsonData) {
                 var data = new google.visualization.DataTable();
-                
-                data.addColumn('string','name');
-                data.addColumn('number','Portfolio');
+
+                data.addColumn('string', 'name');
+                data.addColumn('number', 'Portfolio');
                 // data.addColumn({ type: 'string', role: 'annotation' });
                 data.addColumn('number', 'Benchmark');
                 // data.addColumn({ type: 'string', role: 'annotation' });
-                
-                
-                for(var i=0;i<jsonData.length;i++){
+
+
+                for (var i = 0; i < jsonData.length; i++) {
                     // data.addRows([[jsonData[i].name, jsonData[i].spercentage,""+jsonData[i].spercentage+"",jsonData[i].bpercentage,""+jsonData[i].bpercentage+""]]);
                     data.addRows([[jsonData[i].name, jsonData[i].spercentage, jsonData[i].bpercentage]]);
                 }
@@ -63,13 +63,13 @@
                     width: '100%',
                 }
 
-        var chart = new google.visualization.ColumnChart(
-            document.getElementById('columnChart'));
+                var chart = new google.visualization.ColumnChart(
+                    document.getElementById('columnChart'));
 
-        chart.draw(data, options);
-    }
+                chart.draw(data, options);
+            }
 
-    });
+        });
     }
 
     function drawBarChart() {
@@ -77,51 +77,51 @@
             url: 'http://localhost:8080/barChart1',
             dataType: 'json',
             success: function (jsonData) {
-        var data = new google.visualization.DataTable();
-        data.addColumn('string', 'name');
-        data.addColumn('number', 'percentage');
-        data.addColumn({ type: 'string', role: 'annotation' });
-        // var dataName = new Array();
-        // var dataDiff = new Array();
-        // for (var i=0; i< jsonData.length; i++){
-        //     dataName[i]=jsonData[i].name;
-        // }
-        // for (var i=0;i<jsonData.length;i++){
-        //     dataDiff[i]=jsonData[i].diff;
-        // }
-        for (var i = 0; i < 11; i++) {
-            data.addRows([[jsonData[i].name, jsonData[i].diff,''+jsonData[i].diff+'']]);
-        }
-        // for (var i=0; i<dataDiff.length; i++){
-        //     data.addRows([[dataName[i],dataDiff[i]]]);
-        // }
-            var options = {
-                title: 'GICS Sector Active Weight',
-                colors: ['#dc3912'],
-                chartArea: { width: '50%' },
-                hAxis: {
-                    title: 'Total Population',
-                    minValue: 0
-                },
-                vAxis: {
-                    title: 'City'
-                },
-                annotations: {
-                    alwaysOutside: true,
-                    textStyle: {
-                    fontSize: 14,
-                    color: '#000',
-                    auraColor: 'none'
-                    }
-                },
-            };
+                var data = new google.visualization.DataTable();
+                data.addColumn('string', 'name');
+                data.addColumn('number', 'percentage');
+                data.addColumn({ type: 'string', role: 'annotation' });
+                // var dataName = new Array();
+                // var dataDiff = new Array();
+                // for (var i=0; i< jsonData.length; i++){
+                //     dataName[i]=jsonData[i].name;
+                // }
+                // for (var i=0;i<jsonData.length;i++){
+                //     dataDiff[i]=jsonData[i].diff;
+                // }
+                for (var i = 0; i < 11; i++) {
+                    data.addRows([[jsonData[i].name, jsonData[i].diff, '' + jsonData[i].diff + '']]);
+                }
+                // for (var i=0; i<dataDiff.length; i++){
+                //     data.addRows([[dataName[i],dataDiff[i]]]);
+                // }
+                var options = {
+                    title: 'GICS Sector Active Weight',
+                    colors: ['#dc3912'],
+                    chartArea: { width: '50%' },
+                    hAxis: {
+                        title: 'Total Population',
+                        minValue: 0
+                    },
+                    vAxis: {
+                        title: 'City'
+                    },
+                    annotations: {
+                        alwaysOutside: true,
+                        textStyle: {
+                            fontSize: 14,
+                            color: '#000',
+                            auraColor: 'none'
+                        }
+                    },
+                };
 
-            var chart = new google.visualization.BarChart(document.getElementById('barChart'));
+                var chart = new google.visualization.BarChart(document.getElementById('barChart'));
 
-            chart.draw(data, options);
+                chart.draw(data, options);
             }
         });
-        }
+    }
 
 </script>
 
@@ -129,29 +129,29 @@
 
 <script>
     $('#table').bootstrapTable({
-        height: 300 ,
+        height: 300,
         url: 'http://localhost:8080/barChart1',
-        columns:[{
+        columns: [{
             field: 'code',
             align: 'center',
             valign: 'middle',
             sortable: true,
-            title:'GICS code'
+            title: 'GICS code'
         },
         {
-            field:'name',
+            field: 'name',
             align: 'left',
             valign: 'middle',
             sortable: true,
-            title:'Name'
+            title: 'Name'
         },
         {
-            field:'spercentage',
+            field: 'spercentage',
             align: 'center',
             valign: 'middle',
             sortable: true,
-            title:'Portfolio',
-            formatter: numberFormatter,           
+            title: 'Portfolio',
+            formatter: numberFormatter,
         },
         {
             field: 'bpercentage',
@@ -169,27 +169,27 @@
             title: 'Difference',
             cellStyle: format,
             formatter: numberFormatter,
-        },]   
+        },]
     });
 
-    $('#table').on('click-row.bs.table', function(e, row, $element) {
+    $('#table').on('click-row.bs.table', function (e, row, $element) {
         //alert(row.name+" "+row.code+" "+row.spresentage+" "+row.bpresentage+" "+ row.diff);
-        window.location.assign("http://localhost:8080/details/"+row.code);
-        
-         alert(data.code);               
+        window.location.assign("http://localhost:8080/details/" + row.code);
+
+        alert(data.code);
     });
 
-    function format(data){
-        if (data > 0){
-            return{css: {"color": "green"}};
-        }else if (data <0){
-            return {css:{"color": "red"}};
-        }else{
-            return {css:{"color": "black"}};
+    function format(data) {
+        if (data > 0) {
+            return { css: { "color": "green" } };
+        } else if (data < 0) {
+            return { css: { "color": "red" } };
+        } else {
+            return { css: { "color": "black" } };
         }
     }
 
-    function numberFormatter(data){
+    function numberFormatter(data) {
         return data + '%';
     }
 </script>
