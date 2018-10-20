@@ -88,10 +88,11 @@ type (
 	}
 )
 
+// log filepath
 var sLog = "log/s_reports.log"
 var bmLog = "log/bm_reports.log"
 
-//
+// isError function is a error handler
 func isError(err error) bool {
 	if err != nil {
 		fmt.Println(err.Error())
@@ -100,7 +101,7 @@ func isError(err error) bool {
 	return (err != nil)
 }
 
-//create file is not exists
+// createFile function is checking if file is exists or not
 func createFile(path string) {
 	// detect if file exists
 	var _, err = os.Stat(path)
@@ -117,6 +118,7 @@ func createFile(path string) {
 	// fmt.Println("==> done creating file", path)
 }
 
+// writeLogFile function is writing the log report to logfile.
 func writeLogFile(path string, rows []int, number int) {
 	// open file using READ & WRITE permission
 	var file, err = os.OpenFile(path, os.O_RDWR, 0644)
@@ -148,6 +150,7 @@ func writeLogFile(path string, rows []int, number int) {
 	// fmt.Println("==> done writing to file")
 }
 
+// readFile function is reading the log file
 func readFile(path string) {
 	// re-open file
 	var file, err = os.OpenFile(path, os.O_RDWR, 0644)
@@ -177,6 +180,7 @@ func readFile(path string) {
 	fmt.Println(string(text))
 }
 
+// deleteFile function to delete file if needed
 func deleteFile(path string) {
 	// delete file
 	var err = os.Remove(path)
@@ -212,20 +216,15 @@ func ReadData(xlsxName string, sheetName string, header string) [][]string {
 }
 
 //validate excel file before loading
-func validationSummary(rows [][]string) (bool, []int) {
-	//city := []string{"CA", "US", "MX", "NA", "AU", "HK", "NZ",
-	//	"SG", "CN", "KR", "TW", "APXJP", "AT", "BE", "CH", "DE",
-	//	"DK", "ES", "FI", "FR", "IE", "IL", "IT", "NL", "NO", "PT",
-	//	"CZ", "GR", "HU", "PL", "SE", "EURXUK", "GB", "JP"}
-	//gics := []string{}
+func validationSummary(rows [][]string) []int {
+
 	errorRows := []int{}
-	errorCols := false
+	// errorCols := false
 	pointer := []int{}
 	counter := 0
 	success := 0
 
-	//var errorLogs = ""
-	//var correctRows int
+	// Checking header
 	for j := range rows[0] {
 		if rows[0][j] == "GICS_SI" {
 			counter++
@@ -239,20 +238,24 @@ func validationSummary(rows [][]string) (bool, []int) {
 			counter++
 			pointer = append(pointer, j)
 		}
-
 	}
+
+	// After header checked, if missing any header then report this data file is not usable.
 	if counter != 3 {
 		//table columns are missing
 		errorRows = append(errorRows, 0)
-		errorCols := true
-		return errorCols, errorRows
+		// errorCols := true
+		return errorRows
 	}
+
+	// Checking if any empty data in data file
 	for i := range rows {
 
 		if i == 0 {
 			continue
 		}
 
+		// If empty data exists, then report this row number
 		if rows[i][0] != "" {
 			for j := range pointer {
 				if len(rows[i][pointer[j]]) == 0 {
@@ -262,19 +265,23 @@ func validationSummary(rows [][]string) (bool, []int) {
 			success++
 		}
 	}
+
+	// Writing log report
 	createFile(sLog)
 	writeLogFile(sLog, errorRows, success)
-	return errorCols, errorRows
+	return errorRows
 }
 
 //Benchmark validation
-func validationBenchmark(rows [][]string) (bool, []int) {
+func validationBenchmark(rows [][]string) []int {
+
 	errorRows := []int{}
-	errorCols := false
+	// errorCols := false
 	pointer := []int{}
 	counter := 0
 	success := 0
 
+	// Checking header
 	for j := range rows[0] {
 		if rows[0][j] == "GICS_IG" {
 			counter++
@@ -293,18 +300,23 @@ func validationBenchmark(rows [][]string) (bool, []int) {
 			pointer = append(pointer, j)
 		}
 	}
+
+	// After header checked, if missing any header then report this data file is not usable.
 	if counter != 4 {
 		//table columns are missing
 		errorRows = append(errorRows, 0)
-		errorCols = true
-		return errorCols, errorRows
+		// errorCols = true
+		return errorRows
 	}
 
+	// Checking if any empty data in data file
 	for i := range rows {
 
 		if i == 0 {
 			continue
 		}
+
+		// If empty data exists, then report this row number
 		if rows[i][0] != "" {
 			for j := range pointer {
 				if len(rows[i][pointer[j]]) == 0 {
@@ -313,12 +325,12 @@ func validationBenchmark(rows [][]string) (bool, []int) {
 			}
 			success++
 		}
-
 	}
 
+	// Writing log report
 	createFile(bmLog)
 	writeLogFile(bmLog, errorRows, success)
-	return errorCols, errorRows
+	return errorRows
 }
 
 // SetStockData function use to read data from excel and return the stock struct
@@ -327,18 +339,21 @@ func SetStockData() []StockProprety {
 	// Read data from excel, pass xlsx filename and spreadsheet name
 	rows := ReadData("data/Summary Data.xlsx", "Universe", "CALC_DATE")
 
-	dataFail, errorRows := validationSummary(rows)
-	fmt.Println(dataFail)
+	// Get error rows array
+	errorRows := validationSummary(rows)
+
 	var stock []StockProprety
+
 	// Add data into struct
 	for i := range rows {
 
-		A := false
 		// header location
 		if i == 0 {
 			continue
 		}
 
+		// Check error rows and skip them
+		A := false
 		for j := range errorRows {
 			if i == errorRows[j] {
 				A = true
@@ -467,19 +482,21 @@ func SetBMData() []BenchMarkProprety {
 	// Read data from excel, pass xlsx filename and spreadsheet name
 	rows := ReadData("data/Benchmark.xlsx", "Sheet1", "CALC_DATE")
 
-	dataFail, errorRows := validationBenchmark(rows)
-	fmt.Println(dataFail)
+	// Get error rows array
+	errorRows := validationBenchmark(rows)
+
 	var bench []BenchMarkProprety
 
 	// Add data into struct
 	for i := range rows {
 
-		A := false
 		// header location
 		if i == 0 {
 			continue
 		}
 
+		// Check error rows and skip them
+		A := false
 		for j := range errorRows {
 			if i == errorRows[j] {
 				A = true
@@ -611,13 +628,6 @@ func SetVMQScore() []StockVMQ {
 		}
 	}
 
-	// // Define date
-	// for i := 1; i < len(rows[0]); i++ {
-	// 	if rows[0][i] != "" {
-	// 		date = append(date, rows[0][i])
-	// 	}
-	// }
-
 	// Setup struct
 	for i := 2; i < len(rows); i++ {
 		if rows[i][0] != "" {
@@ -658,6 +668,8 @@ func SetVMQScore() []StockVMQ {
 			}
 		}
 	}
+
+	// Sorting for top10
 	if len(pointer) > 0 {
 		for i := 0; i < len(vmq)-1; i++ {
 			for j := 0; j < len(vmq)-1-i; j++ {
@@ -666,9 +678,7 @@ func SetVMQScore() []StockVMQ {
 					vmq[j] = vmq[j+1]
 					vmq[j+1] = temp
 				}
-
 			}
-
 		}
 	}
 
@@ -985,7 +995,7 @@ func (c *GICSCalculation) SetValue(s string, a float64) {
 	}
 }
 
-// SetBValue function to
+// SetBValue function to add value by getting correct code
 func (c *GICSCalculation) SetBValue(s string, a float64) {
 	if s == c.Code {
 		c.BValue = c.BValue + a
@@ -998,7 +1008,7 @@ func (c *GICSCalculation) SetPercentage(a float64) {
 	c.SPercentage = math.Round(c.SPercentage*100) / 100
 }
 
-// SetBPercentage function to
+// SetBPercentage function use to set Persentage of each data struct
 func (c *GICSCalculation) SetBPercentage(a float64) {
 	c.BPercentage = (c.BValue / a) * 100
 	c.BPercentage = math.Round(c.BPercentage*100) / 100
