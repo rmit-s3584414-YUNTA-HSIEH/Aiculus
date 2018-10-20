@@ -147,6 +147,7 @@
                 }
 
                 var options = {
+                    fontSize:6,
                     allowHtml: true,
                     width: '100%',
                     height: '360',
@@ -230,6 +231,7 @@
                 data.addRows([[, 'Total', , , total]])
 
                 var options = {
+                    fontSize:10,
                     allowHtml: true,
                     sort: 'disbale',
                     width: '100%',
@@ -347,13 +349,12 @@
                     //labels: ["EN", "MA", "IN", "CD", "CS", "HC", "FIN", "IT", "Tele", "Uti", "RE"],
                     labels: ["ENE", "MAT", "IND", "CSD", "CSS", "HLC", "FIN", "IFT", "TEL", "UTI", "REL"],
                     datasets: [{
-                        label: "Difference",
                         backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850", "#493e8e", "#49b6bb", "#beb6bb", "#beffbb", "#beffff", "#6d844e"],
                         data: [data[0].diff, data[1].diff, data[2].diff, data[3].diff, data[4].diff, data[5].diff, data[6].diff, data[7].diff, data[8].diff, data[9].diff, data[10].diff]
                     }]
                 },
                 options: {
-                    legend: { display: true },
+                    legend: { display: false },
                     title: {
                         display: true,
                         fontSize: 16,
@@ -449,14 +450,13 @@
                     labels: [data[0].code, data[1].code, data[2].code, data[3].code, data[4].code],
                     datasets: [
                         {
-                            label: "Difference",
                             backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850"],
                             data: [data[0].diff, data[1].diff, data[2].diff, data[3].diff, data[4].diff]
                         }
                     ]
                 },
                 options: {
-                    legend: { display: true },
+                    legend: { display: false },
                     title: {
                         display: true,
                         fontSize: 18,
