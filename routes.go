@@ -131,10 +131,10 @@ func initializeRoutes() {
 			//return
 		}
 
-		if err := c.SaveUploadedFile(file, file.Filename); err != nil {
-			//c.String(http.StatusBadRequest, fmt.Sprintf("upload file err: %s", err.Error()))
-			//return
-		}
+		// if err := c.SaveUploadedFile(file, file.Filename); err != nil {
+		//c.String(http.StatusBadRequest, fmt.Sprintf("upload file err: %s", err.Error()))
+		//return
+		// }
 		src, _ := file.Open()
 		defer src.Close()
 		// Destination

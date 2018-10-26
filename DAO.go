@@ -416,101 +416,6 @@ func SetStockData() []StockProprety {
 	return stock
 }
 
-//FindID :get id from table and return the data
-func FindID(id string, stock []StockProprety) []StockProprety {
-
-	var theStock []StockProprety
-
-	// Check the type of id
-	idtype := CheckID(id)
-
-	if idtype == "gics" {
-		for i := 0; i < len(stock); i++ {
-			var stringID = stock[i].Gics
-			if strings.HasPrefix(stringID, id) {
-				theStock = append(theStock, stock[i])
-			}
-		}
-		if len(theStock) == 0 {
-			return stock
-		}
-
-		return theStock
-	}
-
-	if idtype == "country" {
-		for i := 0; i < len(stock); i++ {
-			var stringID = stock[i].IsoCty
-			if strings.HasPrefix(stringID, id) {
-				theStock = append(theStock, stock[i])
-			}
-		}
-		if len(theStock) == 0 {
-			return stock
-		}
-
-		return theStock
-	}
-
-	if idtype == "region" {
-
-		// Get regionmap
-		regionmap := BuildRegionMap()
-
-		idlist := regionmap[id]
-
-		// Check every isocty according to the map
-		for j := range regionmap[id] {
-
-			for i := 0; i < len(stock); i++ {
-				var stringID = stock[i].IsoCty
-
-				if strings.HasPrefix(stringID, idlist[j]) {
-					theStock = append(theStock, stock[i])
-				}
-			}
-		}
-		if len(theStock) == 0 {
-			return stock
-		}
-		return theStock
-	}
-
-	return nil
-}
-
-// CheckID function to check the type of return id
-func CheckID(id string) string {
-
-	gics := []string{"10", "15", "20", "25", "30", "35",
-		"40", "45", "50", "55", "60"}
-
-	region := []string{"NA", "EURXUK", "GB", "APXJP", "JP"}
-
-	country := []string{"US", "SG", "SE", "PT", "NZ",
-		"NO", "NL", "MX", "KR", "JP",
-		"IT", "IL", "IE", "HK", "GB",
-		"FR", "FI", "ES", "DK", "DE",
-		"CN", "CH", "CA", "BE", "AU", "AT"}
-
-	for i := range gics {
-		if id == gics[i] {
-			return "gics"
-		}
-	}
-	for i := range region {
-		if id == region[i] {
-			return "region"
-		}
-	}
-	for i := range country {
-		if id == country[i] {
-			return "country"
-		}
-	}
-	return ""
-}
-
 // SetBMData function use to read data from excel and return the benchmark struct
 func SetBMData() []BenchMarkProprety {
 
@@ -656,22 +561,6 @@ func SetSecruityData() []SecruityData {
 
 }
 
-// GetGICSName function is to define the gics name by code
-func GetGICSName(s string) string {
-
-	// Set GICS struct
-	stockGICSCode := []string{"10", "15", "20", "25", "30", "35",
-		"40", "45", "50", "55", "60"}
-	stockGICSName := []string{"ENE", "MAT", "IND", "CSD", "CSS",
-		"HLC", "FIN", "IFT", "TEL", "UTI", "REL"}
-	for i := range stockGICSCode {
-		if s[:2] == stockGICSCode[i] {
-			return stockGICSName[i]
-		}
-	}
-	return ""
-}
-
 // SetVMQScore function to calculate VMQ score
 func SetVMQScore() []StockVMQ {
 	// Read data from excel, pass xlsx filename and spreadsheet name
@@ -768,6 +657,119 @@ func (c *StockVMQ) SetVMQ(s string, v float64, m float64, q float64, vmqs float6
 		c.VMQScore = append(c.VMQScore, vmqs)
 	}
 }
+
+// GetGICSName function is to define the gics name by code
+func GetGICSName(s string) string {
+
+	// Set GICS struct
+	stockGICSCode := []string{"10", "15", "20", "25", "30", "35",
+		"40", "45", "50", "55", "60"}
+	stockGICSName := []string{"ENE", "MAT", "IND", "CSD", "CSS",
+		"HLC", "FIN", "IFT", "TEL", "UTI", "REL"}
+	for i := range stockGICSCode {
+		if s[:2] == stockGICSCode[i] {
+			return stockGICSName[i]
+		}
+	}
+	return ""
+}
+
+//FindID :get id from table and return the data
+func FindID(id string, stock []StockProprety) []StockProprety {
+
+	var theStock []StockProprety
+
+	// Check the type of id
+	idtype := CheckID(id)
+
+	if idtype == "gics" {
+		for i := 0; i < len(stock); i++ {
+			var stringID = stock[i].Gics
+			if strings.HasPrefix(stringID, id) {
+				theStock = append(theStock, stock[i])
+			}
+		}
+		if len(theStock) == 0 {
+			return stock
+		}
+
+		return theStock
+	}
+
+	if idtype == "country" {
+		for i := 0; i < len(stock); i++ {
+			var stringID = stock[i].IsoCty
+			if strings.HasPrefix(stringID, id) {
+				theStock = append(theStock, stock[i])
+			}
+		}
+		if len(theStock) == 0 {
+			return stock
+		}
+
+		return theStock
+	}
+
+	if idtype == "region" {
+
+		// Get regionmap
+		regionmap := BuildRegionMap()
+
+		idlist := regionmap[id]
+
+		// Check every isocty according to the map
+		for j := range regionmap[id] {
+
+			for i := 0; i < len(stock); i++ {
+				var stringID = stock[i].IsoCty
+
+				if strings.HasPrefix(stringID, idlist[j]) {
+					theStock = append(theStock, stock[i])
+				}
+			}
+		}
+		if len(theStock) == 0 {
+			return stock
+		}
+		return theStock
+	}
+
+	return nil
+}
+
+// CheckID function to check the type of return id
+func CheckID(id string) string {
+
+	gics := []string{"10", "15", "20", "25", "30", "35",
+		"40", "45", "50", "55", "60"}
+
+	region := []string{"NA", "EURXUK", "GB", "APXJP", "JP"}
+
+	country := []string{"US", "SG", "SE", "PT", "NZ",
+		"NO", "NL", "MX", "KR", "JP",
+		"IT", "IL", "IE", "HK", "GB",
+		"FR", "FI", "ES", "DK", "DE",
+		"CN", "CH", "CA", "BE", "AU", "AT"}
+
+	for i := range gics {
+		if id == gics[i] {
+			return "gics"
+		}
+	}
+	for i := range region {
+		if id == region[i] {
+			return "region"
+		}
+	}
+	for i := range country {
+		if id == country[i] {
+			return "country"
+		}
+	}
+	return ""
+}
+
+// Calculation part
 
 // CalGICS function to calculate sum&Persentage of stock in order to display
 func CalGICS(s []StockProprety, b []BenchMarkProprety) []GICSCalculation {
