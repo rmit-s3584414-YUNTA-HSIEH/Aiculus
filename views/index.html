@@ -70,10 +70,10 @@
 
                         <style>
                             .google-visualization-table-td {text-align: center !important;font-family: 'Lato'}
-                            .google-visualization-table-table { font-size:xx-small; } 
+                            .google-visualization-table-table { font-size:x-small } 
                     </style>
 
-                        <h5 style="text-align:center;font-family:Lato;font-weight:bolder;">VMQ Scores</h5>
+                        <h5 style="text-align:center;font-weight:bolder;">VMQ Scores</h5>
                     </div>
 
                     <div class="card-body">
@@ -88,8 +88,10 @@
                         <style>
                             .google-visualization-table-td {text-align: center !important;font-family: 'Lato'}
                                 </style>
-                        <h5 style="text-align:center;font-family:Lato;font-weight:bolder;">Top 10 Holdings for
-                            portfolio</h5>
+                        <!-- <h5 style="text-align:center;font-family:Lato;font-weight:bolder;">Top 10 Holdings for
+                            portfolio</h5> -->
+                            <h5 style="text-align:center;font-weight:bolder;">Top 10 Holdings for
+                                portfolio</h5>
                     </div>
                     <div class="card-body">
                         <div id="securitytable">
@@ -333,8 +335,9 @@
                     legend: { display: true },
                     title: {
                         display: true,
-                        fontSize: 16,
-                        // fontColor: "#3cba9f",
+                        fontSize: 20,
+                        fontColor: "black",
+                        fontfamily:"lato",
                         text: 'GICS Sectors'
                     },
                 }
@@ -358,7 +361,9 @@
                     legend: { display: false },
                     title: {
                         display: true,
-                        fontSize: 16,
+                        fontColor: "black",
+                        fontfamily:"lato",
+                        fontSize: 20,
                         text: 'GICS Sectors Active Weight'
                     },
                     //     animation: {
@@ -390,6 +395,7 @@
         dataType: 'json',
         success: function (data) {
             //Doughnut chart
+            Chart.defaults.global.defaultFontColor = 'black';
             new Chart(document.getElementById("barChart2-1"), {
                 type: 'bar',
                 data: {
@@ -417,9 +423,12 @@
                 },
                 options: {
                     legend: { display: true },
+                    tooltips: { bodyFontColor: "black" },
                     title: {
                         display: true,
-                        fontSize: 18,
+                        fontSize: 20,
+                        fontColor: "black",
+                        fontfamily: "Lato",
                         text: 'Regional Weights'
                     },
                     // animation: {
@@ -460,7 +469,9 @@
                     legend: { display: false },
                     title: {
                         display: true,
-                        fontSize: 18,
+                        fontSize: 20,
+                        fontColor: "black",
+                        fontfamily:"lato",
                         text: 'Regional Active Weight'
                     },
                     // animation: {
