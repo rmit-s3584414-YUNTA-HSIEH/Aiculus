@@ -342,7 +342,42 @@ func SetStockData() []StockProprety {
 	// Get error rows array
 	errorRows := validationSummary(rows)
 
-	var stock []StockProprety
+	var (
+		stock []StockProprety
+		// header pointer
+		date     int
+		isin     int
+		ric      int
+		name     int
+		isocty   int
+		gics     int
+		floatmkt int
+	)
+
+	// define header location and set pointer
+	for i := range rows[0] {
+		if rows[0][i] == "CALC_DATE" {
+			date = i
+		}
+		if rows[0][i] == "ISIN" {
+			isin = i
+		}
+		if rows[0][i] == "RIC" {
+			ric = i
+		}
+		if rows[0][i] == "SECURITY_NAME" {
+			name = i
+		}
+		if rows[0][i] == "ISO_CTY_CODE" {
+			isocty = i
+		}
+		if rows[0][i] == "GICS_SI" {
+			gics = i
+		}
+		if rows[0][i] == "FFLOAT_MKTCAP_USD" {
+			floatmkt = i
+		}
+	}
 
 	// Add data into struct
 	for i := range rows {
@@ -366,114 +401,19 @@ func SetStockData() []StockProprety {
 		// Check first element is not empty to add
 		if rows[i][0] != "" {
 			stock = append(stock, StockProprety{
-				Date:        rows[i][0],
-				Isin:        rows[i][1],
-				Ric:         rows[i][2],
-				Name:        rows[i][3],
-				IsoCty:      rows[i][4],
-				Gics:        rows[i][5],
-				FloatMktCap: rows[i][9],
+				Date:        rows[i][date],
+				Isin:        rows[i][isin],
+				Ric:         rows[i][ric],
+				Name:        rows[i][name],
+				IsoCty:      rows[i][isocty],
+				Gics:        rows[i][gics],
+				FloatMktCap: rows[i][floatmkt],
 			})
 		}
 
 	}
 
 	return stock
-}
-
-//FindID :get id from table and return the data
-func FindID(id string, stock []StockProprety) []StockProprety {
-
-	var theStock []StockProprety
-
-	// Check the type of id
-	idtype := CheckID(id)
-
-	if idtype == "gics" {
-		for i := 0; i < len(stock); i++ {
-			var stringID = stock[i].Gics
-			if strings.HasPrefix(stringID, id) {
-				theStock = append(theStock, stock[i])
-			}
-		}
-		if len(theStock) == 0 {
-			return stock
-		}
-
-		return theStock
-	}
-
-	if idtype == "country" {
-		for i := 0; i < len(stock); i++ {
-			var stringID = stock[i].IsoCty
-			if strings.HasPrefix(stringID, id) {
-				theStock = append(theStock, stock[i])
-			}
-		}
-		if len(theStock) == 0 {
-			return stock
-		}
-
-		return theStock
-	}
-
-	if idtype == "region" {
-
-		// Get regionmap
-		regionmap := BuildRegionMap()
-
-		idlist := regionmap[id]
-
-		// Check every isocty according to the map
-		for j := range regionmap[id] {
-
-			for i := 0; i < len(stock); i++ {
-				var stringID = stock[i].IsoCty
-
-				if strings.HasPrefix(stringID, idlist[j]) {
-					theStock = append(theStock, stock[i])
-				}
-			}
-		}
-		if len(theStock) == 0 {
-			return stock
-		}
-		return theStock
-	}
-
-	return nil
-}
-
-// CheckID function to check the type of return id
-func CheckID(id string) string {
-
-	gics := []string{"10", "15", "20", "25", "30", "35",
-		"40", "45", "50", "55", "60"}
-
-	region := []string{"NA", "EURXUK", "GB", "APXJP", "JP"}
-
-	country := []string{"US", "SG", "SE", "PT", "NZ",
-		"NO", "NL", "MX", "KR", "JP",
-		"IT", "IL", "IE", "HK", "GB",
-		"FR", "FI", "ES", "DK", "DE",
-		"CN", "CH", "CA", "BE", "AU", "AT"}
-
-	for i := range gics {
-		if id == gics[i] {
-			return "gics"
-		}
-	}
-	for i := range region {
-		if id == region[i] {
-			return "region"
-		}
-	}
-	for i := range country {
-		if id == country[i] {
-			return "country"
-		}
-	}
-	return ""
 }
 
 // SetBMData function use to read data from excel and return the benchmark struct
@@ -485,7 +425,38 @@ func SetBMData() []BenchMarkProprety {
 	// Get error rows array
 	errorRows := validationBenchmark(rows)
 
-	var bench []BenchMarkProprety
+	var (
+		bench []BenchMarkProprety
+		// header pointer
+		date   int
+		isin   int
+		ric    int
+		isocty int
+		idxmkt int
+		gics   int
+	)
+
+	// define header location and set pointer
+	for i := range rows[0] {
+		if rows[0][i] == "CALC_DATE" {
+			date = i
+		}
+		if rows[0][i] == "ISIN" {
+			isin = i
+		}
+		if rows[0][i] == "RIC" {
+			ric = i
+		}
+		if rows[0][i] == "ISO_CTY_CODE" {
+			isocty = i
+		}
+		if rows[0][i] == "IDX_MKTCAP_USD" {
+			idxmkt = i
+		}
+		if rows[0][i] == "GICS_ES" {
+			gics = i
+		}
+	}
 
 	// Add data into struct
 	for i := range rows {
@@ -509,12 +480,12 @@ func SetBMData() []BenchMarkProprety {
 		// Check first element is not empty to add
 		if rows[i][0] != "" {
 			bench = append(bench, BenchMarkProprety{
-				Date:      rows[i][0],
-				Isin:      rows[i][1],
-				Ric:       rows[i][2],
-				IsoCty:    rows[i][3],
-				IDXMktCap: rows[i][4],
-				Gicses:    rows[i][22],
+				Date:      rows[i][date],
+				Isin:      rows[i][isin],
+				Ric:       rows[i][ric],
+				IsoCty:    rows[i][isocty],
+				IDXMktCap: rows[i][idxmkt],
+				Gicses:    rows[i][gics],
 			})
 		}
 	}
@@ -530,26 +501,33 @@ func SetSecruityData() []SecruityData {
 
 	var (
 		secruity []SecruityData
-		header   []int
+		// header pointer
+		isocty   int
+		gicsind  int
+		name     int
+		stockwgt int
+		gicses   int
 	)
 
+	// define header location and set pointer
 	for i := range rows[0] {
 		if rows[0][i] == "iso_cty" {
-			header = append(header, i)
+			isocty = i
 		}
 		if rows[0][i] == "gics_ind" {
-			header = append(header, i)
+			gicsind = i
 		}
 		if rows[0][i] == "name" {
-			header = append(header, i)
+			name = i
 		}
 		if rows[0][i] == "stock_only_wgt" {
-			header = append(header, i)
+			stockwgt = i
 		}
 		if rows[0][i] == "GICS_ES" {
-			header = append(header, i)
+			gicses = i
 		}
 	}
+
 	// Add data into struct
 	for i := range rows {
 
@@ -559,20 +537,20 @@ func SetSecruityData() []SecruityData {
 		}
 
 		// Get full gics code
-		s := []string{rows[i][header[4]], rows[i][header[1]]}
+		s := []string{rows[i][gicses], rows[i][gicsind]}
 		gics := strings.Join(s, "")
 		sector := GetGICSName(gics)
 
 		// Convert % number into float64
-		weightS := rows[i][header[3]]
+		weightS := rows[i][stockwgt]
 		weightS = strings.TrimRight(weightS, "%")
 		weight := StringToFloat(weightS)
 
 		// Check isocty code
-		if len(rows[i][header[0]]) == 2 {
+		if len(rows[i][isocty]) == 2 {
 			secruity = append(secruity, SecruityData{
-				Name:   rows[i][header[2]],
-				IsoCty: rows[i][header[0]],
+				Name:   rows[i][name],
+				IsoCty: rows[i][isocty],
 				Sector: sector,
 				Weight: weight,
 			})
@@ -581,22 +559,6 @@ func SetSecruityData() []SecruityData {
 
 	return secruity
 
-}
-
-// GetGICSName function is to define the gics name by code
-func GetGICSName(s string) string {
-
-	// Set GICS struct
-	stockGICSCode := []string{"10", "15", "20", "25", "30", "35",
-		"40", "45", "50", "55", "60"}
-	stockGICSName := []string{"ENE", "MAT", "IND", "CSD", "CSS",
-		"HLC", "FIN", "IFT", "TEL", "UTI", "REL"}
-	for i := range stockGICSCode {
-		if s[:2] == stockGICSCode[i] {
-			return stockGICSName[i]
-		}
-	}
-	return ""
 }
 
 // SetVMQScore function to calculate VMQ score
@@ -695,6 +657,119 @@ func (c *StockVMQ) SetVMQ(s string, v float64, m float64, q float64, vmqs float6
 		c.VMQScore = append(c.VMQScore, vmqs)
 	}
 }
+
+// GetGICSName function is to define the gics name by code
+func GetGICSName(s string) string {
+
+	// Set GICS struct
+	stockGICSCode := []string{"10", "15", "20", "25", "30", "35",
+		"40", "45", "50", "55", "60"}
+	stockGICSName := []string{"ENE", "MAT", "IND", "CSD", "CSS",
+		"HLC", "FIN", "IFT", "TEL", "UTI", "REL"}
+	for i := range stockGICSCode {
+		if s[:2] == stockGICSCode[i] {
+			return stockGICSName[i]
+		}
+	}
+	return ""
+}
+
+//FindID :get id from table and return the data
+func FindID(id string, stock []StockProprety) []StockProprety {
+
+	var theStock []StockProprety
+
+	// Check the type of id
+	idtype := CheckID(id)
+
+	if idtype == "gics" {
+		for i := 0; i < len(stock); i++ {
+			var stringID = stock[i].Gics
+			if strings.HasPrefix(stringID, id) {
+				theStock = append(theStock, stock[i])
+			}
+		}
+		if len(theStock) == 0 {
+			return stock
+		}
+
+		return theStock
+	}
+
+	if idtype == "country" {
+		for i := 0; i < len(stock); i++ {
+			var stringID = stock[i].IsoCty
+			if strings.HasPrefix(stringID, id) {
+				theStock = append(theStock, stock[i])
+			}
+		}
+		if len(theStock) == 0 {
+			return stock
+		}
+
+		return theStock
+	}
+
+	if idtype == "region" {
+
+		// Get regionmap
+		regionmap := BuildRegionMap()
+
+		idlist := regionmap[id]
+
+		// Check every isocty according to the map
+		for j := range regionmap[id] {
+
+			for i := 0; i < len(stock); i++ {
+				var stringID = stock[i].IsoCty
+
+				if strings.HasPrefix(stringID, idlist[j]) {
+					theStock = append(theStock, stock[i])
+				}
+			}
+		}
+		if len(theStock) == 0 {
+			return stock
+		}
+		return theStock
+	}
+
+	return nil
+}
+
+// CheckID function to check the type of return id
+func CheckID(id string) string {
+
+	gics := []string{"10", "15", "20", "25", "30", "35",
+		"40", "45", "50", "55", "60"}
+
+	region := []string{"NA", "EURXUK", "GB", "APXJP", "JP"}
+
+	country := []string{"US", "SG", "SE", "PT", "NZ",
+		"NO", "NL", "MX", "KR", "JP",
+		"IT", "IL", "IE", "HK", "GB",
+		"FR", "FI", "ES", "DK", "DE",
+		"CN", "CH", "CA", "BE", "AU", "AT"}
+
+	for i := range gics {
+		if id == gics[i] {
+			return "gics"
+		}
+	}
+	for i := range region {
+		if id == region[i] {
+			return "region"
+		}
+	}
+	for i := range country {
+		if id == country[i] {
+			return "country"
+		}
+	}
+	return ""
+}
+
+// Calculation part
 
 // CalGICS function to calculate sum&Persentage of stock in order to display
 func CalGICS(s []StockProprety, b []BenchMarkProprety) []GICSCalculation {
