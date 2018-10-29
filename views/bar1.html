@@ -9,16 +9,16 @@
         </div>
         <div class="row">
             <div class="col-6">
-                <div id="columnChart" style="height:300px"></div>
+                <div id="columnChart" style="height:300px; margin: 10px;"></div>
             </div>
             <div class="col-6">
-                <div id="barChart" style="height:300px"></div>
+                <div id="barChart" style="height:300px; margin: 10px;"></div>
             </div>
         </div>
         <div class="row">
             <div class="col">
                 <p hidden>{{ .id }}</p>
-                <h1>GICS Details</h1>
+                <h2>GICS Details</h2>
                 <table id="table">
                 </table>
 
@@ -57,6 +57,10 @@
                 }
                 var options = {
                     title: 'GICS Sectors',
+                    titleTextStyle:{
+                        fontSize: 18,
+                    },
+                    fontSize: 10,
                     legend: { position: 'top' },
                     colors: [`#3e95cd`, `#8e5ea2`],
                     width: '100%',
@@ -96,15 +100,20 @@
                 // }
                 var options = {
                     title: 'GICS Sector Active Weight',
+                    titleTextStyle: {
+                        fontSize: 18,
+                    },
+                    legend: { position: 'top' },
                     colors: ['#dc3912'],
-                    chartArea: { width: '50%' },
+                    chartArea: { width: '45%' },
                     hAxis: {
                         title: 'Total Population',
                         minValue: 0
                     },
-                    vAxis: {
-                        title: 'City'
-                    },
+                    fontSize: 10,
+                    // vAxis: {
+                    //     title: 'City'
+                    // },
                     annotations: {
                         alwaysOutside: true,
                         textStyle: {
@@ -113,6 +122,7 @@
                             auraColor: 'none'
                         }
                     },
+                    // width: '100%',
                 };
 
                 var chart = new google.visualization.BarChart(document.getElementById('barChart'));

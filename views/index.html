@@ -105,10 +105,10 @@
                 <div id="myChart"></div>
                 <div class="text-center">
                     <div class="btn-group" role="group" aria-label="time" style="padding:10px;">
-                        <button type="button" class="btn btn-outline-dark" id="daily">&nbsp;&nbsp;Daily&nbsp;&nbsp;
+                        <button type="button" class="btn btn-outline-dark" id="daily" style = "font-size: 12px">&nbsp;&nbsp;Daily&nbsp;&nbsp;
                         </button>
-                        <button type="button" class="btn btn-outline-dark" id="monthly">Monthly</button>
-                        <button type="button" class="btn btn-outline-dark" id="annually">Annually</button>
+                        <button type="button" class="btn btn-outline-dark" id="monthly" style = "font-size: 12px">Monthly</button>
+                        <button type="button" class="btn btn-outline-dark" id="annually" style = "font-size: 12px">Annually</button>
                     </div>
                 </div>
             </div>
@@ -295,8 +295,12 @@
 
         var options = {
             title: 'Portfolio Performance',
+            titleTextStyle:{
+                fontSize: 20,
+            },
+            fontSize: 10,
             curveType: 'function',
-            legend: {position:'top', fontSize: 12},
+            legend: {position:'top', fontSize: 20},
             colors: [`#3e95cd`, `#8e5ea2`],
 
         };
@@ -315,6 +319,8 @@
         dataType: 'json',
         success: function (data) {
             //bar chart
+            Chart.defaults.global.defaultFontSize = 9;
+            Chart.defaults.global.defaultFontColor = 'black';
             new Chart(document.getElementById("barChart1-1"), {
                 type: 'bar',
                 data: {
@@ -396,6 +402,7 @@
         success: function (data) {
             //Doughnut chart
             Chart.defaults.global.defaultFontColor = 'black';
+            Chart.defaults.global.defaultFontSize = 9;
             new Chart(document.getElementById("barChart2-1"), {
                 type: 'bar',
                 data: {
@@ -498,70 +505,70 @@
     });
 
 
-    $.ajax({
-        url: 'http://localhost:8080/barChart3',
-        dataType: 'json',
-        success: function (data) {
+    // $.ajax({
+    //     url: 'http://localhost:8080/barChart3',
+    //     dataType: 'json',
+    //     success: function (data) {
 
-            //bar chart
-            new Chart(document.getElementById("barChart3-1"), {
-                type: 'bar',
-                data: {
-                    //labels: [data[0].code,data[1].code,data[2].code,data[3].code,data[4].code,data[5].code,data[6].code,data[7].code,data[8].code,data[9].code,],
-                    labels: ["AU", "AT", "BE", "CA", "CN", "DK", "FI", "FR", "DE", "GB"],
-                    datasets: [
-                        {
-                            label: "CURR_PORT",
-                            fill: true,
-                            backgroundColor: "#493e8e",
-                            borderColor: "rgba(179,181,198,1)",
-                            pointBorderColor: "#fff",
-                            pointBackgroundColor: "rgba(179,181,198,1)",
-                            data: [data[0].spercentage, data[1].spercentage, data[2].spercentage, data[3].spercentage, data[4].spercentage, data[5].spercentage, data[6].spercentage, data[7].spercentage, data[8].spercentage, data[9].spercentage]
-                        }, {
-                            label: "MSWLD",
-                            fill: true,
-                            backgroundColor: "#beb6bb",
-                            borderColor: "rgba(255,99,132,1)",
-                            pointBorderColor: "#fff",
-                            pointBackgroundColor: "rgba(255,99,132,1)",
-                            pointBorderColor: "#fff",
-                            data: [data[0].bpercentage, data[1].bpercentage, data[2].bpercentage, data[3].bpercentage, data[4].bpercentage, data[5].bpercentage, data[6].bpercentage, data[7].bpercentage, data[8].bpercentage, data[9].bpercentage]
-                        }
-                    ]
-                },
-                options: {
-                    legend: { display: false },
-                    title: {
-                        display: true,
-                        text: 'Country Weights'
-                    }
-                }
-            });
+    //         //bar chart
+    //         new Chart(document.getElementById("barChart3-1"), {
+    //             type: 'bar',
+    //             data: {
+    //                 //labels: [data[0].code,data[1].code,data[2].code,data[3].code,data[4].code,data[5].code,data[6].code,data[7].code,data[8].code,data[9].code,],
+    //                 labels: ["AU", "AT", "BE", "CA", "CN", "DK", "FI", "FR", "DE", "GB"],
+    //                 datasets: [
+    //                     {
+    //                         label: "CURR_PORT",
+    //                         fill: true,
+    //                         backgroundColor: "#493e8e",
+    //                         borderColor: "rgba(179,181,198,1)",
+    //                         pointBorderColor: "#fff",
+    //                         pointBackgroundColor: "rgba(179,181,198,1)",
+    //                         data: [data[0].spercentage, data[1].spercentage, data[2].spercentage, data[3].spercentage, data[4].spercentage, data[5].spercentage, data[6].spercentage, data[7].spercentage, data[8].spercentage, data[9].spercentage]
+    //                     }, {
+    //                         label: "MSWLD",
+    //                         fill: true,
+    //                         backgroundColor: "#beb6bb",
+    //                         borderColor: "rgba(255,99,132,1)",
+    //                         pointBorderColor: "#fff",
+    //                         pointBackgroundColor: "rgba(255,99,132,1)",
+    //                         pointBorderColor: "#fff",
+    //                         data: [data[0].bpercentage, data[1].bpercentage, data[2].bpercentage, data[3].bpercentage, data[4].bpercentage, data[5].bpercentage, data[6].bpercentage, data[7].bpercentage, data[8].bpercentage, data[9].bpercentage]
+    //                     }
+    //                 ]
+    //             },
+    //             options: {
+    //                 legend: { display: false },
+    //                 title: {
+    //                     display: true,
+    //                     text: 'Country Weights'
+    //                 }
+    //             }
+    //         });
 
-            new Chart(document.getElementById("barChart3-2"), {
-                type: 'bar',
-                data: {
-                    //labels: [data[0].code,data[1].code,data[2].code,data[3].code,data[4].code,data[5].code,data[6].code,data[7].code,data[8].code,data[9].code,],
-                    labels: ["AU", "AT", "BE", "CA", "CN", "DK", "FI", "FR", "DE", "GB"],
-                    datasets: [
-                        {
-                            label: "vs_MSWLD",
-                            backgroundColor: ["#3e95cd", "#3e95cd", "#3e95cd", "#3e95cd", "#3e95cd", "#3e95cd", "#3e95cd", "#3e95cd", "#3e95cd", "#3e95cd"],
-                            data: [data[0].diff, data[1].diff, data[2].diff, data[3].diff, data[4].diff, data[5].diff, data[6].diff, data[7].diff, data[8].diff, data[9].diff]
-                        }
-                    ]
-                },
-                options: {
-                    legend: { display: false },
-                    title: {
-                        display: true,
-                        text: 'Country Active Weights'
-                    }
-                }
-            });
-        }
-    });
+    //         new Chart(document.getElementById("barChart3-2"), {
+    //             type: 'bar',
+    //             data: {
+    //                 //labels: [data[0].code,data[1].code,data[2].code,data[3].code,data[4].code,data[5].code,data[6].code,data[7].code,data[8].code,data[9].code,],
+    //                 labels: ["AU", "AT", "BE", "CA", "CN", "DK", "FI", "FR", "DE", "GB"],
+    //                 datasets: [
+    //                     {
+    //                         label: "vs_MSWLD",
+    //                         backgroundColor: ["#3e95cd", "#3e95cd", "#3e95cd", "#3e95cd", "#3e95cd", "#3e95cd", "#3e95cd", "#3e95cd", "#3e95cd", "#3e95cd"],
+    //                         data: [data[0].diff, data[1].diff, data[2].diff, data[3].diff, data[4].diff, data[5].diff, data[6].diff, data[7].diff, data[8].diff, data[9].diff]
+    //                     }
+    //                 ]
+    //             },
+    //             options: {
+    //                 legend: { display: false },
+    //                 title: {
+    //                     display: true,
+    //                     text: 'Country Active Weights'
+    //                 }
+    //             }
+    //         });
+    //     }
+    // });
 </script>
 
 <!-- Optional JavaScript -->
