@@ -48,3 +48,10 @@ By the visual representation, users can understand the relationship between data
 
 ##Full documentation
     Please refer to "Technical Report Aiculus.pdf". 
+
+##Implementation  
+    #Get gin & Excelize
+    -Installation
+        go get -u github.com/gin-gonic/gin
+        go get github.com/360EntSecGroup-Skylar/excelize
+    -Run main.go
