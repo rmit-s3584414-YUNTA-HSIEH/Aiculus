@@ -1,14 +1,12 @@
-#Project Title
+# Project Title
 
     AICULUS DASHBOARD
 
-#Executive Summary
+# Executive Summary
 
     AiCULUS dashboard is a web - based project which helps users to view graphical representation of index data for providing trade actions so that the users can easily analyse the data. 
 
-By the visual representation, users can understand the relationship between data quickly and also understand the trends by which if the product sales are going up or Is the Share A price is going low compared to Share B and C which helps the user to make a decision promptly.
-
-#Contributors
+# Contributors
 
     Name - PreferName- StudentID - EmailAddress
 
@@ -19,69 +17,69 @@ By the visual representation, users can understand the relationship between data
     <Fen Gan - Gary - s3703529 - ganfen9173@gmail.com>
     <Shuijia Zhuo - Roger - s3384039 - shuijia179@gmail.com>
 
-#Description
+# Description
 
-###.idea & .vscode
+### .idea & .vscode
 
     These are the launch&setting files of IDE.
 
-###css
+### css
 
     The folder which contains css file.
 
-###data
+### data
 
     The folder which contains data files. 
 
-###img
+### img
 
     The folder which contains logos. 
 
-###log
+### log
 
     The folder which contains log files.
 
-###static
+### static
 
     Chart.js file.
 
-###views
+### views
 
     Html files location.
 
-###DAO.go
+### DAO.go
 
     The back-end file.
 
-###main.go
+### main.go
 
     Main function to run this dashboard.
 
-###routes.go
+### routes.go
 
     The controller between front-end and back-end.
 
-#Implementation  
+# Implementation  
 
-##Installation
+## Installation
 
-Get gin
+gin
 
     ```
     go get -u github.com/gin-gonic/gin
     ```
 
-Get Excelize
+Excelize
 
     ```
     go get github.com/360EntSecGroup-Skylar/excelize
     ```
 
-##Running the program
+## Running the program
 
     Run main.go
 
 
-#Full documentation
+# Full documentation
 
     Please refer to "Technical Report Aiculus.pdf". 
