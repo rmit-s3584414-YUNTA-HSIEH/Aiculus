@@ -10,7 +10,7 @@
             <div class="col-4 col-xs-6" id="col">
 
                 <div class="card">
-                    <a href="/bar/1">
+                    <a href="/sectorDetail">
                         <div class="card-bodyleft">
                             <div id="carouselExampleControls" class="carousel slide" data-ride="carousel" data-interval="false">
                                 <div class="carousel-inner">
@@ -37,7 +37,7 @@
                 </div>
 
                 <div class="card">
-                    <a href="/bar/2">
+                    <a href="/regionDetail">
                         <div class="card-bodyleft">
                             <div id="carouselExampleControls2" class="carousel slide" data-ride="carousel"
                                 data-interval="false">
@@ -201,7 +201,7 @@
 <script>
 
     $.ajax({
-        url: 'http://localhost:8080/sec',
+        url: 'http://localhost:8080/secruity',
         dataType: 'json',
         success: function (jsonData) {
 
@@ -315,7 +315,7 @@
 
     //use ajax to get other 5 charts' data
     $.ajax({
-        url: 'http://localhost:8080/barChart1',
+        url: 'http://localhost:8080/sector',
         dataType: 'json',
         success: function (data) {
             //bar chart
@@ -397,7 +397,7 @@
 
 
     $.ajax({
-        url: 'http://localhost:8080/barChart2',
+        url: 'http://localhost:8080/region',
         dataType: 'json',
         success: function (data) {
             //Doughnut chart

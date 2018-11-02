@@ -34,7 +34,7 @@
 
     function drawcolumnChart() {
         $.ajax({
-            url: 'http://localhost:8080/sec',
+            url: 'http://localhost:8080/secruity',
             dataType: 'json',
             success: function (jsonData) {
                 var data = new google.visualization.DataTable();
@@ -67,7 +67,7 @@
 <script>
     $('#table').bootstrapTable({
         height: 300,
-        url: 'http://localhost:8080/sec',
+        url: 'http://localhost:8080/secruity',
         columns: [{
             field: 'name',
             title: 'Name',

@@ -6,7 +6,7 @@
 <div id="page-content-wrapper">
     <div class="container-fluid">
         <div class="col">
-            <a class="btn btn-primary" href="/bar/2" role="button" style="margin-top:10px;">Region</a>
+            <a class="btn btn-primary" href="/regionDetail" role="button" style="margin-top:10px;">Region</a>
         </div>
         <div class="row">
             <div class="col-12">
@@ -40,7 +40,7 @@
 
     function drawcolumnChart() {
         $.ajax({
-            url: 'http://localhost:8080/barChart3',
+            url: 'http://localhost:8080/countries',
             dataType: 'json',
             success: function (jsonData) {
                 var data = new google.visualization.DataTable();
@@ -72,7 +72,7 @@
 
     function drawBarChart() {
         $.ajax({
-            url: 'http://localhost:8080/barChart3',
+            url: 'http://localhost:8080/countries',
             dataType: 'json',
             success: function (jsonData) {
                 var data = new google.visualization.DataTable();
@@ -128,7 +128,7 @@
 <script>
     $('#table').bootstrapTable({
         height: 300,
-        url: 'http://localhost:8080/barChart3',
+        url: 'http://localhost:8080/countries',
         columns: [{
             field: 'code',
             sortable: true,

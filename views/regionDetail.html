@@ -6,23 +6,25 @@
 <div id="page-content-wrapper">
     <div class="container-fluid">
         <div class="col">
+            <a class="btn btn-primary" href="/country" role="button" style="margin-top:10px;">Country</a>
         </div>
         <div class="row">
             <div class="col-6">
-                <div id="columnChart" style="height:300px; margin: 10px;"></div>
+                <div id="columnChart" style="height:300px"></div>
             </div>
             <div class="col-6">
-                <div id="barChart" style="height:300px; margin: 10px;"></div>
+                <div id="barChart" style="height:300px"></div>
             </div>
         </div>
+
         <div class="row">
             <div class="col">
-                <p hidden>{{ .id }}</p>
-                <h2>GICS Details</h2>
-                <table id="table">
-                </table>
-
-
+                <div>
+                    <p hidden>{{ .id }}</p>
+                    <h2>Regional Weights Details</h2>
+                    <table id="table">
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -39,31 +41,25 @@
 
     function drawcolumnChart() {
         $.ajax({
-            url: 'http://localhost:8080/barChart1',
+            url: 'http://localhost:8080/region',
             dataType: 'json',
             success: function (jsonData) {
                 var data = new google.visualization.DataTable();
 
                 data.addColumn('string', 'name');
-                data.addColumn('number', 'Portfolio');
                 // data.addColumn({ type: 'string', role: 'annotation' });
-                data.addColumn('number', 'Benchmark');
+                data.addColumn('number', 'CURR_PORT');
                 // data.addColumn({ type: 'string', role: 'annotation' });
-
-
-                for (var i = 0; i < jsonData.length; i++) {
-                    // data.addRows([[jsonData[i].name, jsonData[i].spercentage,""+jsonData[i].spercentage+"",jsonData[i].bpercentage,""+jsonData[i].bpercentage+""]]);
+                data.addColumn('number', 'MSWLD');
+                // data.addColumn({ type: 'string', role: 'annotation' });
+                for (var i = 0; i < 5; i++) {
                     data.addRows([[jsonData[i].name, jsonData[i].spercentage, jsonData[i].bpercentage]]);
+                    // data.addRows([[jsonData[i].name, jsonData[i].spercentage, jsonData[i].bpercentage]]);
                 }
                 var options = {
-                    title: 'GICS Sectors',
-                    titleTextStyle:{
-                        fontSize: 18,
-                    },
-                    fontSize: 10,
+                    title: 'Regional Weights',
                     legend: { position: 'top' },
                     colors: [`#3e95cd`, `#8e5ea2`],
-                    width: '100%',
                 }
 
                 var chart = new google.visualization.ColumnChart(
@@ -77,43 +73,27 @@
 
     function drawBarChart() {
         $.ajax({
-            url: 'http://localhost:8080/barChart1',
+            url: 'http://localhost:8080/region',
             dataType: 'json',
             success: function (jsonData) {
                 var data = new google.visualization.DataTable();
                 data.addColumn('string', 'name');
                 data.addColumn('number', 'percentage');
                 data.addColumn({ type: 'string', role: 'annotation' });
-                // var dataName = new Array();
-                // var dataDiff = new Array();
-                // for (var i=0; i< jsonData.length; i++){
-                //     dataName[i]=jsonData[i].name;
-                // }
-                // for (var i=0;i<jsonData.length;i++){
-                //     dataDiff[i]=jsonData[i].diff;
-                // }
-                for (var i = 0; i < 11; i++) {
+                for (var i = 0; i < 5; i++) {
                     data.addRows([[jsonData[i].name, jsonData[i].diff, '' + jsonData[i].diff + '']]);
                 }
-                // for (var i=0; i<dataDiff.length; i++){
-                //     data.addRows([[dataName[i],dataDiff[i]]]);
-                // }
                 var options = {
-                    title: 'GICS Sector Active Weight',
-                    titleTextStyle: {
-                        fontSize: 18,
-                    },
-                    legend: { position: 'top' },
+                    title: 'Regional Active Weight',
+                    chartArea: { width: '50%' },
                     colors: ['#dc3912'],
-                    chartArea: { width: '45%' },
                     hAxis: {
                         title: 'Total Population',
                         minValue: 0
                     },
-                    fontSize: 10,
-                    // vAxis: {
-                    //     title: 'City'
-                    // },
+                    vAxis: {
+                        title: 'City'
+                    },
                     annotations: {
                         alwaysOutside: true,
                         textStyle: {
@@ -121,8 +101,8 @@
                             color: '#000',
                             auraColor: 'none'
                         }
-                    },
-                    // width: '100%',
+                    }
+
                 };
 
                 var chart = new google.visualization.BarChart(document.getElementById('barChart'));
@@ -136,16 +116,17 @@
 
 
 
+
 <script>
     $('#table').bootstrapTable({
-        height: 300,
-        url: 'http://localhost:8080/barChart1',
+
+        url: 'http://localhost:8080/region',
         columns: [{
             field: 'code',
             align: 'center',
             valign: 'middle',
             sortable: true,
-            title: 'GICS code'
+            title: 'Region Code'
         },
         {
             field: 'name',
@@ -159,7 +140,7 @@
             align: 'center',
             valign: 'middle',
             sortable: true,
-            title: 'Portfolio',
+            title: 'CURR_PORT',
             formatter: numberFormatter,
         },
         {
@@ -167,7 +148,7 @@
             align: 'center',
             valign: 'middle',
             sortable: true,
-            title: 'Benchmark',
+            title: 'MSWLD',
             formatter: numberFormatter,
         },
         {
@@ -175,17 +156,18 @@
             align: 'center',
             valign: 'middle',
             sortable: true,
-            title: 'Difference',
+            title: 'vs_MSWLD',
             cellStyle: format,
             formatter: numberFormatter,
         },]
     });
 
+
     $('#table').on('click-row.bs.table', function (e, row, $element) {
-        //alert(row.name+" "+row.code+" "+row.spresentage+" "+row.bpresentage+" "+ row.diff);
+        //alert(row.name+" "+row.code+" "+row.spercentage+" "+row.bpercentage+" "+ row.diff);
         window.location.assign("http://localhost:8080/details/" + row.code);
 
-        alert(data.code);
+        //alert(row.code);               
     });
 
     function format(data) {

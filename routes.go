@@ -42,6 +42,26 @@ func initializeRoutes() {
 		)
 	})
 
+	router.GET("/sectorDetail", func(c *gin.Context) {
+
+		address := "sectorDetail.html"
+		c.HTML(
+			http.StatusOK,
+			address,
+			gin.H{},
+		)
+	})
+
+	router.GET("/regionDetail", func(c *gin.Context) {
+
+		address := "regionDetail.html"
+		c.HTML(
+			http.StatusOK,
+			address,
+			gin.H{},
+		)
+	})
+
 	router.GET("/support", func(c *gin.Context) {
 
 		address := "support.html"
@@ -162,15 +182,15 @@ func initializeRoutes() {
 		c.JSON(http.StatusOK, VMQ)
 	})
 
-	router.GET("/barChart1", func(c *gin.Context) {
+	router.GET("/sector", func(c *gin.Context) {
 		stock := CalGICS(a, b)
 		c.JSON(http.StatusOK, stock)
 	})
-	router.GET("/barChart2", func(c *gin.Context) {
+	router.GET("/region", func(c *gin.Context) {
 		stock := CalRegion(a, b)
 		c.JSON(http.StatusOK, stock)
 	})
-	router.GET("/barChart3", func(c *gin.Context) {
+	router.GET("/countries", func(c *gin.Context) {
 		stock := CalCountry(a, b)
 		c.JSON(http.StatusOK, stock)
 	})
@@ -181,7 +201,7 @@ func initializeRoutes() {
 		c.JSON(http.StatusOK, stock)
 	})
 
-	router.GET("/sec", func(c *gin.Context) {
+	router.GET("/secruity", func(c *gin.Context) {
 		sec := SetSecruityData()
 		c.JSON(http.StatusOK, sec)
 	})
