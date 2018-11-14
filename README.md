@@ -61,7 +61,14 @@
 
 # Implementation  
 
-## Installation
+## 1. GOLANG
+
+    ```
+    Please CHECK your GoLang system environment. 
+    There should be a "GOPATH" with "C:\Go\bin" (your GO location), and a "GOROOT" with "C:\GO".
+    ```
+
+## 2. Installation
 
 gin
 
@@ -75,9 +82,17 @@ Excelize
     go get github.com/360EntSecGroup-Skylar/excelize
     ```
 
-## Running the program
+## 3. Run the program
 
-    Run main.go
+    Open your Command Prompt, go to the project directory (For example, C:\GO\bin\src\Aiculus-Dashboard).
+    
+    ```
+    Type in 
+    go build
+    
+    Then type in 
+    go run main.go DAO.go routes.go
+    ```
 
 
 # Full documentation
