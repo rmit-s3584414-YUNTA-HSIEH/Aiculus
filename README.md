@@ -63,10 +63,10 @@
 
 ## 1. GOLANG
 
-    ```
+    
     Please CHECK your GoLang system environment. 
     There should be a "GOPATH" with "C:\Go\bin" (your GO location), and a "GOROOT" with "C:\GO".
-    ```
+    
 
 ## 2. Installation
 
