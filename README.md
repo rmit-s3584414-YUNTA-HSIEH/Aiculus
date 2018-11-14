@@ -72,27 +72,27 @@
 
 gin
 
-    ```
+    
     go get -u github.com/gin-gonic/gin
-    ```
+    
 
 Excelize
 
-    ```
+    
     go get github.com/360EntSecGroup-Skylar/excelize
-    ```
+    
 
 ## 3. Run the program
 
     Open your Command Prompt, go to the project directory (For example, C:\GO\bin\src\Aiculus-Dashboard).
     
-    ```
+    
     Type in 
     go build
     
     Then type in 
     go run main.go DAO.go routes.go
-    ```
+    
 
 
 # Full documentation
